@@ -1,0 +1,26 @@
+# If pipenv fails with: TypeError: 'module' object is not callable
+# Run: pipenv run pip install pip==18.0
+
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+green = "==2.12.1"
+coverage = "==4.5.1"
+mock = "==2.0.0"
+pylint = "==1.8.4"
+responses = "==0.9.0"
+
+[packages]
+
+flask = "==1.0.2"
+pydocumentdb = "==2.3.1"
+requests = "==2.18.4"
+coloredlogs = "==9.3.1"
+
+[requires]
+
+python_version = "3.6.5"
