@@ -5,7 +5,7 @@ from modules.event_system import event_system
 
 class TestEventSystem(unittest.TestCase):
 
-    def test_all(self):
+    def test_sub_publish_unsub(self):
         event_system.subscribe_to_event('event', self.assertIsNotNone)
         event_system.subscribe_to_event('event', raises_exception_on_no_data)
         event_system.publish_event('event', {'some': 'data'})

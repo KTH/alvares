@@ -3,13 +3,26 @@ __author__ = 'tinglev'
 import logging
 from flask import Flask, request, abort
 from modules.event_system.event_system import publish_event
-from modules.subscribers import slack
+from modules.subscribers.slack import slack_deployment, slack_error, slack_recommendation
+from modules.subscribers.detectify import detectify
 from modules.log import init_logging
+from modules import environment
 
 FLASK = Flask(__name__)
 
 def init_subscriptions():
-    slack.subscribe()
+    log = logging.getLogger(__name__)
+    if not environment.get_env(environment.DISABLE_SLACK_INTEGRATION):
+        slack_deployment.subscribe()
+        slack_error.subscribe()
+        slack_recommendation.subscribe()
+    else:
+        log.info('Skipping Slack integration')
+
+    if not environment.get_env(environment.DISABLE_DETECTIFY_INTEGRATION):
+        detectify.subscribe()
+    else:
+        log.info('Skipping Detectify integration')
 
 @FLASK.before_request
 def only_accept_json_requests():
@@ -35,9 +48,12 @@ def new_recommendation():
 # Start server
 #
 
-if __name__ == '__main__':
+def start_server():
     init_logging()
     log = logging.getLogger(__name__)
     log.info('Starting application')
     init_subscriptions()
     FLASK.run(host='0.0.0.0', port=3010, debug=False)
+
+if __name__ == '__main__':
+    start_server()
