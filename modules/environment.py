@@ -17,8 +17,7 @@ DETECTIFY_CLUSTERS = 'DETECTIFY_CLUSTERS'
 SLACK_CHANNEL_OVERRIDE = 'SLACK_CHANNEL_OVERRIDE'
 SLACK_CHANNELS = 'SLACK_CHANNELS'
 SLACK_WEB_HOOK = 'SLACK_WEB_HOOK_URL'
-DISABLE_SLACK_INTEGRATION = 'DISABLE_SLACK_INTEGRATION'
-DISABLE_DETECTIFY_INTEGRATION = 'DISABLE_DETECTIFY_INTEGRATION'
+DISABLED_SUBSCRIBERS = 'DISABLED_SUBSCRIBERS'
 SKIP_VALIDATION_TESTS = 'SKIP_VALIDATION_TESTS'
 VALIDATE_DEPLOYMENT_URL = 'VALIDATE_DEPLOYMENT_URL'
 
@@ -26,7 +25,9 @@ def get_env(name):
     return os.environ.get(name)
 
 def get_env_list(name):
-    return [ch.rstrip() for ch in os.environ.get(name).split(',')]
+    if os.environ.get(name):
+        return [ch.rstrip() for ch in os.environ.get(name).split(',')]
+    return []
 
 def get_env_with_default_value(name, default_value):
     value = os.environ.get(name)
