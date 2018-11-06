@@ -16,8 +16,8 @@ class TestSchemaValidation(unittest.TestCase):
         )
         deployment_json = mock_data.get_deployment()
         result = requests.post(validation_url, json=deployment_json, allow_redirects=False)
-        self.assertEqual(result.status_code, 200)
         self.assertEqual(result.json(), {})
+        self.assertEqual(result.status_code, 200)
 
     @unittest.skipIf(environment.get_env(environment.SKIP_VALIDATION_TESTS),
                      'SKIP_VALIDATION_TESTS set')
@@ -28,5 +28,5 @@ class TestSchemaValidation(unittest.TestCase):
         )
         deployment_json = mock_data.get_error()
         result = requests.post(validation_url, json=deployment_json, allow_redirects=False)
-        self.assertEqual(result.status_code, 200)
         self.assertEqual(result.json(), {})
+        self.assertEqual(result.status_code, 200)
