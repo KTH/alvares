@@ -2,40 +2,48 @@ __author__ = 'tinglev@kth.se'
 
 from modules import environment
 
+def get_string_attribute(deployment, attribute):
+    try:
+        if not deployment[attribute]:
+            return ''
+        return deployment[attribute]
+    except KeyError:
+        return ''
+
+def get_list_attribute(deployment, attribute):
+    try:
+        if not deployment[attribute]:
+            return []
+        return [item.rstrip() for item in deployment[attribute].split(',')]
+    except KeyError:
+        return []
+
+def has_published_url(deployment):
+    return get_string_attribute(deployment, 'publishedUrl') != ''
+
+def get_published_url(deployment):
+    return get_string_attribute(deployment, 'publishedUrl')
+
 def get_slack_channels(deployment):
-    if 'slackChannels' in deployment and deployment['slackChannels']:
-        return [ch.rstrip() for ch in deployment['slackChannels'].split(',')]
-    return []
+    return get_list_attribute(deployment, 'slackChannels')
 
 def get_application_name(deployment):
-    if 'applicationName' in deployment and deployment['applicationName']:
-        return deployment['applicationName']
-    return ''
+    return get_string_attribute(deployment, 'applicationName')
 
 def get_application_version(deployment):
-    if 'version' in deployment and deployment['version']:
-        return deployment['version']
-    return ''
+    return get_string_attribute(deployment, 'version')
 
 def get_cluster(deployment):
-    if 'cluster' in deployment and deployment['cluster']:
-        return deployment['cluster']
-    return ''
+    return get_string_attribute(deployment, 'cluster')
 
 def get_public_name_english(deployment):
-    if 'publicNameEnglish' in deployment and deployment['publicNameEnglish']:
-        return deployment['publicNameEnglish']
-    return ''
+    return get_string_attribute(deployment, 'publicNameEnglish')
 
 def get_public_name_swedish(deployment):
-    if 'publicNameSwedish' in deployment and deployment['publicNameSwedish']:
-        return deployment['publicNameSwedish']
-    return ''
+    return get_string_attribute(deployment, 'publicNameSwedish')
 
 def get_detectify_tokens(deployment):
-    if 'detectifyProfileTokens' in deployment and deployment['detectifyProfileTokens']:
-        return [t.rstrip() for t in deployment['detectifyProfileTokens'].split(',')]
-    return []
+    return get_list_attribute(deployment, 'detectifyProfileTokens')
 
 def get_hosts():
     return {

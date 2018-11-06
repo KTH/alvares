@@ -47,34 +47,35 @@ def call_slack_channel_with_monitor_url(deployment):
                                        create_slack_payload(message, channel))
 
 def should_monitor(deployment):
-    published = has_publish_url(deployment)
+    published = has_published_url(deployment)
     cluster_ok = should_monitor_cluster(deployment)
     app_excluded = app_is_excluded(deployment)
     return published and cluster_ok and not app_excluded
 
 def app_is_excluded(deployment):
     global LOG
-    app_excluded = (deployment.application_name in
+    app_excluded = (deployment_util.get_application_name(deployment) in
                     environment.get_env(environment.UTR_EXCLUDED_APPS))
     if app_excluded:
         LOG.debug('Application "%s" in UTR_EXCLUDED_APPS, '
                   'skipping UpTimeRobot integration',
-                  deployment.application_name)
+                  deployment_util.get_application_name(deployment))
     return app_excluded
 
-def has_publish_url(deployment):
+def has_published_url(deployment):
     global LOG
-    app_has_publish_url = hasattr(deployment, 'published_url') and deployment.published_url
-    if not app_has_publish_url:
+    has_publish_url = deployment_util.has_published_url(deployment)
+    if not has_publish_url:
         LOG.debug('Deployment has no published_url, skipping UpTimeRobot integration')
-    return app_has_publish_url
+    return has_publish_url
 
 def should_monitor_cluster(deployment):
     global LOG
-    cluster_ok = deployment.cluster in environment.get_env(environment.UTR_CLUSTERS)
+    cluster_ok = (deployment_util.get_cluster(deployment) in
+                  environment.get_env(environment.UTR_CLUSTERS))
     if not cluster_ok:
         LOG.debug('Cluster "%s" not in UTR_CLUSTERS, skipping UpTimeRobot integration',
-                  deployment.cluster)
+                  deployment_util.get_cluster(deployment))
     return cluster_ok
 
 def get_alert_contacts():

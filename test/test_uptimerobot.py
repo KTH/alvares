@@ -9,6 +9,26 @@ from test import mock_data
 
 class UptimerobotTests(unittest.TestCase):
 
+    def test_has_published_url(self):
+        deployment = mock_data.get_deployment()
+        self.assertTrue(uptimerobot.has_published_url(deployment))
+        deployment['publishedUrl'] = None
+        self.assertFalse(uptimerobot.has_published_url(deployment))
+
+    def test_app_is_excluded(self):
+        os.environ[environment.UTR_EXCLUDED_APPS] = 'kth-azure-app'
+        deployment = mock_data.get_deployment()
+        self.assertTrue(uptimerobot.app_is_excluded(deployment))
+        os.environ[environment.UTR_EXCLUDED_APPS] = 'tamarack'
+        self.assertFalse(uptimerobot.app_is_excluded(deployment))
+
+    def test_should_monitor_cluster(self):
+        os.environ[environment.UTR_CLUSTERS] = 'stage, development'
+        deployment = mock_data.get_deployment()
+        self.assertFalse(uptimerobot.should_monitor_cluster(deployment))
+        os.environ[environment.UTR_CLUSTERS] = 'stage, active'
+        self.assertTrue(uptimerobot.should_monitor_cluster(deployment))
+
     def test_get_alert_contacts(self):
         uptimerobot.call_endpoint = Mock(return_value={
             "stat": "ok",
@@ -36,3 +56,25 @@ class UptimerobotTests(unittest.TestCase):
         alert_contacts = uptimerobot.get_alert_contacts()
         self.assertEqual(len(alert_contacts), 1)
         self.assertEqual(alert_contacts[0]['friendly_name'], '#team-pipeline')
+
+    def test_create_friendly_name(self):
+        deployment = mock_data.get_deployment()
+        name = uptimerobot.create_friendly_name(deployment)
+        self.assertEqual(name, 'Monitor application')
+        deployment['publicNameEnglish'] = None
+        name = uptimerobot.create_friendly_name(deployment)
+        self.assertEqual(name, 'Monitorapp')
+        deployment['publicNameSwedish'] = None
+        name = uptimerobot.create_friendly_name(deployment)
+        self.assertEqual(name, 'kth-azure-app')
+
+    def test_select_alert_contact(self):
+        uptimerobot.get_alert_contacts = Mock(return_value=[
+            {
+                "id": "321",
+                "friendly_name": "#team-pipeline",
+                "type": 11,
+                "status": 2,
+                "value": "https://hooks.slack.com/services/abc/123/xzy"
+            }
+        ])
