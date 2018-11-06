@@ -8,16 +8,15 @@ DEPLOYMENT_STRING = r"""
         "cluster": "active",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
-        "publishedUrl": "/kth-azure-app",
         "slackChannels": "#team-pipeline,#developers",
         "publicNameSwedish": "Monitorapp",
         "publicNameEnglish": "Monitor application",
         "descriptionSwedish": "Monitorapp för klustret",
         "descriptionEnglish": "Monitor application for cluster",
-        "monitorUrl": "/_monitor",
+        "monitorPath": "/_monitor",
         "created": "",
         "importance": "high",
-        "servicePath": "/kth-azure-app",
+        "applicationPath": "/kth-azure-app",
         "detectifyProfileTokens": "abc123xyz456,987mnb654vcx"
     }
 """

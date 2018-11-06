@@ -9,11 +9,11 @@ from test import mock_data
 
 class UptimerobotTests(unittest.TestCase):
 
-    def test_has_published_url(self):
+    def test_has_application_path(self):
         deployment = mock_data.get_deployment()
-        self.assertTrue(uptimerobot.has_published_url(deployment))
-        deployment['publishedUrl'] = None
-        self.assertFalse(uptimerobot.has_published_url(deployment))
+        self.assertTrue(uptimerobot.has_application_path(deployment))
+        deployment['applicationPath'] = None
+        self.assertFalse(uptimerobot.has_application_path(deployment))
 
     def test_app_is_excluded(self):
         os.environ[environment.UTR_EXCLUDED_APPS] = 'kth-azure-app'

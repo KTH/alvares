@@ -47,7 +47,7 @@ def call_slack_channel_with_monitor_url(deployment):
                                        create_slack_payload(message, channel))
 
 def should_monitor(deployment):
-    published = has_published_url(deployment)
+    published = has_application_path(deployment)
     cluster_ok = should_monitor_cluster(deployment)
     app_excluded = app_is_excluded(deployment)
     return published and cluster_ok and not app_excluded
@@ -62,12 +62,12 @@ def app_is_excluded(deployment):
                   deployment_util.get_application_name(deployment))
     return app_excluded
 
-def has_published_url(deployment):
+def has_application_path(deployment):
     global LOG
-    has_publish_url = deployment_util.has_published_url(deployment)
-    if not has_publish_url:
+    has_app_path = deployment_util.has_application_path(deployment)
+    if not has_app_path:
         LOG.debug('Deployment has no published_url, skipping UpTimeRobot integration')
-    return has_publish_url
+    return has_app_path
 
 def should_monitor_cluster(deployment):
     global LOG

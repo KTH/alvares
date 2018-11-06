@@ -18,11 +18,14 @@ def get_list_attribute(deployment, attribute):
     except KeyError:
         return []
 
-def has_published_url(deployment):
-    return get_string_attribute(deployment, 'publishedUrl') != ''
+def has_application_path(deployment):
+    return get_string_attribute(deployment, 'applicationPath') != ''
 
-def get_published_url(deployment):
-    return get_string_attribute(deployment, 'publishedUrl')
+def get_application_path(deployment):
+    return get_string_attribute(deployment, 'applicationPath')
+
+def get_monitor_path(deployment):
+    return get_string_attribute(deployment, 'monitorPath')
 
 def get_slack_channels(deployment):
     return get_list_attribute(deployment, 'slackChannels')
@@ -61,16 +64,43 @@ def get_hosts():
         }
     }
 
-def get_full_monitor_url(deployment):
+def get_full_url_for_path(path, cluster):
     hosts = get_hosts()
-    host = 'active'
-    mode = 'app'
-    if 'monitorUrl' in deployment and deployment['monitorUrl']:
-        if deployment['monitorUrl'].startswith('/'):
-            if deployment['monitorUrl'].startswith('/api/'):
-                mode = 'api'
-            if get_cluster(deployment) == 'stage':
-                host = 'stage'
-            return f'{hosts[host][mode]}{deployment["monitorUrl"]}'
-        return deployment['monitorUrl']
-    return ''
+    if not path or not cluster:
+        return ''
+    if not path.startswith('/'):
+        # Absolut url
+        return path
+    if path.startswith('/api/'):
+        return hosts[cluster]['api']
+    return hosts[cluster]['app']
+
+def path_is_relative(path):
+    return path.startswith('/')
+
+def get_host_for_application(path, cluster):
+    hosts = get_hosts()
+    if not path or not cluster:
+        return ''
+    if path.startswith('/api/'):
+        return hosts[cluster]['api']
+    return hosts[cluster]['app']
+
+def combine_host_and_paths(host, *paths):
+    url = host.rstrip('/')
+    for path in paths:
+        url = f'{url}{path.rstrip("/")}'
+    return url
+
+def get_full_monitor_url(deployment):
+    if not path_is_relative(get_monitor_path(deployment)):
+        return get_monitor_path(deployment)
+    host = get_host_for_application(get_monitor_path(deployment), get_cluster(deployment))
+    return combine_host_and_paths(host, get_application_path(deployment),
+                                  get_monitor_path(deployment))
+
+def get_full_application_url(deployment):
+    if not path_is_relative(get_application_path(deployment)):
+        return get_application_path(deployment)
+    host = get_host_for_application(get_monitor_path(deployment), get_cluster(deployment))
+    return combine_host_and_paths(host, get_application_path(deployment))
