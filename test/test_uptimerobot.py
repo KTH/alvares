@@ -57,17 +57,6 @@ class UptimerobotTests(unittest.TestCase):
         self.assertEqual(len(alert_contacts), 1)
         self.assertEqual(alert_contacts[0]['friendly_name'], '#team-pipeline')
 
-    def test_create_friendly_name(self):
-        deployment = mock_data.get_deployment()
-        name = uptimerobot.create_friendly_name(deployment)
-        self.assertEqual(name, 'Monitor application')
-        deployment['publicNameEnglish'] = None
-        name = uptimerobot.create_friendly_name(deployment)
-        self.assertEqual(name, 'Monitorapp')
-        deployment['publicNameSwedish'] = None
-        name = uptimerobot.create_friendly_name(deployment)
-        self.assertEqual(name, 'kth-azure-app')
-
     def test_select_alert_contact(self):
         uptimerobot.get_alert_contacts = Mock(return_value=[
             {

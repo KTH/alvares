@@ -110,3 +110,10 @@ def get_full_application_url(deployment):
         return get_application_path(deployment)
     host = get_host_for_application(get_monitor_path(deployment), get_cluster(deployment))
     return combine_host_and_paths(host, get_application_path(deployment))
+
+def create_friendly_name(deployment):
+    if get_public_name_english(deployment):
+        return get_public_name_english(deployment)
+    if get_public_name_swedish(deployment):
+        return get_public_name_swedish(deployment)
+    return get_application_name(deployment)

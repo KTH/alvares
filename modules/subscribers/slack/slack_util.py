@@ -51,7 +51,6 @@ def create_link_to_logs(deployment):
     host = environment.get_env_with_default_value(environment.GRAYLOG_HOST,
                                                   'https://graycloud.ite.kth.se')
     graylog_image = deployment_util.get_graylog_image(deployment)
-    print(graylog_image)
     url_safe_graylog_image = urllib.parse.quote(graylog_image)
     return (f'{host}/search?'
             f'rangetype=relative&fields=message%2Csource&'

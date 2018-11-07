@@ -101,7 +101,7 @@ def add_or_edit_monitor(deployment):
         if response['monitors']:
             modify_or_add_monitor(deployment, monitor_id=response['monitors'][0]['id'])
             return
-        response = search_for_existing_monitor(create_friendly_name(deployment))
+        response = search_for_existing_monitor(deployment_util.create_friendly_name(deployment))
         if response['monitors']:
             modify_or_add_monitor(deployment, monitor_id=response['monitors'][0]['id'])
             return
@@ -116,7 +116,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
                                                      'APPLICATION_STATUS: OK')
     payload = {
         'url': deployment_util.get_full_monitor_url(deployment),
-        'friendly_name': create_friendly_name(deployment),
+        'friendly_name': deployment_util.create_friendly_name(deployment),
         'alert_contacts' : select_alert_contact(deployment),
         # Type 2 = Keyword
         'type': 2,
@@ -129,7 +129,8 @@ def modify_or_add_monitor(deployment, monitor_id=None):
         LOG.info('Editing monitor with id "%s"', monitor_id)
         call_endpoint('/editMonitor', payload)
     else:
-        LOG.info('Adding monitor with friendly name "%s"', create_friendly_name(deployment))
+        LOG.info('Adding monitor with friendly name "%s"',
+                 deployment_util.create_friendly_name(deployment))
         call_endpoint('/newMonitor', payload)
 
 def select_alert_contact(deployment):
@@ -140,13 +141,6 @@ def select_alert_contact(deployment):
             if channel.replace('#', '') == contact['friendly_name'].replace('#', ''):
                 return contact['id']
     return -1
-
-def create_friendly_name(deployment):
-    if deployment_util.get_public_name_english(deployment):
-        return deployment_util.get_public_name_english(deployment)
-    if deployment_util.get_public_name_swedish(deployment):
-        return deployment_util.get_public_name_swedish(deployment)
-    return deployment_util.get_application_name(deployment)
 
 def call_endpoint(api_url, payload):
     global LOG # pylint: disable=W0603

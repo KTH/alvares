@@ -27,3 +27,14 @@ class DeploymentUtilTest(unittest.TestCase):
         deployment['applicationPath'] = 'https://absolute.path/kth-azure-app/'
         application_url = deployment_util.get_full_application_url(deployment)
         self.assertEqual(application_url, 'https://absolute.path/kth-azure-app/')
+
+    def test_create_friendly_name(self):
+        deployment = mock_data.get_deployment()
+        name = deployment_util.create_friendly_name(deployment)
+        self.assertEqual(name, 'Monitor application')
+        deployment['publicNameEnglish'] = None
+        name = deployment_util.create_friendly_name(deployment)
+        self.assertEqual(name, 'Monitorapp')
+        deployment['publicNameSwedish'] = None
+        name = deployment_util.create_friendly_name(deployment)
+        self.assertEqual(name, 'kth-azure-app')
