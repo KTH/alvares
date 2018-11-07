@@ -22,7 +22,7 @@ def get_attachment(deployment,
         "text": f"Application version: {application_version}"
     }
 
-def get_payload_body(channel, text, username='Dizin',
+def get_payload_body(channel, text, username='Alvares',
                      icon=':no_entry:'): #pragma: no cover
     return {
         "channel": channel,
