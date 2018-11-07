@@ -25,17 +25,17 @@ def only_accept_json_requests():
 
 @FLASK.route('/api/v1/deployment', methods=['PUT'])
 def new_deployment():
-    deployment = request.json()
+    deployment = request.get_json()
     event_system.publish_event('deployment', deployment)
 
 @FLASK.route('/api/v1/error', methods=['PUT'])
 def new_error():
-    error = request.json()
+    error = request.get_json()
     event_system.publish_event('error', error)
 
 @FLASK.route('/api/v1/recommendation', methods=['PUT'])
 def new_recommendation():
-    recommendation = request.json()
+    recommendation = request.get_json()
     event_system.publish_event('recommendation', recommendation)
 
 #
