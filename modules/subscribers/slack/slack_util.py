@@ -1,9 +1,10 @@
 __author__ = 'tinglev@kth.se'
 
 import logging
+import urllib
 import requests
 from requests import HTTPError, ConnectTimeout, RequestException
-from modules import deployment_util
+from modules import deployment_util, environment
 
 LOG = logging.getLogger(__name__)
 
@@ -47,13 +48,13 @@ def call_slack_endpoint(channel, web_hook, payload):
                   channel, request_ex)
 
 def create_link_to_logs(deployment):
-    return ("https://kth-production.portal.mms.microsoft.com/"
-            "?returnUrl=%2F#Workspace/search/index?"
-            "_timeInterval.intervalDuration=604800&"
-            "is=false&"
-            "q=search%20dockerinfo_labels_se_kth_imageName_s%3D%3D%22{}%22%20"
-            "and%20dockerinfo_labels_se_kth_imageVersion_s%3D%3D%22{}%22%20"
-            "and%20dockerinfo_labels_se_kth_cluster_s%3D%3D%22{}%22%20"
-            "%7C%20project%20time_t%2C%20msg_s%2C%20err_stack_s%20%7C%20render%20table%20"
-            "%7C%20sort%20by%20time_t%20desc"
-            .format(deployment.image_name, deployment.version, deployment.cluster))
+    host = environment.get_env_with_default_value(environment.GRAYLOG_HOST,
+                                                  'https://graycloud.ite.kth.se')
+    graylog_image = deployment_util.get_graylog_image(deployment)
+    print(graylog_image)
+    url_safe_graylog_image = urllib.parse.quote(graylog_image)
+    return (f'{host}/search?'
+            f'rangetype=relative&fields=message%2Csource&'
+            f'width=2560&highlightMessage=&relative=300'
+            f'&q=source%3A{deployment_util.get_cluster(deployment)}+'
+            f'AND+image_name%3A{url_safe_graylog_image}')

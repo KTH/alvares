@@ -1,8 +1,8 @@
 __author__ = 'tinglev@kth.se'
 
 import unittest
-import requests
 from test import mock_data
+import requests
 from modules import environment
 
 class TestSchemaValidation(unittest.TestCase):

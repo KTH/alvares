@@ -2,10 +2,10 @@ __author__ = 'tinglev'
 
 import os
 import unittest
+from test import mock_data
 from mock import Mock
 from modules.subscribers.uptimerobot import uptimerobot
 from modules import environment
-from test import mock_data
 
 class UptimerobotTests(unittest.TestCase):
 

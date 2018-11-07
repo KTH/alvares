@@ -30,9 +30,9 @@ ERROR_STRING = r"""
 """
 
 def get_deployment():
-    global DEPLOYMENT_STRING
+    global DEPLOYMENT_STRING # pylint: disable=W0603
     return json.loads(DEPLOYMENT_STRING)
 
 def get_error():
-    global ERROR_STRING
+    global ERROR_STRING # pylint: disable=W0603
     return json.loads(ERROR_STRING)

@@ -3,7 +3,7 @@ __author__ = 'tinglev'
 import logging
 import json
 from requests import get, post, HTTPError, ConnectTimeout, RequestException
-import modules.environment as environment
+from modules import environment
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules import deployment_util
 
@@ -28,7 +28,7 @@ def handle_deployment(deployment):
     return deployment
 
 def should_use_cluster(deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     cluster_ok = (deployment_util.get_cluster(deployment) in
                   environment.get_env_list(environment.DETECTIFY_CLUSTERS))
     if not cluster_ok:
@@ -37,7 +37,7 @@ def should_use_cluster(deployment):
     return cluster_ok
 
 def process_api_key(api_key, deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     auth_header = create_auth_header(api_key)
     scan_list_json = get_scan_list_json(auth_header)
     token_list = get_token_list_from_json(scan_list_json)
@@ -56,7 +56,7 @@ def process_profile_token(token, token_list, auth_header):
         evaluate_scan_state(auth_header, scan_state, token)
 
 def evaluate_scan_state(auth_header, scan_state, token):
-    global LOG
+    global LOG # pylint: disable=W0603
     if scan_state == 'stopped':
         start_scan(auth_header, token)
     else:
@@ -69,7 +69,7 @@ def start_scan(auth_header, token):
     raise_if_not_200(response)
 
 def raise_if_not_200(response):
-    global LOG
+    global LOG # pylint: disable=W0603
     error = None
     if not response:
         error = 'HTTP error while getting scan status'
@@ -92,7 +92,7 @@ def raise_if_not_200(response):
         raise DetectifyError(error)
 
 def get_scan_state(auth_header, token):
-    global LOG
+    global LOG # pylint: disable=W0603
     status_endpoint = create_scan_status_url(token)
     status_response = call_detectify_endpoint(status_endpoint, auth_header, get)
     raise_if_not_200(status_response)
@@ -126,7 +126,7 @@ def create_auth_header(api_key):
     return {'X-Detectify-Key': api_key}
 
 def call_detectify_endpoint(url, auth_header, method):
-    global LOG
+    global LOG # pylint: disable=W0603
     try:
         LOG.debug('Calling Detectify at url "%s" with auth "%s"', url, auth_header)
         response = method(url, headers=auth_header)

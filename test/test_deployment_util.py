@@ -1,9 +1,6 @@
 __author__ = 'tinglev'
 
-import os
 import unittest
-from mock import Mock
-from modules import environment
 from test import mock_data
 from modules import deployment_util
 
@@ -23,7 +20,7 @@ class DeploymentUtilTest(unittest.TestCase):
     def test_get_full_application_url(self):
         deployment = mock_data.get_deployment()
         application_url = deployment_util.get_full_application_url(deployment)
-        self.assertEqual(application_url, 'https://app.kth.se/kth-azure-app')        
+        self.assertEqual(application_url, 'https://app.kth.se/kth-azure-app')
         deployment['applicationPath'] = '/kth-azure-app/'
         application_url = deployment_util.get_full_application_url(deployment)
         self.assertEqual(application_url, 'https://app.kth.se/kth-azure-app')

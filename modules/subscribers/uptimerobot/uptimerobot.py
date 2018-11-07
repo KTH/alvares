@@ -1,6 +1,5 @@
 __author__ = 'tinglev'
 
-import os
 import logging
 import requests
 from requests import HTTPError, ConnectTimeout, RequestException
@@ -21,7 +20,7 @@ def unsubscribe():
     unsubscribe_from_event('deployment', handle_deployment)
 
 def handle_deployment(deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     if not should_monitor(deployment):
         LOG.info('Skipping adding monitor for "%s"', deployment)
         return
@@ -53,7 +52,7 @@ def should_monitor(deployment):
     return published and cluster_ok and not app_excluded
 
 def app_is_excluded(deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     app_excluded = (deployment_util.get_application_name(deployment) in
                     environment.get_env(environment.UTR_EXCLUDED_APPS))
     if app_excluded:
@@ -63,14 +62,14 @@ def app_is_excluded(deployment):
     return app_excluded
 
 def has_application_path(deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     has_app_path = deployment_util.has_application_path(deployment)
     if not has_app_path:
         LOG.debug('Deployment has no published_url, skipping UpTimeRobot integration')
     return has_app_path
 
 def should_monitor_cluster(deployment):
-    global LOG
+    global LOG # pylint: disable=W0603
     cluster_ok = (deployment_util.get_cluster(deployment) in
                   environment.get_env(environment.UTR_CLUSTERS))
     if not cluster_ok:
@@ -88,7 +87,7 @@ def search_for_existing_monitor(keyword):
     '''
     Check if a given monitor_url already has an entry on UTR
     '''
-    global LOG
+    global LOG # pylint: disable=W0603
     if keyword is None:
         return None
     payload = {'search': keyword}
@@ -97,7 +96,7 @@ def search_for_existing_monitor(keyword):
 
 def add_or_edit_monitor(deployment):
     try:
-        global LOG
+        global LOG # pylint: disable=W0603
         response = search_for_existing_monitor(deployment_util.get_full_monitor_url(deployment))
         if response['monitors']:
             modify_or_add_monitor(deployment, monitor_id=response['monitors'][0]['id'])
@@ -112,7 +111,7 @@ def add_or_edit_monitor(deployment):
                   format(deployment.monitor_url), exc_info=True)
 
 def modify_or_add_monitor(deployment, monitor_id=None):
-    global LOG
+    global LOG # pylint: disable=W0603
     keyword = environment.get_env_with_default_value(environment.UTR_KEYWORD,
                                                      'APPLICATION_STATUS: OK')
     payload = {
@@ -150,7 +149,7 @@ def create_friendly_name(deployment):
     return deployment_util.get_application_name(deployment)
 
 def call_endpoint(api_url, payload):
-    global LOG
+    global LOG # pylint: disable=W0603
     if api_url.startswith('/'):
         base_url = environment.get_env_with_default_value(environment.UTR_API_BASE_URL,
                                                           'https://api.uptimerobot.com/v2')

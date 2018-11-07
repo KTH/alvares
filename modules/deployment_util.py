@@ -18,6 +18,12 @@ def get_list_attribute(deployment, attribute):
     except KeyError:
         return []
 
+def get_image_name(deployment):
+    return get_string_attribute(deployment, 'imageName')
+
+def get_graylog_image(deployment):
+    return f'/{get_image_name(deployment)}:{get_application_version(deployment)}(.*)/'
+
 def has_application_path(deployment):
     return get_string_attribute(deployment, 'applicationPath') != ''
 

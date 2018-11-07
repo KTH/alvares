@@ -2,10 +2,10 @@ __author__ = 'tinglev'
 
 import os
 import unittest
+from test import mock_data
 from mock import patch, call
 from modules.subscribers.slack import slack_util, slack_deployment, slack_error
 from modules import environment
-from test import mock_data
 
 class SlackTests(unittest.TestCase):
 
@@ -20,21 +20,18 @@ class SlackTests(unittest.TestCase):
                                 'attachments': [{'a': 'b', 'c': 'd'},
                                                 {'a': 'b', 'c': 'd'}]})
 
-    # def test_get_attachment(self):
-    #     slack_middleware = Slack('slack')
-    #     deployment = test_data.create_test_deployment()
-    #     attachment = slack_middleware.get_attachment(deployment)
-    #     self.maxDiff = None
-    #     log_link = ('https://kth-production.portal.mms.microsoft.com/?returnUrl=%2F#Workspace/search/index?_timeInterval.intervalDuration=604800&is=false&q=search%20dockerinfo_labels_se_kth_imageName_s%3D%3D%22kth-azure-app%22%20and%20dockerinfo_labels_se_kth_imageVersion_s%3D%3D%221.3.4_abc123%22%20and%20dockerinfo_labels_se_kth_cluster_s%3D%3D%22stage%22%20%7C%20project%20time_t%2C%20msg_s%2C%20err_stack_s%20%7C%20render%20table%20%7C%20sort%20by%20time_t%20desc')
-
-    #     assertValue = {'author_link': log_link,
-    #                                   'author_name': 'View logs for this deployment',
-    #                                   'color': '#36a64f',
-    #                                   'fallback': 'Your client does not support attachments :(',
-    #                                   'text': 'Application version: 1.3.4_abc123',
-    #                                   'title': 'Application name: kth-azure-app'}
-        
-    #     self.assertEqual(attachment, assertValue)
+    def test_get_attachment(self):
+        deployment = mock_data.get_deployment()
+        attachment = slack_util.get_attachment(deployment)
+        log_link = ('https://graycloud.ite.kth.se/search?'
+                    'rangetype=relative&fields=message%2Csource&'
+                    'width=2560&highlightMessage=&relative=300'
+                    '&q=source%3Aactive+'
+                    'AND+image_name%3A/kth-azure-app%3A2.0.11_abc123%28.%2A%29/')
+        self.assertEqual(attachment['author_name'], 'View logs for this deployment')
+        self.assertEqual(attachment['text'], 'Application version: 2.0.11_abc123')
+        self.assertEqual(attachment['title'], 'Application name: kth-azure-app')
+        self.assertEqual(attachment['author_link'], log_link)
 
     def test_create_deployment_message(self):
         deployment = mock_data.get_deployment()
@@ -56,25 +53,31 @@ class SlackTests(unittest.TestCase):
     @patch.object(slack_deployment, 'send_deployment_to_slack')
     def test_handle_deployment(self, mock_send):
         deployment = mock_data.get_deployment()
-        os.environ[environment.SLACK_WEB_HOOK] = 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7'
+        os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
+                                                  'T02KE/B4PH1/VmEd2c7')
         os.environ[environment.SLACK_CHANNELS] = '#zermatt,#developers'
         slack_deployment.handle_deployment(deployment)
         calls = [
-            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', '#zermatt', deployment),
-            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', '#developers', deployment),
-            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', '#team-pipeline', deployment),
+            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
+                 '#zermatt', deployment),
+            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
+                 '#developers', deployment),
+            call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
+                 '#team-pipeline', deployment),
         ]
         mock_send.assert_has_calls(calls, any_order=True)
         mock_send.reset_mock()
         os.environ[environment.SLACK_CHANNEL_OVERRIDE] = '#override'
-        calls = [call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', '#override', deployment)]
+        calls = [call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
+                      '#override', deployment)]
         slack_deployment.handle_deployment(deployment)
         mock_send.assert_has_calls(calls, any_order=True)
 
     @patch.object(slack_error, 'call_slack_endpoint')
     def test_handle_error_override(self, mock_send):
         error = mock_data.get_error()
-        os.environ[environment.SLACK_WEB_HOOK] = 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7'
+        os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
+                                                  'T02KE/B4PH1/VmEd2c7')
         os.environ[environment.SLACK_CHANNELS] = '#zermatt,#developers'
         os.environ[environment.SLACK_CHANNEL_OVERRIDE] = '#override'
         slack_error.handle_error(error)
@@ -93,7 +96,8 @@ class SlackTests(unittest.TestCase):
     @patch.object(slack_error, 'call_slack_endpoint')
     def test_handle_error_with_channels(self, mock_send):
         error = mock_data.get_error()
-        os.environ[environment.SLACK_WEB_HOOK] = 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7'
+        os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
+                                                  'T02KE/B4PH1/VmEd2c7')
         os.environ[environment.SLACK_CHANNELS] = '#zermatt,#developers'
         del os.environ[environment.SLACK_CHANNEL_OVERRIDE]
         slack_error.handle_error(error)
@@ -111,15 +115,18 @@ class SlackTests(unittest.TestCase):
             "icon_emoji": ':no_entry:'
         }
         calls = [
-            call('#team-pipeline-logs', 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_1),
-            call('#ita-ops', 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_2),
+            call('#team-pipeline-logs',
+                 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_1),
+            call('#ita-ops',
+                 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_2),
         ]
         mock_send.assert_has_calls(calls, any_order=True)
 
     @patch.object(slack_error, 'call_slack_endpoint')
     def test_handle_error_no_channels(self, mock_send):
         error = mock_data.get_error()
-        os.environ[environment.SLACK_WEB_HOOK] = 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7'
+        os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
+                                                  'T02KE/B4PH1/VmEd2c7')
         os.environ[environment.SLACK_CHANNELS] = '#zermatt,#developers'
         del os.environ[environment.SLACK_CHANNEL_OVERRIDE]
         error['slackChannels'] = None
@@ -138,7 +145,9 @@ class SlackTests(unittest.TestCase):
             "icon_emoji": ':no_entry:'
         }
         calls = [
-            call('#zermatt', 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_1),
-            call('#developers', 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_2),
+            call('#zermatt',
+                 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_1),
+            call('#developers',
+                 'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_2),
         ]
         mock_send.assert_has_calls(calls, any_order=True)

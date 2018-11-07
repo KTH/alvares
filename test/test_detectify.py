@@ -2,10 +2,10 @@ __author__ = 'tinglev'
 
 import unittest
 import os
+from test import mock_data
 from mock import patch
 import responses
 from requests import HTTPError
-from test import mock_data
 from modules import environment
 from modules.subscribers.detectify import detectify
 
@@ -43,7 +43,7 @@ class DetectifyTests(unittest.TestCase):
                 "created": "2018-01-10T08:34:15Z",
                 "token": "abc1234"
             }
-                ]
+        ]
         self.assertEqual(detectify.get_token_list_from_json(json), ['abc123', 'abc1234'])
 
     @responses.activate
@@ -107,21 +107,21 @@ class DetectifyTests(unittest.TestCase):
                           "state": "stopped"}, status=200)
         responses.add(responses.GET, 'https://api.detectify.com/rest/v2/profiles/',
                       json=[
-                            {
-                                "name": "Test",
-                                "endpoint": "www.test.com",
-                                "status": "verified",
-                                "created": "2018-01-10T08:34:15Z",
-                                "token": "abc123xyz456"
-                            },
-                            {
-                                "name": "Test2",
-                                "endpoint": "www.test2.com",
-                                "status": "verified",
-                                "created": "2018-01-10T08:34:15Z",
-                                "token": "abc1234"
-                            }
-                            ], status=200)
+                          {
+                              "name": "Test",
+                              "endpoint": "www.test.com",
+                              "status": "verified",
+                              "created": "2018-01-10T08:34:15Z",
+                              "token": "abc123xyz456"
+                          },
+                          {
+                              "name": "Test2",
+                              "endpoint": "www.test2.com",
+                              "status": "verified",
+                              "created": "2018-01-10T08:34:15Z",
+                              "token": "abc1234"
+                          }
+                      ], status=200)
         responses.add(responses.GET, 'https://api.detectify.com/rest/v2/profiles/',
                       json=[], status=200)
         responses.add(responses.POST, 'https://api.detectify.com/rest/v2/scans/abc123xyz456/',

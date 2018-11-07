@@ -1,7 +1,6 @@
 __author__ = 'tinglev@kth.se'
 
 import logging
-from modules import environment
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 
 LOG = logging.getLogger(__name__)
