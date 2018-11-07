@@ -14,7 +14,6 @@ ENV LANG=en_US.UTF-8 \
 RUN pipenv install
 RUN pipenv install pip
 
-# Clean up
 RUN rm -rf /var/cache/apk/*
 
 COPY ["modules",  "modules"]
