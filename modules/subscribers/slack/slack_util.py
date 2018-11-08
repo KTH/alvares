@@ -54,6 +54,6 @@ def create_link_to_logs(deployment):
     url_safe_graylog_image = urllib.parse.quote(graylog_image)
     return (f'{host}/search?'
             f'rangetype=relative&fields=message%2Csource&'
-            f'width=2560&highlightMessage=&relative=300'
+            f'width=2560&highlightMessage=&relative=3600'
             f'&q=source%3A{deployment_util.get_cluster(deployment)}+'
             f'AND+image_name%3A{url_safe_graylog_image}')
