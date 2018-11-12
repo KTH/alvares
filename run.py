@@ -1,6 +1,7 @@
 __author__ = 'tinglev'
 
 import logging
+import threading
 from flask import Flask, request, abort
 from modules.event_system import event_system
 from modules.subscribers.slack import (slack_deployment, slack_error,
@@ -12,6 +13,13 @@ from modules.subscribers.application_endpoint import application_endpoint
 from modules.log import init_logging
 
 FLASK = Flask(__name__)
+
+def fire_event(event, event_data):
+    event_system.publish_event(event, event_data)
+
+def fire_event_in_thread(event, event_data):
+    event_thread = threading.Thread(target=fire_event, args=(event, event_data,))
+    event_thread.start()
 
 def init_subscriptions():
     subscribers = [database, detectify, slack_deployment, slack_error,
@@ -26,19 +34,19 @@ def only_accept_json_requests():
 @FLASK.route('/api/v1/deployment', methods=['PUT'])
 def new_deployment():
     deployment = request.get_json()
-    event_system.publish_event('deployment', deployment)
+    fire_event_in_thread('deployment', deployment)
     return '200 OK'
 
 @FLASK.route('/api/v1/error', methods=['PUT'])
 def new_error():
     error = request.get_json()
-    event_system.publish_event('error', error)
+    fire_event_in_thread('error', error)
     return '200 OK'
 
 @FLASK.route('/api/v1/recommendation', methods=['PUT'])
 def new_recommendation():
     recommendation = request.get_json()
-    event_system.publish_event('recommendation', recommendation)
+    fire_event_in_thread('recommendation', recommendation)
     return '200 OK'
 
 #
