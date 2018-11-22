@@ -13,6 +13,9 @@ class DeploymentUtilTest(unittest.TestCase):
         deployment['applicationPath'] = '/kth-azure-app/'
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://app.kth.se/kth-azure-app/_monitor')
+        deployment['cluster'] = 'stage'
+        monitor_url = deployment_util.get_full_monitor_url(deployment)
+        self.assertEqual(monitor_url, 'https://app-r.referens.sys.kth.se/kth-azure-app/_monitor')       
         deployment['monitorPath'] = 'https://absolute.path/kth-azure-app/_monitor'
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://absolute.path/kth-azure-app/_monitor')

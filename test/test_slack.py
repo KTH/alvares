@@ -23,11 +23,10 @@ class SlackTests(unittest.TestCase):
     def test_get_attachment(self):
         deployment = mock_data.get_deployment()
         attachment = slack_util.get_attachment(deployment)
-        log_link = ('https://graycloud.ite.kth.se/search?'
-                    'rangetype=relative&fields=message%2Csource&'
-                    'width=2560&highlightMessage=&relative=300'
-                    '&q=source%3Aactive+'
-                    'AND+image_name%3A/kth-azure-app%3A2.0.11_abc123%28.%2A%29/')
+        log_link = ('https://graycloud.ite.kth.se/search?rangetype=relative&'
+                    'fields=message%2Csource&width=2560&highlightMessage=&'
+                    'relative=3600&q=source%3Aactive+AND+image_name%3A'
+                    '/.%2Akth-azure-app%3A2.0.11_abc123.%2A/')
         self.assertEqual(attachment['author_name'], 'View logs for this deployment')
         self.assertEqual(attachment['text'], 'Application version: 2.0.11_abc123')
         self.assertEqual(attachment['title'], 'Application name: kth-azure-app')
