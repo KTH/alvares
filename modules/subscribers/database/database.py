@@ -92,10 +92,10 @@ def get_existing_collection(client, database, collection_name):
         raise Exception('Error while querying for collection "{}"'
                         .format(collection_name), query_err)
 
-def write_deployment(client, collection, application):
+def write_deployment(client, collection, deployment):
     global LOG # pylint: disable=W0603
     try:
-        LOG.info('Writing application "%s"', application)
-        client.CreateDocument(collection['_self'], application)
+        LOG.info('Writing deployment "%s"', deployment)
+        client.CreateDocument(collection['_self'], deployment)
     except docdb_errors.DocumentDBError as doc_err:
         raise Exception('Error when saving application to database', doc_err)

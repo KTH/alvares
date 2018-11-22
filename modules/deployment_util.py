@@ -108,7 +108,7 @@ def get_full_monitor_url(deployment):
 def get_full_application_url(deployment):
     if not path_is_relative(get_application_path(deployment)):
         return get_application_path(deployment)
-    host = get_host_for_application(get_monitor_path(deployment), get_cluster(deployment))
+    host = get_host_for_application(get_application_path(deployment), get_cluster(deployment))
     return combine_host_and_paths(host, get_application_path(deployment))
 
 def create_friendly_name(deployment):
