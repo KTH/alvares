@@ -7,6 +7,7 @@ RUN apk update && \
     apk upgrade
 
 COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
