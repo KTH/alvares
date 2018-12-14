@@ -6,7 +6,7 @@ def get_string_attribute(deployment, attribute):
     try:
         if not deployment[attribute]:
             return ''
-        return deployment[attribute]
+        return deployment[attribute].replace('"', '').strip()
     except KeyError:
         return ''
 
@@ -14,7 +14,7 @@ def get_list_attribute(deployment, attribute):
     try:
         if not deployment[attribute]:
             return []
-        return [item.rstrip() for item in deployment[attribute].split(',')]
+        return [item.replace('"', '').strip() for item in deployment[attribute].split(',')]
     except KeyError:
         return []
 
