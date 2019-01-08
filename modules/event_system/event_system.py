@@ -1,22 +1,28 @@
 __author__ = 'tinglev@kth.se'
 
+import logging
 from modules import environment
 
 subscribers = {} # pylint: disable=C0103
 
 def publish_event(event, data):
+    logger = logging.getLogger(__name__)
+    for function in get_all_event_functions(event):
+        try:
+            function(data)
+        except Exception: # pylint: disable=W0703
+            logger.exception('Caught exception when running subscription '
+                             'function for a module.')
+
+def get_all_event_functions(event):
     global subscribers # pylint: disable=W0603,C0103
-    for existing_event, function_list in subscribers.items():
-        if existing_event == event:
-            for function in function_list:
-                function(data)
+    if event in subscribers:
+        return subscribers[event]
+    return []
 
 def subscribe_to_event(event, function):
     global subscribers # pylint: disable=W0603,C0103
-    for existing_event, _ in subscribers.items():
-        if existing_event == event:
-            break
-    else:
+    if not get_all_event_functions(event):
         subscribers[event] = []
     subscribers[event].append(function)
 
