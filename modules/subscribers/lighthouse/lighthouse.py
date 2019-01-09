@@ -71,6 +71,6 @@ def get_payload(channel, deployment, report_path):
             'channels': channel,
             'filename': 'report.html',
             'filetype': 'html',
-            'file': io.BytesIO(report_file.read()),
+            'file': report_file,
             'title': f'Lighthouse report for application {image_name}'
         }
