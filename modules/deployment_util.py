@@ -18,6 +18,9 @@ def get_list_attribute(deployment, attribute):
     except KeyError:
         return []
 
+def get_test_accessibility(deployment):
+    return get_string_attribute(deployment, 'testAccessibility')
+
 def get_image_name(deployment):
     return get_string_attribute(deployment, 'imageName')
 

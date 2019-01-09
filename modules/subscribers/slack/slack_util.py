@@ -22,6 +22,20 @@ def get_attachment(deployment,
         "text": f"Application version: {application_version}"
     }
 
+def get_deployment_channels(deployment):
+    channels = []
+    channel_override = environment.get_env(environment.SLACK_CHANNEL_OVERRIDE)
+    if channel_override:
+        channels.append(channel_override)
+        return channels
+    for channel in environment.get_env_list(environment.SLACK_CHANNELS):
+        if channel not in channels:
+            channels.append(channel)
+    for channel in deployment_util.get_slack_channels(deployment):
+        if channel not in channels:
+            channels.append(channel)
+    return channels
+
 def get_payload_body(channel, text, username='Alvares',
                      icon=':no_entry:'): #pragma: no cover
     return {

@@ -52,6 +52,7 @@ class SlackTests(unittest.TestCase):
     @patch.object(slack_deployment, 'send_deployment_to_slack')
     def test_handle_deployment(self, mock_send):
         deployment = mock_data.get_deployment()
+        del os.environ[environment.SLACK_CHANNEL_OVERRIDE]
         os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
                                                   'T02KE/B4PH1/VmEd2c7')
         os.environ[environment.SLACK_CHANNELS] = '#zermatt,#developers'
@@ -64,6 +65,9 @@ class SlackTests(unittest.TestCase):
             call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
                  '#team-pipeline', deployment),
         ]
+        # Print actual calls - for debugging
+        #for c in mock_send.call_args_list:
+        #    print(c)
         mock_send.assert_has_calls(calls, any_order=True)
         mock_send.reset_mock()
         os.environ[environment.SLACK_CHANNEL_OVERRIDE] = '#override'
@@ -150,3 +154,17 @@ class SlackTests(unittest.TestCase):
                  'https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7', payload_2),
         ]
         mock_send.assert_has_calls(calls, any_order=True)
+
+    def test_get_deployment_channels(self):
+        deployment = mock_data.get_deployment()
+        channels = slack_util.get_deployment_channels(deployment)
+        self.assertEqual(channels, ['#team-pipeline', '#developers'])
+        os.environ[environment.SLACK_CHANNELS] = '#team-pipeline'
+        channels = slack_util.get_deployment_channels(deployment)
+        self.assertEqual(channels, ['#team-pipeline', '#developers'])
+        os.environ[environment.SLACK_CHANNELS] = '#team-pipeline, #general'
+        channels = slack_util.get_deployment_channels(deployment)
+        self.assertEqual(channels, ['#team-pipeline', '#general', '#developers'])
+        os.environ[environment.SLACK_CHANNEL_OVERRIDE] = '#override'
+        channels = slack_util.get_deployment_channels(deployment)
+        self.assertEqual(channels, ['#override'])

@@ -17,7 +17,8 @@ DEPLOYMENT_STRING = r"""
         "created": "",
         "importance": "high",
         "applicationPath": "/kth-azure-app",
-        "detectifyProfileTokens": "abc123xyz456,987mnb654vcx"
+        "detectifyProfileTokens": "abc123xyz456,987mnb654vcx",
+        "testAccessibility": "true"
     }
 """
 

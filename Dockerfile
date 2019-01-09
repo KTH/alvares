@@ -4,7 +4,8 @@ RUN mkdir /repo
 WORKDIR /repo
 
 RUN apk update && \
-    apk upgrade
+    apk upgrade && \
+    apk add docker
 
 COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock

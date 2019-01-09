@@ -17,30 +17,9 @@ def unsubscribe():
 def handle_deployment(deployment):
     global LOG # pylint: disable=W0603
     web_hook = environment.get_env(environment.SLACK_WEB_HOOK)
-    overridden = send_to_channel_override(web_hook, deployment)
-    if not overridden:
-        sent_to = send_to_global_channels(web_hook, deployment)
-        send_to_deployment_channels(web_hook, deployment, sent_to)
-    return deployment
-
-def send_to_global_channels(web_hook, deployment):
-    sent_to = []
-    for channel in environment.get_env_list(environment.SLACK_CHANNELS):
+    for channel in slack_util.get_deployment_channels(deployment):
         send_deployment_to_slack(web_hook, channel, deployment)
-        sent_to.append(channel)
-    return sent_to
-
-def send_to_channel_override(web_hook, deployment):
-    channel_override = environment.get_env(environment.SLACK_CHANNEL_OVERRIDE)
-    if channel_override:
-        send_deployment_to_slack(web_hook, channel_override, deployment)
-        return deployment
-    return None
-
-def send_to_deployment_channels(web_hook, deployment, already_sent_to):
-    for channel in deployment_util.get_slack_channels(deployment):
-        if not channel in already_sent_to:
-            send_deployment_to_slack(web_hook, channel, deployment)
+    return deployment
 
 def send_deployment_to_slack(web_hook, channel, deployment):
     global LOG # pylint: disable=W0603

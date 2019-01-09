@@ -17,6 +17,8 @@ DETECTIFY_CLUSTERS = 'DETECTIFY_CLUSTERS'
 SLACK_CHANNEL_OVERRIDE = 'SLACK_CHANNEL_OVERRIDE'
 SLACK_CHANNELS = 'SLACK_CHANNELS'
 SLACK_WEB_HOOK = 'SLACK_WEB_HOOK'
+SLACK_TOKEN = 'SLACK_TOKEN'
+SLACK_API_BASE_URL = 'SLACK_API_BASE_URL'
 DISABLED_SUBSCRIBERS = 'DISABLED_SUBSCRIBERS'
 SKIP_VALIDATION_TESTS = 'SKIP_VALIDATION_TESTS'
 VALIDATE_DEPLOYMENT_URL = 'VALIDATE_DEPLOYMENT_URL'
@@ -34,25 +36,25 @@ def get_env(name):
 
 def get_env_list(name):
     if os.environ.get(name):
-        return [ch.rstrip() for ch in os.environ.get(name).split(',')]
+        return [ch.strip() for ch in os.environ.get(name).split(',')]
     return []
 
 def get_env_with_default_value(name, default_value):
     value = os.environ.get(name)
     if not value:
         return default_value
-    return value
+    return value.strip()
 
 def use_debug(): # pragma: no cover
     return os.environ.get(DEBUG)
 
 def get_utr_clusters():
     clusters = os.environ.get(UTR_CLUSTERS)
-    return [cluster.rstrip() for cluster in clusters.split(',')]
+    return [cluster.strip() for cluster in clusters.split(',')]
 
 def get_utr_excluded_apps():
     excluded_apps = os.environ.get(UTR_EXCLUDED_APPS)
-    return [app.rstrip() for app in excluded_apps.split(',')]
+    return [app.strip() for app in excluded_apps.split(',')]
 
 def get_app_host(cluster_name):
     if cluster_name == "stage":
