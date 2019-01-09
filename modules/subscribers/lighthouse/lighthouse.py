@@ -52,7 +52,7 @@ def send_file_to_slack(channel, deployment, report_path):
     url = f'{api_base_url}/files.upload'
     headers = {'Content-type': 'multipart/form-data'}
     payload = get_payload(channel, deployment)
-    files = {'file': (report_path, open(report_path, 'rb').read().encode(), 'html')}
+    files = {'file': (report_path, open(report_path, 'rb').read(), 'html')}
     LOG.debug('File upload payload is: "%s"', payload)
     try:
         LOG.debug('Calling Slack with payload "%s"', payload)
