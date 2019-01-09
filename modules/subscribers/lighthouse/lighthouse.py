@@ -67,7 +67,7 @@ def get_payload(channel, deployment):
     return {
         'token': slack_token,
         'channels': channel,
-        'filename': 'lighthouse_report.html',
+        'filename': 'report.html',
         'filetype': 'html',
         'title': f'Lighthouse report for application {image_name}'
     }
