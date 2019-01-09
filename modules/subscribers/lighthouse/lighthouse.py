@@ -53,7 +53,7 @@ def send_file_to_slack(channel, deployment, report_path):
     #headers = {'Content-type': 'multipart/form-data'}
     headers = {}
     payload = get_payload(channel, deployment, report_path)
-    files = {'file': (report_path, open(report_path, 'rb'), 'html')}
+    files = {'file': (report_path, open(report_path, 'rb'))}
     LOG.debug('File upload payload is: "%s"', payload)
     LOG.debug('File data is: "%s"', files)
     try:
