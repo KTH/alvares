@@ -1,5 +1,7 @@
 __author__ = 'tinglev'
 
+import os
+import shutil
 import logging
 import requests
 import tempfile
@@ -27,7 +29,8 @@ def handle_deployment(deployment):
         return deployment
     app_url = deployment_util.get_full_application_url(deployment)
     if app_url:
-        with tempfile.mkdtemp() as tmp_dir:
+        try:
+            tmp_dir = tempfile.mkdtemp()
             LOG.debug('Temp dir created, running headless-lighthouse')
             process.run_with_output(f'docker run -e URL={app_url} '
                                     f'-v {tmp_dir}:/report '
@@ -35,6 +38,9 @@ def handle_deployment(deployment):
             report_path = f'{tmp_dir}/report.html'
             for channel in slack_util.get_deployment_channels(deployment):
                 send_file_to_slack(channel, deployment, report_path)
+        finally:
+            if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
+                shutil.rmtree(tmp_dir)
     return deployment
 
 def send_file_to_slack(channel, deployment, report_path):
