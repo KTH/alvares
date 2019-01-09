@@ -52,8 +52,9 @@ def send_file_to_slack(channel, deployment, report_path):
     url = f'{api_base_url}/files.upload'
     headers = {'Content-type': 'multipart/form-data'}
     payload = get_payload(channel, deployment)
-    files = {'file': (report_path, open(report_path, 'rb').read(), 'html')}
+    files = {'file': (report_path, open(report_path, 'rb'), 'html')}
     LOG.debug('File upload payload is: "%s"', payload)
+    LOG.debug('File data is: "%s"', files)
     try:
         LOG.debug('Calling Slack with payload "%s"', payload)
         response = requests.post(url, files=files, data=payload, headers=headers)
@@ -68,7 +69,5 @@ def get_payload(channel, deployment):
     return {
         'token': slack_token,
         'channels': channel,
-        'filename': 'report.html',
-        'filetype': 'html',
         'title': f'Lighthouse report for application {image_name}'
     }
