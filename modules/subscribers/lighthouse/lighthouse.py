@@ -65,12 +65,11 @@ def send_file_to_slack(channel, deployment, report_path):
 def get_payload(channel, deployment, report_path):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     image_name = deployment_util.get_image_name(deployment)
-    with open(report_path, 'rb') as report_file:
-        return {
-            'token': slack_token,
-            'channels': channel,
-            'filename': 'report.html',
-            'filetype': 'html',
-            'file': report_file,
-            'title': f'Lighthouse report for application {image_name}'
-        }
+    return {
+        'token': slack_token,
+        'channels': channel,
+        'filename': 'report.html',
+        'filetype': 'html',
+        'file': open(report_path, 'rb'),
+        'title': f'Lighthouse report for application {image_name}'
+    }
