@@ -50,25 +50,23 @@ def send_file_to_slack(channel, deployment, report_path):
     api_base_url = environment.get_env(environment.SLACK_API_BASE_URL)
     url = f'{api_base_url}/files.upload'
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
-    payload = get_payload(channel, deployment, report_path)
+    payload = get_payload(channel, deployment)
+    files = {'file': open(report_path, 'rb')}
     LOG.debug('File upload payload is: "%s"', payload)
     try:
         LOG.debug('Calling Slack with payload "%s"', payload)
-        response = requests.post(url, data=payload, headers=headers)
+        response = requests.post(url, files=files, data=payload, headers=headers)
         LOG.debug('Response was "%s"', response.text)
     except (HTTPError, ConnectTimeout, RequestException) as request_ex:
         LOG.error('Could not send slack notification to channel "%s": "%s"',
                   channel, request_ex)
 
-def get_payload(channel, deployment, report_path):
+def get_payload(channel, deployment):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     image_name = deployment_util.get_image_name(deployment)
-    with open(report_path, 'r') as report_file:
-        file_content = report_file.read().encode()
     return {
         'token': slack_token,
         'channels': channel,
-        'content': file_content,
         'filename': 'lighthouse_report.html',
         'filetype': 'html',
         'title': f'Lighthouse report for application {image_name}'
