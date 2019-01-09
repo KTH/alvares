@@ -32,9 +32,10 @@ def handle_deployment(deployment):
         try:
             tmp_dir = tempfile.mkdtemp()
             LOG.debug('Temp dir created, running headless-lighthouse')
-            process.run_with_output(f'docker run -e URL={app_url} '
-                                    f'-v {tmp_dir}:/report '
-                                    f'kthregistryv2.sys.kth.se/headless-lighthouse:1.0.8_578859d')
+            output = process.run_with_output(f'docker run -e URL={app_url} '
+                                             f'-v {tmp_dir}:/report '
+                                             f'kthregistryv2.sys.kth.se/headless-lighthouse:1.0.8_578859d')
+            LOG.debug('Output from lighthouse was: "%s"', output)
             report_path = f'{tmp_dir}/report.html'
             for channel in slack_util.get_deployment_channels(deployment):
                 send_file_to_slack(channel, deployment, report_path)
