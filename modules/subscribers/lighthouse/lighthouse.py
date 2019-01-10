@@ -6,6 +6,7 @@ import shutil
 import logging
 import requests
 import tempfile
+import datetime
 from requests import HTTPError, ConnectTimeout, RequestException
 from modules import environment
 from modules.subscribers.slack import slack_util
@@ -70,10 +71,15 @@ def get_payload(channel, deployment, report_path):
     app_version = deployment_util.get_application_version(deployment)
     app_url = deployment_util.get_full_application_url(deployment)
     return {
-        'filename': report_path,
+        'filename': create_file_name(deployment),
         'token': slack_token,
         'channels': channel,
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': f'This report was created by scanning {app_url}'
     }
+
+def create_file_name(deployment):
+    app_name = deployment_util.get_application_name(deployment)
+    date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
+    return f'report_{app_name}_{date_time}.html'
