@@ -77,7 +77,7 @@ def get_payload(channel, deployment, report_path):
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': (f'This report was created by scanning {app_url} and the total '
-                            'score for this report was {0:.2f}'
+                            'score for this report was {0:.2f}/5.0'
                             .format(parse_total_score(report_path)))
     }
 
@@ -90,19 +90,18 @@ def parse_total_score(report_path):
     total_score = 0.0
     with open(report_path, 'r') as report_file:
         content = report_file.read()
-        accessibility = re.search(r'"id":"accessibility","score":(.+?)}', content)
-        performance = re.search(r'"id":"performance","score":(.+?)}', content)
-        pwa = re.search(r'"id":"performance","score":(.+?)}', content)
-        best_practices = re.search(r'"id":"best-practices","score":(.+?)}', content)
-        seo = re.search(r'"id":"best-practices","score":(.+?)}', content)
-        if accessibility:
-            total_score += float(accessibility.group(1))
-        if performance:
-            total_score += float(performance.group(1))
-        if pwa:
-            total_score += float(pwa.group(1))
-        if best_practices:
-            total_score += float(best_practices.group(1))
-        if seo:
-            total_score += float(seo.group(1))
+        total_score += get_score(r'"id":"accessibility","score":(.+?)}', content)
+        total_score += get_score(r'"id":"performance","score":(.+?)}', content)
+        total_score += get_score(r'"id":"pwa","score":(.+?)}', content)
+        total_score += get_score(r'"id":"best-practices","score":(.+?)}', content)
+        total_score += get_score(r'"id":"seo","score":(.+?)}', content)
     return total_score
+
+def get_score(pattern, content):
+    value = re.search(pattern, content)
+    if value:
+        try:
+            return float(value.group(1))
+        except ValueError:
+            return 0
+    return 0

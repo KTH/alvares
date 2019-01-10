@@ -8,4 +8,4 @@ class TestSchemaValidation(unittest.TestCase):
 
     def test_parse_total_score(self):
         result = lighthouse.parse_total_score(f'{root_path.PROJECT_ROOT}/test/test_report.html')
-        self.assertEqual(result, 3.7700000000000005)
+        self.assertEqual(result, 3.58)
