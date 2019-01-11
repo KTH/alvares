@@ -42,7 +42,7 @@ def handle_deployment(deployment):
                                              f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
             LOG.debug('Output from lighthouse was: "%s"', output)
             report_path = f'{tmp_dir}/report.html'
-            box_link = upload_to_box(report_path)
+            box_link = upload_to_box(report_path, deployment)
             for channel in slack_util.get_deployment_channels(deployment):
                 send_file_to_slack(channel, deployment, report_path, box_link)
         finally:
@@ -50,12 +50,12 @@ def handle_deployment(deployment):
                 shutil.rmtree(tmp_dir)
     return deployment
 
-def upload_to_box(report_path):
+def upload_to_box(report_path, deployment):
     box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
     box_auth_json = json.loads(box_auth_string.replace("'", ""))
     box_sdk = JWTAuth.from_settings_dictionary(box_auth_json)
     client = BoxClient(box_sdk)
-    file_name = create_file_name(create_file_name)
+    file_name = create_file_name(deployment)
     box_file = client.folder('63669613923').upload(report_path, file_name)
     return box_file.get_sharable_link(access='open')
 
