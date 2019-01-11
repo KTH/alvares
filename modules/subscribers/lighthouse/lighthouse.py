@@ -58,7 +58,7 @@ def upload_to_box(report_path, deployment):
     file_name = create_file_name(deployment)
     # Folder id 0 is the root folder
     box_file = client.folder('0').upload(report_path, file_name)
-    return box_file.get_sharable_link(access='open')
+    return box_file.get_shared_link(access='open')
 
 def send_file_to_slack(channel, deployment, report_path, box_link):
     global LOG
