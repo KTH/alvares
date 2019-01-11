@@ -20,6 +20,7 @@ flask = "==1.0.2"
 pydocumentdb = "==2.3.3"
 requests = "==2.20.1"
 coloredlogs = "==10.0"
+boxsdk = {version = "==2.0.0", extras = ["jwt"]}
 
 [requires]
 

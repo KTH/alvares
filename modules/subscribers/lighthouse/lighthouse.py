@@ -2,11 +2,14 @@ __author__ = 'tinglev'
 
 import os
 import re
+import json
 import shutil
 import logging
 import tempfile
 import datetime
 import requests
+from boxsdk import JWTAuth
+from boxsdk import Client as BoxClient
 from requests import HTTPError, ConnectTimeout, RequestException
 from modules import environment
 from modules.subscribers.slack import slack_util
@@ -39,21 +42,31 @@ def handle_deployment(deployment):
                                              f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
             LOG.debug('Output from lighthouse was: "%s"', output)
             report_path = f'{tmp_dir}/report.html'
+            box_link = upload_to_box(report_path)
             for channel in slack_util.get_deployment_channels(deployment):
-                send_file_to_slack(channel, deployment, report_path)
+                send_file_to_slack(channel, deployment, report_path, box_link)
         finally:
             if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir)
     return deployment
 
-def send_file_to_slack(channel, deployment, report_path):
+def upload_to_box(report_path):
+    box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
+    box_auth_json = json.loads(box_auth_string)
+    box_sdk = JWTAuth.from_settings_dictionary(box_auth_json)
+    client = BoxClient(box_sdk)
+    file_name = create_file_name(create_file_name)
+    box_file = client.folder('63669613923').upload(report_path, file_name)
+    return box_file.get_sharable_link(access='open')
+
+def send_file_to_slack(channel, deployment, report_path, box_link):
     global LOG
     LOG.debug('Starting upload of lighthouse report to Slack')
     api_base_url = environment.get_env(environment.SLACK_API_BASE_URL)
     url = f'{api_base_url}/files.upload'
     #headers = {'Content-type': 'multipart/form-data'}
     headers = {}
-    payload = get_payload(channel, deployment, report_path)
+    payload = get_payload(channel, deployment, report_path, box_link)
     files = {'file': (report_path, open(report_path, 'rb'), 'binary')}
     LOG.debug('File upload payload is: "%s"', payload)
     LOG.debug('File data is: "%s"', files)
@@ -65,7 +78,7 @@ def send_file_to_slack(channel, deployment, report_path):
         LOG.error('Could not send slack notification to channel "%s": "%s"',
                   channel, request_ex)
 
-def get_payload(channel, deployment, report_path):
+def get_payload(channel, deployment, report_path, box_link):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     app_name = deployment_util.get_application_name(deployment)
     app_version = deployment_util.get_application_version(deployment)
@@ -77,14 +90,15 @@ def get_payload(channel, deployment, report_path):
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': (f'This report was created by scanning {app_url} and the total '
-                            'score for this report was {0:.2f}/5.0'
-                            .format(parse_total_score(report_path)))
+                            'score for this report was {0:.2f}/5.0. Link to report in box is {}'
+                            .format(parse_total_score(report_path), box_link))
     }
 
 def create_file_name(deployment):
+    cluster_name = deployment_util.get_cluster(deployment)
     app_name = deployment_util.get_application_name(deployment)
     date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
-    return f'report_{app_name}_{date_time}.html'
+    return f'report_{app_name}_{cluster_name}_{date_time}.html'
 
 def parse_total_score(report_path):
     total_score = 0.0
