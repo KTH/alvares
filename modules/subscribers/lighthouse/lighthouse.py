@@ -91,7 +91,7 @@ def get_payload(channel, deployment, report_path, box_link):
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': (f'This report was created by scanning {app_url} and the total '
-                            'score for this report was {0:.2f}/5.0. Link to report in box is {}'
+                            'score for this report was {0:.2f}/5.0. Link to report in box is {1}'
                             .format(parse_total_score(report_path), box_link))
     }
 
