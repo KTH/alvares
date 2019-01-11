@@ -52,7 +52,7 @@ def handle_deployment(deployment):
 
 def upload_to_box(report_path):
     box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
-    box_auth_json = json.loads(box_auth_string)
+    box_auth_json = json.loads(box_auth_string.replace("'", ""))
     box_sdk = JWTAuth.from_settings_dictionary(box_auth_json)
     client = BoxClient(box_sdk)
     file_name = create_file_name(create_file_name)
