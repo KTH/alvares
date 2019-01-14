@@ -42,9 +42,9 @@ def handle_deployment(deployment):
                                              f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
             LOG.debug('Output from lighthouse was: "%s"', output)
             report_path = f'{tmp_dir}/report.html'
-            box_link = upload_to_box(report_path, deployment)
+            #box_link = upload_to_box(report_path, deployment)
             for channel in slack_util.get_deployment_channels(deployment):
-                send_file_to_slack(channel, deployment, report_path, box_link)
+                send_file_to_slack(channel, deployment, report_path)
         finally:
             if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir)
@@ -60,14 +60,14 @@ def upload_to_box(report_path, deployment):
     box_file = client.folder('0').upload(report_path, file_name)
     return box_file.get_shared_link(access='open')
 
-def send_file_to_slack(channel, deployment, report_path, box_link):
+def send_file_to_slack(channel, deployment, report_path):
     global LOG
     LOG.debug('Starting upload of lighthouse report to Slack')
     api_base_url = environment.get_env(environment.SLACK_API_BASE_URL)
     url = f'{api_base_url}/files.upload'
     #headers = {'Content-type': 'multipart/form-data'}
     headers = {}
-    payload = get_payload(channel, deployment, report_path, box_link)
+    payload = get_payload(channel, deployment, report_path)
     files = {'file': (report_path, open(report_path, 'rb'), 'binary')}
     LOG.debug('File upload payload is: "%s"', payload)
     LOG.debug('File data is: "%s"', files)
@@ -79,7 +79,7 @@ def send_file_to_slack(channel, deployment, report_path, box_link):
         LOG.error('Could not send slack notification to channel "%s": "%s"',
                   channel, request_ex)
 
-def get_payload(channel, deployment, report_path, box_link):
+def get_payload(channel, deployment, report_path):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     app_name = deployment_util.get_application_name(deployment)
     app_version = deployment_util.get_application_version(deployment)
@@ -91,8 +91,8 @@ def get_payload(channel, deployment, report_path, box_link):
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': (f'This report was created by scanning {app_url} and the total '
-                            'score for this report was {0:.2f}/5.0. Link to report in box is {1}'
-                            .format(parse_total_score(report_path), box_link))
+                            'score for this report was {0:.2f}/5.0'
+                            .format(parse_total_score(report_path)))
     }
 
 def create_file_name(deployment):
