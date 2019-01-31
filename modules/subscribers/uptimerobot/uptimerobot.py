@@ -37,7 +37,7 @@ def create_slack_payload(message, channel):
     }
 
 def call_slack_channel_with_monitor_url(deployment):
-    message = (f'*{create_friendly_name(deployment)}* in '
+    message = (f'*{deployment_util.create_friendly_name(deployment)}* in '
                f'*{deployment_util.get_cluster(deployment)}* is '
                f'UpTimeRobot monitored using {deployment_util.get_full_monitor_url(deployment)}')
     for channel in deployment_util.get_slack_channels(deployment):
