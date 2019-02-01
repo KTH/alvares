@@ -35,13 +35,17 @@ def only_accept_json_requests():
 
 @FLASK.route('/api/v1/deployment', methods=['PUT'])
 def new_deployment():
+    log = logging.getLogger(__name__)
     deployment = request.get_json()
+    log.debug('Got deployment: "%s"', deployment)
     fire_event_in_thread('deployment', deployment)
     return '200 OK'
 
 @FLASK.route('/api/v1/error', methods=['PUT'])
 def new_error():
+    log = logging.getLogger(__name__)
     error = request.get_json()
+    log.debug('Got error: "%s"', error)
     fire_event_in_thread('error', error)
     return '200 OK'
 
