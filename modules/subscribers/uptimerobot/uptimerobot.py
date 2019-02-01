@@ -140,6 +140,10 @@ def select_alert_contact(deployment):
         for channel in slack_channels:
             if channel.replace('#', '') == contact['friendly_name'].replace('#', ''):
                 return contact['id']
+    # If no match is found default to #team-pipeline
+    for contact in contacts:
+        if contact['friendly_name'] == '#team-pipeline':
+            return contact['id']
     return -1
 
 def call_endpoint(api_url, payload):
