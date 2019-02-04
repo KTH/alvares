@@ -52,7 +52,7 @@ def handle_deployment(deployment):
     return deployment
 
 def get_urls_to_scan(deployment):
-    explicit_urls = deployment_util.get_test_accessibility(deployment)
+    explicit_urls = deployment_util.get_accessibility_urls(deployment)
     if explicit_urls:
         return explicit_urls
     else:
