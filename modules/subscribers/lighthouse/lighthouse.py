@@ -45,7 +45,7 @@ def handle_deployment(deployment):
                 report_path = f'{tmp_dir}/report.html'
                 #box_link = upload_to_box(report_path, deployment)
                 for channel in slack_util.get_deployment_channels(deployment):
-                    send_file_to_slack(channel, deployment, report_path)
+                    send_file_to_slack(channel, deployment, report_path, url)
         finally:
             if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir)
@@ -68,14 +68,14 @@ def upload_to_box(report_path, deployment):
     box_file = client.folder('0').upload(report_path, file_name)
     return box_file.get_shared_link(access='open')
 
-def send_file_to_slack(channel, deployment, report_path):
+def send_file_to_slack(channel, deployment, report_path, url):
     global LOG
     LOG.debug('Starting upload of lighthouse report to Slack')
     api_base_url = environment.get_env(environment.SLACK_API_BASE_URL)
     url = f'{api_base_url}/files.upload'
     #headers = {'Content-type': 'multipart/form-data'}
     headers = {}
-    payload = get_payload(channel, deployment, report_path)
+    payload = get_payload(channel, deployment, report_path, url)
     files = {'file': (report_path, open(report_path, 'rb'), 'binary')}
     LOG.debug('File upload payload is: "%s"', payload)
     LOG.debug('File data is: "%s"', files)
@@ -87,18 +87,17 @@ def send_file_to_slack(channel, deployment, report_path):
         LOG.error('Could not send slack notification to channel "%s": "%s"',
                   channel, request_ex)
 
-def get_payload(channel, deployment, report_path):
+def get_payload(channel, deployment, report_path, url):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     app_name = deployment_util.get_application_name(deployment)
     app_version = deployment_util.get_application_version(deployment)
-    app_url = deployment_util.get_full_application_url(deployment)
     return {
         'filename': create_file_name(deployment),
         'token': slack_token,
         'channels': channel,
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
-        'initial_comment': (f'This report was created by scanning {app_url} and the total '
+        'initial_comment': (f'This report was created by scanning {url} and the total '
                             'score for this report was {0:.2f}/5.0'
                             .format(parse_total_score(report_path)))
     }
