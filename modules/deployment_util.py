@@ -21,6 +21,9 @@ def get_list_attribute(deployment, attribute):
 def get_test_accessibility(deployment):
     return get_string_attribute(deployment, 'testAccessibility')
 
+def get_accessibility_urls(deployment):
+    return get_list_attribute(deployment, 'accessibilityUrls')
+
 def get_image_name(deployment):
     return get_string_attribute(deployment, 'imageName')
 

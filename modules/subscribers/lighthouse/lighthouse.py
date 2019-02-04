@@ -32,23 +32,31 @@ def handle_deployment(deployment):
     if not environment.get_env(environment.SLACK_TOKEN):
         LOG.info('No SLACK_TOKEN env provided. Cant run lighthouse')
         return deployment
-    app_url = deployment_util.get_full_application_url(deployment)
-    if app_url:
+    urls = get_urls_to_scan(deployment)
+    if urls:
         try:
             tmp_dir = tempfile.mkdtemp()
-            LOG.debug('Temp dir created, running headless-lighthouse')
-            output = process.run_with_output(f'docker run -e URL={app_url} '
-                                             f'-v {tmp_dir}:/report '
-                                             f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
-            LOG.debug('Output from lighthouse was: "%s"', output)
-            report_path = f'{tmp_dir}/report.html'
-            #box_link = upload_to_box(report_path, deployment)
-            for channel in slack_util.get_deployment_channels(deployment):
-                send_file_to_slack(channel, deployment, report_path)
+            for url in urls:
+                LOG.debug('Temp dir created, running headless-lighthouse')
+                output = process.run_with_output(f'docker run -e URL={url} '
+                                                 f'-v {tmp_dir}:/report '
+                                                 f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
+                LOG.debug('Output from lighthouse was: "%s"', output)
+                report_path = f'{tmp_dir}/report.html'
+                #box_link = upload_to_box(report_path, deployment)
+                for channel in slack_util.get_deployment_channels(deployment):
+                    send_file_to_slack(channel, deployment, report_path)
         finally:
             if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir)
     return deployment
+
+def get_urls_to_scan(deployment):
+    explicit_urls = deployment_util.get_test_accessibility(deployment)
+    if explicit_urls:
+        return explicit_urls
+    else:
+        return [deployment_util.get_full_application_url(deployment)]
 
 def upload_to_box(report_path, deployment):
     box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
