@@ -32,20 +32,20 @@ def handle_deployment(deployment):
     if not environment.get_env(environment.SLACK_TOKEN):
         LOG.info('No SLACK_TOKEN env provided. Cant run lighthouse')
         return deployment
-    urls = get_urls_to_scan(deployment)
-    if urls:
+    urls_to_scan = get_urls_to_scan(deployment)
+    if urls_to_scan:
         try:
             tmp_dir = tempfile.mkdtemp()
-            for url in urls:
+            for scan_url in urls_to_scan:
                 LOG.debug('Temp dir created, running headless-lighthouse')
-                output = process.run_with_output(f'docker run -e URL={url} '
+                output = process.run_with_output(f'docker run -e URL={scan_url} '
                                                  f'-v {tmp_dir}:/report '
                                                  f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
                 LOG.debug('Output from lighthouse was: "%s"', output)
                 report_path = f'{tmp_dir}/report.html'
                 #box_link = upload_to_box(report_path, deployment)
                 for channel in slack_util.get_deployment_channels(deployment):
-                    send_file_to_slack(channel, deployment, report_path, url)
+                    send_file_to_slack(channel, deployment, report_path, scan_url)
         finally:
             if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
                 shutil.rmtree(tmp_dir)
@@ -68,26 +68,26 @@ def upload_to_box(report_path, deployment):
     box_file = client.folder('0').upload(report_path, file_name)
     return box_file.get_shared_link(access='open')
 
-def send_file_to_slack(channel, deployment, report_path, url):
+def send_file_to_slack(channel, deployment, report_path, scanned_url):
     global LOG
     LOG.debug('Starting upload of lighthouse report to Slack')
     api_base_url = environment.get_env(environment.SLACK_API_BASE_URL)
-    url = f'{api_base_url}/files.upload'
+    api_url = f'{api_base_url}/files.upload'
     #headers = {'Content-type': 'multipart/form-data'}
     headers = {}
-    payload = get_payload(channel, deployment, report_path, url)
+    payload = get_payload(channel, deployment, report_path, scanned_url)
     files = {'file': (report_path, open(report_path, 'rb'), 'binary')}
     LOG.debug('File upload payload is: "%s"', payload)
     LOG.debug('File data is: "%s"', files)
     try:
         LOG.debug('Calling Slack with payload "%s"', payload)
-        response = requests.post(url, files=files, data=payload, headers=headers)
+        response = requests.post(api_url, files=files, data=payload, headers=headers)
         LOG.debug('Response was "%s"', response.text)
     except (HTTPError, ConnectTimeout, RequestException) as request_ex:
         LOG.error('Could not send slack notification to channel "%s": "%s"',
                   channel, request_ex)
 
-def get_payload(channel, deployment, report_path, url):
+def get_payload(channel, deployment, report_path, scanned_url):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
     app_name = deployment_util.get_application_name(deployment)
     app_version = deployment_util.get_application_version(deployment)
@@ -97,7 +97,7 @@ def get_payload(channel, deployment, report_path, url):
         'channels': channel,
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
-        'initial_comment': (f'This report was created by scanning {url} and the total '
+        'initial_comment': (f'This report was created by scanning {scanned_url} and the total '
                             'score for this report was {0:.2f}/5.0'
                             .format(parse_total_score(report_path)))
     }
