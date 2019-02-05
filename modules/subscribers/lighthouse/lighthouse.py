@@ -16,8 +16,6 @@ from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules import deployment_util, process
 
-LOG = logging.getLogger(__name__)
-
 def subscribe():
     subscribe_to_event('deployment', handle_deployment)
 
@@ -25,40 +23,44 @@ def unsubscribe():
     unsubscribe_from_event('deployment', handle_deployment)
 
 def handle_deployment(deployment):
-    global LOG
+    logger = logging.getLogger(__name__)
     if not deployment_util.get_test_accessibility(deployment):
-        LOG.debug('testAccessibility not set - skipping Lighthouse')
+        logger.debug('testAccessibility not set - skipping Lighthouse')
         return deployment
     if not environment.get_env(environment.SLACK_TOKEN):
-        LOG.info('No SLACK_TOKEN env provided. Cant run lighthouse')
+        logger.info('No SLACK_TOKEN env provided. Cant run lighthouse')
         return deployment
     app_url = deployment_util.get_full_application_url(deployment)
     if app_url:
-        try:
-            tmp_dir = tempfile.mkdtemp()
-            LOG.debug('Temp dir created, running headless-lighthouse')
-            output = process.run_with_output(f'docker run -e URL={app_url} '
-                                             f'-v {tmp_dir}:/report '
-                                             f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
-            LOG.debug('Output from lighthouse was: "%s"', output)
-            report_path = f'{tmp_dir}/report.html'
-            #box_link = upload_to_box(report_path, deployment)
-            for channel in slack_util.get_deployment_channels(deployment):
-                send_file_to_slack(channel, deployment, report_path)
-        finally:
-            if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
-                shutil.rmtree(tmp_dir)
+        process_url(deployment, app_url)
     return deployment
 
-def upload_to_box(report_path, deployment):
-    box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
-    box_auth_json = json.loads(box_auth_string.replace("'", ""))
-    box_sdk = JWTAuth.from_settings_dictionary(box_auth_json)
-    client = BoxClient(box_sdk)
-    file_name = create_file_name(deployment)
-    # Folder id 0 is the root folder
-    box_file = client.folder('0').upload(report_path, file_name)
-    return box_file.get_shared_link(access='open')
+def process_url(deployment, url):
+    logger = logging.getLogger(__name__)
+    try:
+        tmp_dir = tempfile.mkdtemp()
+        logger.debug('Temp dir created, running headless-lighthouse')
+        output = process.run_with_output(f'docker run -e URL={app_url} '
+                                            f'-v {tmp_dir}:/report '
+                                            f'docker.io/kthse/headless-lighthouse:1.0.10_61260d1')
+        logger.debug('Output from lighthouse was: "%s"', output)
+        report_path = f'{tmp_dir}/report.html'
+        #box_link = upload_to_box(report_path, deployment)
+        for channel in slack_util.get_deployment_channels(deployment):
+            send_file_to_slack(channel, deployment, report_path)
+    finally:
+        if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
+            shutil.rmtree(tmp_dir)    
+
+# def upload_to_box(report_path, deployment):
+#     box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
+#     box_auth_json = json.loads(box_auth_string.replace("'", ""))
+#     box_sdk = JWTAuth.from_settings_dictionary(box_auth_json)
+#     client = BoxClient(box_sdk)
+#     file_name = create_file_name(deployment)
+#     # Folder id 0 is the root folder
+#     box_file = client.folder('0').upload(report_path, file_name)
+#     return box_file.get_shared_link(access='open')
 
 def send_file_to_slack(channel, deployment, report_path):
     global LOG
@@ -98,8 +100,11 @@ def get_payload(channel, deployment, report_path):
 def create_file_name(deployment):
     cluster_name = deployment_util.get_cluster(deployment)
     app_name = deployment_util.get_application_name(deployment)
-    date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
+    date_time = get_current_date_time()
     return f'report_{app_name}_{cluster_name}_{date_time}.html'
+
+def get_current_date_time():
+    return datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
 
 def parse_total_score(report_path):
     total_score = 0.0
