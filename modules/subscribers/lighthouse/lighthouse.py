@@ -41,7 +41,7 @@ def process_url_to_scan(deployment, url_to_scan):
     try:
         tmp_dir = tempfile.mkdtemp()
         logger.debug('Temp dir created, running headless-lighthouse')
-        image = 'docker.io/kthse/headless-lighthouse:1.0.10_61260d1'
+        image = environment.get_env(environment.LIGHTHOUSE_IMAGE)
         output = process.run_with_output(f'docker run -e URL={url_to_scan} '
                                          f'-v {tmp_dir}:/report '
                                          f'{image}')
@@ -101,7 +101,7 @@ def get_payload(channel, deployment, report_path, scanned_url):
         'filetype': 'binary',
         'title': f'Lighthouse report for application {app_name}:{app_version}',
         'initial_comment': (f'This report was created by scanning {scanned_url} and the total '
-                            'score for this report was {0:.2f}/5.0'
+                            'score for this report was {0:.2f}/4.0'
                             .format(parse_total_score(report_path)))
     }
 
@@ -120,7 +120,7 @@ def parse_total_score(report_path):
         content = report_file.read()
         total_score += get_score(r'"id":"accessibility","score":(.+?)}', content)
         total_score += get_score(r'"id":"performance","score":(.+?)}', content)
-        total_score += get_score(r'"id":"pwa","score":(.+?)}', content)
+        #total_score += get_score(r'"id":"pwa","score":(.+?)}', content)
         total_score += get_score(r'"id":"best-practices","score":(.+?)}', content)
         total_score += get_score(r'"id":"seo","score":(.+?)}', content)
     return total_score

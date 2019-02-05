@@ -10,7 +10,7 @@ class TestSchemaValidation(unittest.TestCase):
 
     def test_parse_total_score(self):
         result = lighthouse.parse_total_score(f'{root_path.PROJECT_ROOT}/test/test_report.html')
-        self.assertEqual(result, 3.58)
+        self.assertEqual(result, 3.04)
 
     def test_create_file_name(self):
         deployment = mock_data.get_deployment()
