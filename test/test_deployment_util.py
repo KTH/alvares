@@ -19,6 +19,9 @@ class DeploymentUtilTest(unittest.TestCase):
         deployment['monitorPath'] = 'https://absolute.path/kth-azure-app/_monitor'
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://absolute.path/kth-azure-app/_monitor')
+        del deployment['monitorPath']
+        monitor_url = deployment_util.get_full_monitor_url(deployment)
+        self.assertEqual(monitor_url, 'https://app-r.referens.sys.kth.se/kth-azure-app/_monitor')
 
     def test_get_full_application_url(self):
         deployment = mock_data.get_deployment()
@@ -33,6 +36,9 @@ class DeploymentUtilTest(unittest.TestCase):
         deployment['applicationPath'] = 'https://absolute.path/kth-azure-app/'
         application_url = deployment_util.get_full_application_url(deployment)
         self.assertEqual(application_url, 'https://absolute.path/kth-azure-app/')
+        del deployment['applicationPath']
+        application_url = deployment_util.get_full_application_url(deployment)
+        self.assertEqual(application_url, '')
 
     def test_create_friendly_name(self):
         deployment = mock_data.get_deployment()
