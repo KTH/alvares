@@ -37,10 +37,7 @@ def get_application_path(deployment):
     return get_string_attribute(deployment, 'applicationPath')
 
 def get_monitor_path(deployment):
-    monitor_path = get_string_attribute(deployment, 'monitorPath')
-    if not monitor_path:
-        return '/_monitor'
-    return monitor_path
+    return get_string_attribute(deployment, 'monitorPath')
 
 def get_slack_channels(deployment):
     return get_list_attribute(deployment, 'slackChannels')

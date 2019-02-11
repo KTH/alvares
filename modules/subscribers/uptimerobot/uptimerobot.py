@@ -49,7 +49,14 @@ def should_monitor(deployment):
     published = has_application_path(deployment)
     cluster_ok = should_monitor_cluster(deployment)
     app_excluded = app_is_excluded(deployment)
-    return published and cluster_ok and not app_excluded
+    uses_monitor = has_monitor_url(deployment)
+    return published and cluster_ok and not app_excluded and uses_monitor
+
+def has_monitor_url(deployment):
+    monitor_url = deployment_util.get_full_monitor_url(deployment)
+    if monitor_url:
+        return True
+    return False
 
 def app_is_excluded(deployment):
     global LOG # pylint: disable=W0603
