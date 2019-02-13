@@ -1,6 +1,9 @@
 __author__ = 'tinglev@kth.se'
 
+import logging
 from modules import environment
+
+LOG = logging.getLogger(__name__)
 
 def get_string_attribute(deployment, attribute):
     try:
@@ -107,7 +110,13 @@ def combine_host_and_paths(host, *paths):
 def get_full_monitor_url(deployment):
     if not path_is_relative(get_monitor_path(deployment)):
         return get_monitor_path(deployment)
+    
     host = get_host_for_application(get_application_path(deployment), get_cluster(deployment))
+    
+    LOG.info('get_full_monitor_url host: "%s"', host)
+    LOG.info('get_full_monitor_url path: "%s"', get_application_path(deployment))
+    LOG.info('get_full_monitor_url monitor: "%s"', get_monitor_path(deployment))
+
     return combine_host_and_paths(host, get_application_path(deployment),
                                   get_monitor_path(deployment))
 

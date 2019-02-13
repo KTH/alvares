@@ -59,6 +59,7 @@ def should_monitor(deployment):
     return published and cluster_ok and not app_excluded and uses_monitor
 
 def has_monitor_url(deployment):
+    LOG.info('deployment: "%s"', deployment)
     monitor_url = deployment_util.get_full_monitor_url(deployment)
     if monitor_url:
         return True
