@@ -50,6 +50,12 @@ def should_monitor(deployment):
     cluster_ok = should_monitor_cluster(deployment)
     app_excluded = app_is_excluded(deployment)
     uses_monitor = has_monitor_url(deployment)
+
+    LOG.info('should_monitor-published: "%s"', published)
+    LOG.info('should_monitor-cluster_ok: "%s"', cluster_ok)
+    LOG.info('should_monitor-app_excluded: "%s"', app_excluded)
+    LOG.info('should_monitor-uses_monitor: "%s"', uses_monitor)
+
     return published and cluster_ok and not app_excluded and uses_monitor
 
 def has_monitor_url(deployment):
