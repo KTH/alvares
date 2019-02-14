@@ -109,6 +109,7 @@ def combine_host_and_paths(host, *paths):
 
 def get_full_monitor_url(deployment):
     
+    LOG.info('get_full_monitor_url get_monitor_path: "%s"', get_monitor_path(deployment))
     LOG.info('get_full_monitor_url path_is_relative: "%s"', path_is_relative(get_monitor_path(deployment)))
     LOG.info('get_full_monitor_url get_monitor_path: "%s"', get_monitor_path(deployment))
 

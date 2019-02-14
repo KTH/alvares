@@ -10,18 +10,33 @@ class DeploymentUtilTest(unittest.TestCase):
         deployment = mock_data.get_deployment()
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://app.kth.se/kth-azure-app/_monitor')
+    
+    def test_get_full_monitor_url_applicationPath(self):
+        deployment = mock_data.get_deployment()
         deployment['applicationPath'] = '/kth-azure-app/'
+
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://app.kth.se/kth-azure-app/_monitor')
+
+    def test_get_full_monitor_url_is_stage(self):
+        deployment = mock_data.get_deployment()
         deployment['cluster'] = 'stage'
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://app-r.referens.sys.kth.se/kth-azure-app/_monitor')
+
+    def test_get_full_monitor_url_monitorPath(self):
+        deployment = mock_data.get_deployment()
         deployment['monitorPath'] = 'https://absolute.path/kth-azure-app/_monitor'
         monitor_url = deployment_util.get_full_monitor_url(deployment)
         self.assertEqual(monitor_url, 'https://absolute.path/kth-azure-app/_monitor')
+
+    def test_get_full_monitor_url_no_monitorPath(self):
+        deployment = mock_data.get_deployment()
         del deployment['monitorPath']
         monitor_url = deployment_util.get_full_monitor_url(deployment)
-        self.assertEqual(monitor_url, 'https://app-r.referens.sys.kth.se/kth-azure-app/_monitor')
+        # No monitor url when monitorPath is empty,
+        # Later this should default to https://app-r.referens.sys.kth.se/kth-azure-app/_monitor agina.
+        self.assertEqual(monitor_url, '')
 
     def test_get_full_application_url(self):
         deployment = mock_data.get_deployment()
