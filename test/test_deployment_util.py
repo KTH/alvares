@@ -38,6 +38,17 @@ class DeploymentUtilTest(unittest.TestCase):
         # Later this should default to https://app-r.referens.sys.kth.se/kth-azure-app/_monitor agina.
         self.assertEqual(monitor_url, '')
 
+    def test_monitor_path_default_path(self):
+        deployment = mock_data.get_deployment()
+        expected_url = '/_monitor'
+        self.assertEqual(expected_url, deployment_util.get_monitor_path(deployment))
+
+    def test_monitor_path_explicit_path(self):
+        deployment = mock_data.get_deployment()
+        expected_url = 'https://absolute.path/kth-azure-app/_monitor'
+        deployment['monitorPath'] = expected_url
+        self.assertEqual(expected_url, deployment_util.get_monitor_path(deployment))
+
     def test_get_full_application_url(self):
         deployment = mock_data.get_deployment()
         application_url = deployment_util.get_full_application_url(deployment)
