@@ -40,7 +40,10 @@ def get_application_path(deployment):
     return get_string_attribute(deployment, 'applicationPath')
 
 def get_monitor_path(deployment):
-    return get_string_attribute(deployment, 'monitorPath')
+    result = get_string_attribute(deployment, 'monitorPath')
+    if result is None:
+        result = '/_monitor'
+    return result
 
 def get_slack_channels(deployment):
     return get_list_attribute(deployment, 'slackChannels')
@@ -109,19 +112,11 @@ def combine_host_and_paths(host, *paths):
 
 def get_full_monitor_url(deployment):
     
-    LOG.info('get_full_monitor_url get_monitor_path: "%s"', get_monitor_path(deployment))
-    LOG.info('get_full_monitor_url path_is_relative: "%s"', path_is_relative(get_monitor_path(deployment)))
-    LOG.info('get_full_monitor_url get_monitor_path: "%s"', get_monitor_path(deployment))
-
     if not path_is_relative(get_monitor_path(deployment)):
         return get_monitor_path(deployment)
     
     host = get_host_for_application(get_application_path(deployment), get_cluster(deployment))
     
-    LOG.info('get_full_monitor_url host: "%s"', host)
-    LOG.info('get_full_monitor_url path: "%s"', get_application_path(deployment))
-    LOG.info('get_full_monitor_url monitor: "%s"', get_monitor_path(deployment))
-
     return combine_host_and_paths(host, get_application_path(deployment),
                                   get_monitor_path(deployment))
 
