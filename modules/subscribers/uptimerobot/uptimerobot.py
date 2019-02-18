@@ -124,10 +124,19 @@ def add_or_edit_monitor(deployment):
         LOG.error('Could not add or edit monitor for: "%s"',
                   format(deployment.monitor_url), exc_info=True)
 
+def get_keyword(deployment):
+    result = None
+    if 'monitorPattern' in deployment:
+        result = deployment['monitorPattern']
+    
+    if result is None:
+        result = environment.get_env_with_default_value(environment.UTR_KEYWORD,
+                                                     'APPLICATION_STATUS: OK')
+    return result
+
 def modify_or_add_monitor(deployment, monitor_id=None):
     global LOG # pylint: disable=W0603
-    keyword = environment.get_env_with_default_value(environment.UTR_KEYWORD,
-                                                     'APPLICATION_STATUS: OK')
+    
     payload = {
         'url': deployment_util.get_full_monitor_url(deployment),
         'friendly_name': deployment_util.create_friendly_name(deployment),
@@ -136,7 +145,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
         'type': 2,
         # Type 2 = Keyword missing
         'keyword_type': 2,
-        'keyword_value': keyword
+        'keyword_value': get_keyword(deployment)
     }
     if monitor_id:
         payload['id'] = monitor_id
