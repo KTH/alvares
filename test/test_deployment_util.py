@@ -32,11 +32,17 @@ class DeploymentUtilTest(unittest.TestCase):
 
     def test_get_full_monitor_url_no_monitorPath(self):
         deployment = mock_data.get_deployment()
+        expected_url = 'https://app.kth.se/kth-azure-app/_monitor'
         del deployment['monitorPath']
-        monitor_url = deployment_util.get_full_monitor_url(deployment)
-        # No monitor url when monitorPath is empty,
-        # Later this should default to https://app-r.referens.sys.kth.se/kth-azure-app/_monitor agina.
-        self.assertEqual(monitor_url, '')
+        self.assertEqual(expected_url, deployment_util.get_full_monitor_url(deployment))
+
+
+    def test_get_full_monitor_url_no_monitorPath_no_application_last_slash(self):
+        deployment = mock_data.get_deployment()
+        expected_url = 'https://app.kth.se/kth-azure-app/_monitor'
+        del deployment['monitorPath']
+        deployment['applicationPath'] = '/kth-azure-app'
+        self.assertEqual(expected_url, deployment_util.get_full_monitor_url(deployment))
 
     def test_monitor_path_default_path(self):
         deployment = mock_data.get_deployment()
@@ -46,6 +52,15 @@ class DeploymentUtilTest(unittest.TestCase):
     def test_monitor_path_explicit_path(self):
         deployment = mock_data.get_deployment()
         expected_url = 'https://absolute.path/kth-azure-app/_monitor'
+        deployment['monitorPath'] = expected_url
+        self.assertEqual(expected_url, deployment_util.get_monitor_path(deployment))
+
+    def test_monitor_path_explicit_path_no_ending_slash(self):
+        deployment = mock_data.get_deployment()
+        expected_url = 'https://absolute.path/kth-azure-app/_monitor'
+        del  deployment['monitorPath']
+        del  deployment['applicationPath']
+        deployment['applicationPath'] = '/kth-azure-app'
         deployment['monitorPath'] = expected_url
         self.assertEqual(expected_url, deployment_util.get_monitor_path(deployment))
 
