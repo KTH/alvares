@@ -10,9 +10,9 @@ def publish_event(event, data):
     for function in get_all_event_functions(event):
         try:
             function(data)
-        except Exception: # pylint: disable=W0703
+        except Exception as ex: # pylint: disable=W0703
             logger.exception('Caught exception when running subscription '
-                             'function for a module.')
+                             'function for a module. Event: {}, Error: {}'.format(event, ex))
 
 def get_all_event_functions(event):
     global subscribers # pylint: disable=W0603,C0103

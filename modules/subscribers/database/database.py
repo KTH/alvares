@@ -18,8 +18,11 @@ def handle_deployment(deployment):
     client = connect_to_db()
     database = create_database(client)
     collections = create_collections(client, database)
+    LOG.info('Invoking writing deployment to deployments')
     write_deployment(client, collections['deployments'], deployment)
+    LOG.info('Invoking writing deployment to applications')
     write_deployment(client, collections['applications'], deployment)
+    LOG.info('Returning deployment {} for futher integrations.'.format(deployment))
     return deployment
 
 def connect_to_db():
@@ -98,5 +101,7 @@ def write_deployment(client, collection, deployment):
     try:
         LOG.info('Writing deployment "%s"', deployment)
         client.CreateDocument(collection['_self'], deployment)
+        LOG.info('Writing deployment done.')
+
     except docdb_errors.DocumentDBError as doc_err:
         raise Exception('Error when saving application to database', doc_err)
