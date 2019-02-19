@@ -5,6 +5,7 @@ import pydocumentdb.document_client as docdb_client
 import pydocumentdb.errors as docdb_errors
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules import environment
+from modules.subscribers.database import cosmosdb
 
 LOG = logging.getLogger(__name__)
 
@@ -18,11 +19,15 @@ def handle_deployment(deployment):
     client = connect_to_db()
     database = create_database(client)
     collections = create_collections(client, database)
-    LOG.info('Invoking writing deployment to deployments')
     write_deployment(client, collections['deployments'], deployment)
-    LOG.info('Invoking writing deployment to applications')
-    write_deployment(client, collections['applications'], deployment)
-    LOG.info('Returning deployment {} for futher integrations.'.format(deployment))
+
+    # Patric testar
+    if deployment['applicationName'] == 'kth-azure-app':
+        try: 
+            cosmosdb.handle_deployment(deployment)
+        except Exception as ex:
+            LOG.exception('Application write error to Dizin, Error: {}'.format(ex))
+
     return deployment
 
 def connect_to_db():
@@ -65,7 +70,7 @@ def get_existing_database(client):
 def create_collections(client, database):
     global LOG # pylint: disable=W0603
     collections = {}
-    for collection_name in ['deployments', 'errors', 'applications']:
+    for collection_name in ['deployments', 'errors']:
         try:
             LOG.debug('Creating collection "%s"', collection_name)
             collections[collection_name] = client.CreateCollection(database['_self'],

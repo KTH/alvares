@@ -17,6 +17,7 @@ responses = "==0.10.4"
 [packages]
 
 flask = "==1.0.2"
+azure-cosmos = "==3.0.2"
 pydocumentdb = "==2.3.3"
 requests = "==2.20.1"
 coloredlogs = "==10.0"
