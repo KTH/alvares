@@ -19,6 +19,7 @@ def handle_deployment(deployment):
     database = create_database(client)
     collections = create_collections(client, database)
     write_deployment(client, collections['deployments'], deployment)
+     write_deployment(client, collections['applications'], deployment)
     return deployment
 
 def connect_to_db():
