@@ -41,7 +41,7 @@ def get_application_path(deployment):
 
 def get_monitor_path(deployment):
     result = get_string_attribute(deployment, 'monitorPath')
-    if result is '':
+    if not result:
         result = '/_monitor'
     return result
 
