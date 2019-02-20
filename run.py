@@ -12,6 +12,7 @@ from modules.subscribers.uptimerobot import uptimerobot
 from modules.subscribers.application_endpoint import application_endpoint
 from modules.subscribers.lighthouse import lighthouse
 from modules.log import init_logging
+from modules import deployment_util
 
 FLASK = Flask(__name__)
 
@@ -37,6 +38,9 @@ def only_accept_json_requests():
 def new_deployment():
     log = logging.getLogger(__name__)
     deployment = request.get_json()
+    deployment["applicationUrl"] = deployment_util.get_full_application_url(deployment)
+    deployment["monitorUrl"] = deployment_util.get_full_monitor_url(deployment)
+
     log.debug('Got deployment: "%s"', deployment)
     fire_event_in_thread('deployment', deployment)
     return '200 OK'
