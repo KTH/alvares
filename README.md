@@ -12,4 +12,4 @@ API to handle integrations or different sorts. Handles successful deployments to
 
 To skip an integration, just set the environment variable `DISABLED_SUBSCRIBERS` to a comma
 separated list of all module names that should be excluded. For example:
-`modules.subscribers.database.database`
+`modules.subscribers.cosmosdb.cosmosdb`

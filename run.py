@@ -7,7 +7,7 @@ from modules.event_system import event_system
 from modules.subscribers.slack import (slack_deployment, slack_error,
                                        slack_recommendation)
 from modules.subscribers.detectify import detectify
-from modules.subscribers.database import database
+from modules.subscribers.database import cosmosdb
 from modules.subscribers.uptimerobot import uptimerobot
 from modules.subscribers.application_endpoint import application_endpoint
 from modules.subscribers.lighthouse import lighthouse
@@ -25,7 +25,7 @@ def fire_event_in_thread(event, event_data):
     event_thread.start()
 
 def init_subscriptions():
-    subscribers = [database, detectify, slack_deployment, slack_error,
+    subscribers = [cosmosdb, detectify, slack_deployment, slack_error,
                    slack_recommendation, uptimerobot, application_endpoint,
                    lighthouse]
     event_system.init_subscriptions(subscribers)
