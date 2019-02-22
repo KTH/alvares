@@ -21,7 +21,7 @@ class SlackTests(unittest.TestCase):
                                                 {'a': 'b', 'c': 'd'}]})
 
     def test_get_attachment(self):
-        deployment = mock_data.get_deployment()
+        deployment = mock_data.get_deployment_with_defaults()
         attachment = slack_util.get_attachment(deployment)
         log_link = ('https://graycloud.ite.kth.se/search?rangetype=relative&'
                     'fields=message%2Csource&width=2560&highlightMessage=&'
@@ -33,7 +33,7 @@ class SlackTests(unittest.TestCase):
         self.assertEqual(attachment['author_link'], log_link)
 
     def test_create_deployment_message(self):
-        deployment = mock_data.get_deployment()
+        deployment = mock_data.get_deployment_with_defaults()
         message = slack_deployment.create_deployment_message(deployment)
         self.assertEqual(message, '*kth-azure-app* deployed in *active*')
 
@@ -51,7 +51,7 @@ class SlackTests(unittest.TestCase):
 
     @patch.object(slack_deployment, 'send_deployment_to_slack')
     def test_handle_deployment(self, mock_send):
-        deployment = mock_data.get_deployment()
+        deployment = mock_data.get_deployment_with_defaults()
         del os.environ[environment.SLACK_CHANNEL_OVERRIDE]
         os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
                                                   'T02KE/B4PH1/VmEd2c7')
@@ -156,7 +156,7 @@ class SlackTests(unittest.TestCase):
         mock_send.assert_has_calls(calls, any_order=True)
 
     def test_get_deployment_channels(self):
-        deployment = mock_data.get_deployment()
+        deployment = mock_data.get_deployment_with_defaults()
         channels = slack_util.get_deployment_channels(deployment)
         self.assertEqual(channels, ['#team-pipeline', '#developers'])
         os.environ[environment.SLACK_CHANNELS] = '#team-pipeline'

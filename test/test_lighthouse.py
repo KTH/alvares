@@ -13,7 +13,7 @@ class TestSchemaValidation(unittest.TestCase):
         self.assertEqual(result, 3.04)
 
     def test_create_file_name(self):
-        deployment = mock_data.get_deployment()
+        deployment = mock_data.get_deployment_with_defaults()
         lighthouse.get_current_date_time = mock.MagicMock()
         lighthouse.get_current_date_time.return_value = '2000-01-02_13:40'
         result = lighthouse.create_file_name(deployment)

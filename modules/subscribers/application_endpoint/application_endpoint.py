@@ -15,9 +15,9 @@ def handle_deployment(deployment):
         call_slack_channel_with_application_endpoint_url(deployment)
 
 def call_slack_channel_with_application_endpoint_url(deployment):
-    message = (f'*{deployment_util.create_friendly_name(deployment)}* '
+    message = (f'*{deployment_util.get_application_url(deployment)}* '
                f'in *{deployment_util.get_cluster(deployment)}* '
-               f'is accessible on {deployment_util.get_full_application_url(deployment)}')
+               f'is accessible on {deployment_util.get_application_url(deployment)}')
 
     for channel in deployment_util.get_slack_channels(deployment):
         slack_util.call_slack_endpoint(channel,

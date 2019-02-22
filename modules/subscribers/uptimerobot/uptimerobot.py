@@ -37,9 +37,9 @@ def create_slack_payload(message, channel):
     }
 
 def call_slack_channel_with_monitor_url(deployment):
-    message = (f'*{deployment_util.create_friendly_name(deployment)}* in '
+    message = (f'*{deployment_util.get_friendly_name(deployment)}* in '
                f'*{deployment_util.get_cluster(deployment)}* is '
-               f'UpTimeRobot monitored using {deployment_util.get_full_monitor_url(deployment)}')
+               f'UpTimeRobot monitored using {deployment_util.get_monitor_url(deployment)}')
     for channel in deployment_util.get_slack_channels(deployment):
         slack_util.call_slack_endpoint(channel,
                                        environment.get_env(environment.SLACK_WEB_HOOK),
@@ -57,7 +57,7 @@ def should_monitor(deployment):
 
 def has_monitor_url(deployment):
     LOG.info('deployment: "%s"', deployment)
-    monitor_url = deployment_util.get_full_monitor_url(deployment)
+    monitor_url = deployment_util.get_monitor_url(deployment)
     if monitor_url:
         return True
     return False
@@ -108,11 +108,11 @@ def search_for_existing_monitor(keyword):
 def add_or_edit_monitor(deployment):
     try:
         global LOG # pylint: disable=W0603
-        response = search_for_existing_monitor(deployment_util.get_full_monitor_url(deployment))
+        response = search_for_existing_monitor(deployment_util.get_monitor_url(deployment))
         if response['monitors']:
             modify_or_add_monitor(deployment, monitor_id=response['monitors'][0]['id'])
             return
-        response = search_for_existing_monitor(deployment_util.create_friendly_name(deployment))
+        response = search_for_existing_monitor(deployment_util.get_friendly_name(deployment))
         if response['monitors']:
             modify_or_add_monitor(deployment, monitor_id=response['monitors'][0]['id'])
             return
@@ -121,28 +121,18 @@ def add_or_edit_monitor(deployment):
         LOG.error('Could not add or edit monitor for: "%s"',
                   format(deployment.monitor_url), exc_info=True)
 
-def get_keyword(deployment):
-    result = None
-    if 'monitorPattern' in deployment:
-        result = deployment['monitorPattern']
-    
-    if result is None:
-        result = environment.get_env_with_default_value(environment.UTR_KEYWORD,
-                                                     'APPLICATION_STATUS: OK')
-    return result
-
 def modify_or_add_monitor(deployment, monitor_id=None):
     global LOG # pylint: disable=W0603
     
     payload = {
-        'url': deployment_util.get_full_monitor_url(deployment),
-        'friendly_name': deployment_util.create_friendly_name(deployment),
+        'url': deployment_util.get_monitor_url(deployment),
+        'friendly_name': deployment_util.get_friendly_name(deployment),
         'alert_contacts' : select_alert_contact(deployment),
         # Type 2 = Keyword
         'type': 2,
         # Type 2 = Keyword missing
         'keyword_type': 2,
-        'keyword_value': get_keyword(deployment)
+        'keyword_value': deployment_util.get_monitor_pattern(deployment)
     }
     if monitor_id:
         payload['id'] = monitor_id
@@ -150,7 +140,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
         call_endpoint('/editMonitor', payload)
     else:
         LOG.info('Adding monitor with friendly name "%s"',
-                 deployment_util.create_friendly_name(deployment))
+                 deployment_util.get_friendly_name(deployment))
         call_endpoint('/newMonitor', payload)
 
 def select_alert_contact(deployment):

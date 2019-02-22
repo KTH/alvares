@@ -59,7 +59,7 @@ def get_urls_to_scan(deployment):
     if explicit_urls:
         return explicit_urls
     else:
-        return [deployment_util.get_full_application_url(deployment)]
+        return [deployment_util.get_application_url(deployment)]
 
 def upload_to_box(report_path, deployment):
     box_auth_string = environment.get_env(environment.BOX_AUTH_JSON)
@@ -92,14 +92,12 @@ def send_file_to_slack(channel, deployment, report_path, scanned_url):
 
 def get_payload(channel, deployment, report_path, scanned_url):
     slack_token = environment.get_env(environment.SLACK_TOKEN)
-    app_name = deployment_util.get_application_name(deployment)
-    app_version = deployment_util.get_application_version(deployment)
     return {
         'filename': create_file_name(deployment),
         'token': slack_token,
         'channels': channel,
         'filetype': 'binary',
-        'title': f'Lighthouse report for application {app_name}:{app_version}',
+        'title': f'{deployment_util.get_friendly_name(deployment)} - Performance and Accessibility Audit',
         'initial_comment': (f'This report was created by scanning {scanned_url} and the total '
                             'score for this report was {0:.2f}/4.0'
                             .format(parse_total_score(report_path)))
