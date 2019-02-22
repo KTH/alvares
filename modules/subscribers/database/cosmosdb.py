@@ -4,8 +4,8 @@ from modules import environment
 import azure.cosmos.cosmos_client as cosmos_client
 import azure.cosmos.errors as errors
 
-# Docs:
-# https://github.com/Azure/azure-cosmos-python/blob/a21f6fb4bad3f59909ef43558b598f9fb476b7bc/samples/DatabaseManagement/Program.py
+# Example code:
+# https://github.com/Azure/azure-cosmos-python/blob/master/samples/DatabaseManagement/Program.py
 
 LOG = logging.getLogger(__name__)
 
