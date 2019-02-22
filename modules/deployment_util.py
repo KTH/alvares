@@ -79,7 +79,7 @@ def get_cluster(deployment):
 
 def get_friendly_name(deployment):
     return get_string_attribute(deployment, 'friendlyName')
-    
+
 def get_public_name_english(deployment):
     return get_string_attribute(deployment, 'publicNameEnglish')
 
