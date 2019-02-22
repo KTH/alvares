@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 DATABASE_ID = 'dizin'
 DATABASE_LINK = 'dbs/' + DATABASE_ID
-CONTAINER_ID = 'applications'
+CONTAINER_ID = 'deploymentv2'
 
 
 def subscribe():
