@@ -45,6 +45,6 @@ def get_slack_channels(recommendation):
 
 def send_recommendation_to_slack(channel, message):
     global LOG # pylint: disable=W0603
-    LOG.debug('Sending Slack notification to channel "%s"', channel)
+    LOG.info('Sending recommendation to channel "%s"', channel)
     web_hook = environment.get_env(environment.SLACK_WEB_HOOK)
     slack_util.call_slack_endpoint(channel, web_hook, message)

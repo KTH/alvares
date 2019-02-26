@@ -87,7 +87,7 @@ def send_file_to_slack(channel, deployment, report_path, scanned_url):
         response = requests.post(api_url, files=files, data=payload, headers=headers)
         logger.debug('Response was "%s"', response.text)
     except (HTTPError, ConnectTimeout, RequestException) as request_ex:
-        logger.error('Could not send slack notification to channel "%s": "%s"',
+        logger.error('Could not send slack lighthouse notification to channel "%s": "%s"',
                   channel, request_ex)
 
 def get_payload(channel, deployment, report_path, scanned_url):
