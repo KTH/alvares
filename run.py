@@ -57,7 +57,9 @@ def new_error():
 
 @FLASK.route('/api/v1/recommendation', methods=['PUT'])
 def new_recommendation():
+    log = logging.getLogger(__name__)
     recommendation = request.get_json()
+    log.debug('Got recommendation: "%s"', recommendation)
     fire_event_in_thread('recommendation', recommendation)
     return '200 OK'
 
