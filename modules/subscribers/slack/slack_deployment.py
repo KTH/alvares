@@ -23,7 +23,7 @@ def handle_deployment(deployment):
 
 def send_deployment_to_slack(web_hook, channel, deployment):
     global LOG # pylint: disable=W0603
-    LOG.debug('Sending Slack notification to channel "%s"', channel)
+    LOG.debug('Sending Slack deployment notification to channel "%s"', channel)
     message = create_deployment_message(deployment)
     payload = create_deployment_payload(channel, message, deployment)
     slack_util.call_slack_endpoint(channel, web_hook, payload)
