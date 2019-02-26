@@ -27,7 +27,7 @@ class SlackTests(unittest.TestCase):
                     'fields=message%2Csource&width=2560&highlightMessage=&'
                     'relative=3600&q=source%3Aactive+AND+image_name%3A'
                     '/.%2Akth-azure-app%3A2.0.11_abc123.%2A/')
-        self.assertEqual(attachment['author_name'], 'View logs for this deployment')
+        self.assertEqual(attachment['author_name'], ':mag: Log')
         self.assertEqual(attachment['text'], 'Application version: 2.0.11_abc123')
         self.assertEqual(attachment['title'], 'Application name: kth-azure-app')
         self.assertEqual(attachment['author_link'], log_link)
