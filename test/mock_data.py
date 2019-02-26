@@ -67,7 +67,6 @@ DEPLOYMENT_SAMPLES_WITH_EXPECTED_VALUES = [
         "imageName": "kth-azure-app",
         "created": "",
         "applicationPath": "/my-app",
-        "monitorPath": "http://example.com/url-not-allowed",
 
         "mock-expected": {
             "monitorUrl" : "https://app.kth.se/my-app/_monitor",
@@ -233,7 +232,6 @@ DEPLOYMENT_SAMPLES_WITH_EXPECTED_VALUES = [
         "importance": "medium",
         "applicationPath": "/api/my-app/",
         "monitorPattern": "a-string-in-html",
-        "monitorPath": "/apddddi/my-app/_monitor",
         
         "mock-expected": {
             "monitorUrl" : "https://api.kth.se/api/my-app/_monitor",
@@ -309,7 +307,6 @@ DEPLOYMENT_STRING = r"""
         "publicNameEnglish": "Monitor application",
         "descriptionSwedish": "Monitorapp för klustret",
         "descriptionEnglish": "Monitor application for cluster",
-        "monitorPath": "/_monitor",
         "created": "",
         "importance": "high",
         "applicationPath": "/kth-azure-app",
@@ -363,3 +360,47 @@ def expected_value(sample, attribute):
         return None
 
     return None
+
+
+
+
+
+RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES = [
+    r"""
+    {
+        "message": "Please add a config a.",
+        "slackChannels": "#team-pipeline-logs,#ita-ops",
+        
+        "mock-expected": {
+            "message": "Please add a config a.",
+            "slackChannels": [
+                "#team-pipeline-logs",
+                "#ita-ops"
+            ]
+        }
+    }
+    """,
+    r"""
+        {
+            "message": "We recommend you add this too..",
+            "slackChannels": "#team-pipeline-logs,#ita-ops,#ita-ops",
+            
+            "mock-expected": {
+                "message": "We recommend you add this too..",
+                "slackChannels": [
+                    "#team-pipeline-logs",
+                    "#ita-ops"
+                ]
+            }
+        }
+    """
+]
+
+def get_recommendation_samples():
+    global RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES # pylint: disable=W0603
+    result = []
+
+    for sample in RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES:
+        result.append(json.loads(sample))
+
+    return result
