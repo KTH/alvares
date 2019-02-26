@@ -8,6 +8,8 @@ from modules.subscribers.slack import slack_util
 LOG = logging.getLogger(__name__)
 
 def subscribe():
+    global LOG # pylint: disable=W0603
+    LOG.info('Adding Slack Recommendations as a subscriber.')
     subscribe_to_event('recommendation', handle_recommendation)
 
 def unsubscribe():
@@ -15,6 +17,7 @@ def unsubscribe():
 
 def handle_recommendation(recommendation):
     global LOG # pylint: disable=W0603
+    LOG.info('Sending Slack Recommendations for as a subscriber. {}')
     for channel in get_slack_channels(recommendation):
         send_recommendation_to_slack(channel, recommendation['message'])
     return recommendation
