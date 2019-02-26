@@ -17,7 +17,7 @@ def unsubscribe():
 
 def handle_recommendation(recommendation):
     global LOG # pylint: disable=W0603
-    LOG.info('Sending Slack Recommendations for as a subscriber. {}')
+    LOG.info('Sending Slack Recommendation.')
     for channel in get_slack_channels(recommendation):
         send_recommendation_to_slack(channel, recommendation['message'])
     return recommendation
