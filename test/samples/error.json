@@ -1,0 +1,5 @@
+{
+    "message": "An error occured",
+    "slackChannels": "#team-pipeline-logs,#ita-ops",
+    "stackTrace": "This is a multiline\nstack trace"
+}

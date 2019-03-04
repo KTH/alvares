@@ -31,3 +31,15 @@ class DeploymentUtilTest(unittest.TestCase):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
             self.assertEqual(mock_data.expected_value(sample, 'importance'), deployment_util.get_importance(sample))
+
+    def test_get_team_from_samples(self):
+        for sample in mock_data.get_deployment_samples():
+            sample = deployment_enricher.enrich(sample)
+            self.assertEqual(mock_data.expected_value(sample, 'team'), deployment_util.get_team(sample))
+    
+    def test_get_slack_channels(self):
+        for sample in mock_data.get_recommendation_samples():
+            for channel in deployment_util.get_slack_channels(sample):
+                self.assertEqual(
+                    len(mock_data.expected_value(sample, 'slackChannels')),
+                    len(deployment_util.get_slack_channels(sample)))

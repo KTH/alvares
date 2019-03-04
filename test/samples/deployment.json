@@ -1,0 +1,16 @@
+{
+    "applicationName": "kth-azure-app",
+    "cluster": "active",
+    "version": "2.0.11_abc123",
+    "imageName": "kth-azure-app",
+    "slackChannels": "#team-pipeline,#developers",
+    "publicNameSwedish": "Monitorapp",
+    "publicNameEnglish": "Monitor application",
+    "descriptionSwedish": "Monitorapp för klustret",
+    "descriptionEnglish": "Monitor application for cluster",
+    "created": "",
+    "importance": "high",
+    "applicationPath": "/kth-azure-app",
+    "detectifyProfileTokens": "abc123xyz456,987mnb654vcx",
+    "testAccessibility": "true"
+}

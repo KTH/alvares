@@ -10,21 +10,21 @@ from modules import environment
 class UptimerobotTests(unittest.TestCase):
 
     def test_has_application_path(self):
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         self.assertTrue(uptimerobot.has_application_path(deployment))
         deployment['applicationPath'] = None
         self.assertFalse(uptimerobot.has_application_path(deployment))
 
     def test_app_is_excluded(self):
         os.environ[environment.UTR_EXCLUDED_APPS] = 'kth-azure-app'
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         self.assertTrue(uptimerobot.app_is_excluded(deployment))
         os.environ[environment.UTR_EXCLUDED_APPS] = 'tamarack'
         self.assertFalse(uptimerobot.app_is_excluded(deployment))
 
     def test_should_monitor_cluster(self):
         os.environ[environment.UTR_CLUSTERS] = 'stage, development'
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         self.assertFalse(uptimerobot.should_monitor_cluster(deployment))
         os.environ[environment.UTR_CLUSTERS] = 'stage, active'
         self.assertTrue(uptimerobot.should_monitor_cluster(deployment))

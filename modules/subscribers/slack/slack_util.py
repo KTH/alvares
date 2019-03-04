@@ -16,7 +16,7 @@ def get_attachment(deployment,
     return {
         "fallback": fallback,
         "color": color,
-        "author_name": ":mag: Logs",
+        "author_name": ":mag: Search Logs",
         "author_link": create_link_to_logs(deployment),
         "title": f"Application name: {application_name}",
         "text": f"Application version: {application_version}"

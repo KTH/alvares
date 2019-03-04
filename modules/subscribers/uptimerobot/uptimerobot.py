@@ -145,7 +145,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
 
 def select_alert_contact(deployment):
     contacts = get_alert_contacts()
-    slack_channels = deployment_util.get_slack_channels(deployment)
+    slack_channels = deployment_util.get_team(deployment)
     for contact in contacts:
         for channel in slack_channels:
             if channel.replace('#', '') == contact['friendly_name'].replace('#', ''):

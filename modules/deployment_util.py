@@ -33,13 +33,26 @@ def get_url_attribute(deployment, attribute):
         
     return ''
 
+#
+# Get unique items in set
+# 
 def get_list_attribute(deployment, attribute):
+    result = set([])
     try:
         if attribute not in deployment:
-            return []
-        return [item.replace('"', '').strip() for item in deployment[attribute].split(',')]
+            return sorted(set([]))
+
+        items = deployment[attribute].split(',')
+
+        for item in items:
+            item = item.strip()
+            result.add(item)
     except KeyError:
-        return []
+        return sorted(set([]))
+
+    return sorted(result)
+
+
 
 def get_test_accessibility(deployment):
     return get_string_attribute(deployment, 'testAccessibility')
@@ -49,7 +62,10 @@ def get_accessibility_urls(deployment):
 
 def get_importance(deployment):
     return get_string_attribute(deployment, 'importance')
- 
+
+def get_team(deployment):
+    return get_string_attribute(deployment, 'team')
+
 def get_image_name(deployment):
     return get_string_attribute(deployment, 'imageName')
 
@@ -66,7 +82,11 @@ def get_monitor_pattern(deployment):
     return get_string_attribute(deployment, 'monitorPattern')
 
 def get_slack_channels(deployment):
-    return get_list_attribute(deployment, 'slackChannels')
+    result = []
+    for channel in get_list_attribute(deployment, 'slackChannels'):
+        if channel.startswith("#"):
+            result.append(channel)
+    return result
 
 def get_application_name(deployment):
     return get_string_attribute(deployment, 'applicationName')

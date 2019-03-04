@@ -2,15 +2,14 @@ __author__ = 'tinglev@kth.se'
 
 import logging
 from modules import deployment_util
-from modules import deployment_util
 from modules import environment
 
 LOG = logging.getLogger(__name__)
 
-
 def enrich(deployment):
-    LOG.debug("Adding default values and common calculated values to the 'deployment' json.")
-    
+    LOG.debug(
+        "Adding default values and common calculated values to the 'deployment' json.")
+
     # monitorPath - Not used any more
     # Can be removed later
     if 'monitorPath' in deployment:
@@ -27,10 +26,14 @@ def enrich(deployment):
     # friendlyName
     if 'friendlyName' not in deployment:
         deployment['friendlyName'] = get_default_friendly_name(deployment)
-    
+
     # monitorPattern
     if 'monitorPattern' not in deployment:
         deployment['monitorPattern'] = get_default_monitor_pattern()
+
+    # monitorPattern
+    if 'team' not in deployment and 'slackChannels' in deployment:
+        deployment['team'] = get_team_from_slack_channels(deployment)
 
     # importance
     deployment = validate_importance_level(deployment)
@@ -56,17 +59,20 @@ def get_default_monitor_url(deployment):
         monitor_route
     )
 
+
 def get_default_friendly_name(deployment):
     if deployment_util.get_public_name_english(deployment):
         return deployment_util.get_public_name_english(deployment)
 
     if deployment_util.get_public_name_swedish(deployment):
         return deployment_util.get_public_name_swedish(deployment)
-    
+
     return deployment_util.get_application_name(deployment)
+
 
 def get_default_monitor_pattern():
     return environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+
 
 def validate_importance_level(deployment):
     if 'importance' not in deployment:
@@ -79,10 +85,34 @@ def validate_importance_level(deployment):
 
     return deployment
 
+
 def get_default_importance_level():
     return 'low'
+
 
 def is_invalid_importance_level(importance):
     if importance in ['low', 'medium', 'high']:
         return False
     return True
+
+
+def get_team_from_slack_channels(deployment):
+
+    for channel in deployment_util.get_slack_channels(deployment):
+
+        if "team-pipeline" in channel:
+            return "team-pipeline"
+
+        if "team-studadm" in channel:
+            return "team-studadm"
+
+        if "team-e-larande" in channel:
+            return "team-e-larande"
+
+        if "team-integration" in channel:
+            return "team-integration"
+
+        if "team-kth-webb" in channel:
+            return "team-kth-webb"
+
+    return ''

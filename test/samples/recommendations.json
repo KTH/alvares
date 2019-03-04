@@ -1,0 +1,23 @@
+[{
+    "message": "Please add a config a.",
+    "slackChannels": "#team-pipeline-build-logs,#ita-ops",
+
+    "mock-expected": {
+        "message": "Please add a config a.",
+        "slackChannels": [
+            "#team-pipeline-build-logs",
+            "#ita-ops"
+        ]
+    }
+}, {
+    "message": "We recommend you add this too..",
+    "slackChannels": "#team-pipeline-build-logs,#ita-ops,#ita-ops",
+
+    "mock-expected": {
+        "message": "We recommend you add this too..",
+        "slackChannels": [
+            "#team-pipeline-build-logs",
+            "#ita-ops"
+        ]
+    }
+}]

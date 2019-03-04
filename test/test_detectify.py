@@ -20,7 +20,7 @@ class DetectifyTests(unittest.TestCase):
 
     def test_should_use_cluster(self):
         os.environ[environment.DETECTIFY_CLUSTERS] = ''
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         result = detectify.should_use_cluster(deployment)
         self.assertFalse(result)
         os.environ[environment.DETECTIFY_CLUSTERS] = 'active'
@@ -70,7 +70,7 @@ class DetectifyTests(unittest.TestCase):
     @responses.activate
     def test_process_api_key(self):
         api_key = 'xyz'
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         responses.add(responses.GET, 'https://api.detectify.com/rest/v2/profiles/',
                       json=[
                           {
@@ -126,7 +126,7 @@ class DetectifyTests(unittest.TestCase):
                       json=[], status=200)
         responses.add(responses.POST, 'https://api.detectify.com/rest/v2/scans/abc123xyz456/',
                       json={}, status=200)
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         detectify.handle_deployment(deployment)
         mock_start_scan.assert_called_once()
         mock_start_scan.reset_mock()

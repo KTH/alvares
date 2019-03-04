@@ -21,19 +21,19 @@ class SlackTests(unittest.TestCase):
                                                 {'a': 'b', 'c': 'd'}]})
 
     def test_get_attachment(self):
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         attachment = slack_util.get_attachment(deployment)
         log_link = ('https://graycloud.ite.kth.se/search?rangetype=relative&'
                     'fields=message%2Csource&width=2560&highlightMessage=&'
                     'relative=3600&q=source%3Aactive+AND+image_name%3A'
                     '/.%2Akth-azure-app%3A2.0.11_abc123.%2A/')
-        self.assertEqual(attachment['author_name'], ':mag: Log')
+        self.assertEqual(attachment['author_name'], ':mag: Search Logs')
         self.assertEqual(attachment['text'], 'Application version: 2.0.11_abc123')
         self.assertEqual(attachment['title'], 'Application name: kth-azure-app')
         self.assertEqual(attachment['author_link'], log_link)
 
     def test_create_deployment_message(self):
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         message = slack_deployment.create_deployment_message(deployment)
         self.assertEqual(message, '*kth-azure-app* deployed in *active*')
 
@@ -51,7 +51,7 @@ class SlackTests(unittest.TestCase):
 
     @patch.object(slack_deployment, 'send_deployment_to_slack')
     def test_handle_deployment(self, mock_send):
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         del os.environ[environment.SLACK_CHANNEL_OVERRIDE]
         os.environ[environment.SLACK_WEB_HOOK] = ('https://hooks.slack.com/services/'
                                                   'T02KE/B4PH1/VmEd2c7')
@@ -156,9 +156,9 @@ class SlackTests(unittest.TestCase):
         mock_send.assert_has_calls(calls, any_order=True)
 
     def test_get_deployment_channels(self):
-        deployment = mock_data.get_deployment_with_defaults()
+        deployment = mock_data.get_deployment_sample_enriched()
         channels = slack_util.get_deployment_channels(deployment)
-        self.assertEqual(channels, ['#team-pipeline', '#developers'])
+        self.assertEqual(channels, ['#developers', '#team-pipeline'])
         os.environ[environment.SLACK_CHANNELS] = '#team-pipeline'
         channels = slack_util.get_deployment_channels(deployment)
         self.assertEqual(channels, ['#team-pipeline', '#developers'])

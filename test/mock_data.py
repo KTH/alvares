@@ -1,343 +1,30 @@
 __author__ = 'tinglev@kth.se'
 
 import json
+import os
 from modules import deployment_enricher
 
-DEPLOYMENT_SAMPLES_WITH_EXPECTED_VALUES = [
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "created": "",
-        "applicationPath": "/my-app",
-        "monitorPattern": "APPLICATION_STATUS: OK",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/my-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-        {
-        "applicationName": "kth-azure-app",
-        "cluster": "stage",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "created": "",
-        "applicationPath": "/my-app",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app-r.referens.sys.kth.se/my-app/_monitor",
-            "applicationUrl" : "https://app-r.referens.sys.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-        {
-        "applicationName": "kth-azure-app",
-        "cluster": "missing-cluster",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "created": "",
-        "applicationPath": "/my-app",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/my-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-        {
-        "applicationName": "kth-azure-app",
-        "cluster": "missing-cluster",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "created": "",
-        "applicationPath": "/my-app",
-
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/my-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "created": "",
-        "applicationPath": "/my-app",
-        "monitorUrl": "https://example.com/other-monitoring-url",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://example.com/other-monitoring-url",
-            "applicationUrl" : "https://app.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-    }""",
-
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "created": "",
-        "importance": "medium",
-        "applicationPath": "/kth-azure-app",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/kth-azure-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/kth-azure-app",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "medium"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "publicNameSwedish": "Monitorapp",
-        "publicNameEnglish": "Monitor application",
-        "descriptionSwedish": "Monitorapp för klustret",
-        "descriptionEnglish": "Monitor application for cluster",
-        "created": "",
-        "importance": "high",
-        "applicationPath": "/app/my-app/",
-        "testAccessibility": "true",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/app/my-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/app/my-app/",
-            "friendlyName": "Monitor application",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "high"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "publicNameSwedish": "Monitorapp",
-        "descriptionSwedish": "Monitorapp för klustret",
-        "descriptionEnglish": "Monitor application for cluster",
-        "created": "",
-        "importance": "high",
-        "applicationPath": "/app/my-app/",
-        "testAccessibility": "true",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://app.kth.se/app/my-app/_monitor",
-            "applicationUrl" : "https://app.kth.se/app/my-app/",
-            "friendlyName": "Monitorapp",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "high"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "created": "",
-        "importance": "high",
-        "applicationPath": "/api/my-app/",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://api.kth.se/api/my-app/_monitor",
-            "applicationUrl" : "https://api.kth.se/api/my-app/",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "high"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "created": "",
-        "importance": "high",
-        "applicationPath": "/api/my-app/",
-        "monitorPattern": "a-string-in-html",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://api.kth.se/api/my-app/_monitor",
-            "applicationUrl" : "https://api.kth.se/api/my-app/",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "a-string-in-html",
-            "importance": "high"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "created": "",
-        "importance": "medium",
-        "applicationPath": "/api/my-app/",
-        "monitorPattern": "a-string-in-html",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://api.kth.se/api/my-app/_monitor",
-            "applicationUrl" : "https://api.kth.se/api/my-app/",
-            "friendlyName": "kth-azure-app",
-            "monitorPattern": "a-string-in-html",
-            "importance": "medium"
-        }
-    }""",
-    r"""
-    {
-        "applicationName": "old-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "created": "",
-        "importance": "medium",
-        "applicationPath": "/api/my-app/",
-        "monitorPattern": "a-string-in-html",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://api.kth.se/api/my-app/_monitor",
-            "applicationUrl" : "https://api.kth.se/api/my-app/",
-            "friendlyName": "old-app",
-            "monitorPattern": "a-string-in-html",
-            "importance": "medium"
-        }
-    }""",
-    r"""
-        {
-        "applicationName": "integral-app",
-        "cluster": "integral-stage",
-        "version": "2.0.11_abc123",
-        "imageName": "integral-app",
-        "created": "",
-        "applicationPath": "/integral-app",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://integral-r.referens.sys.kth.se/integral-app/_monitor",
-            "applicationUrl" : "https://integral-r.referens.sys.kth.se/integral-app",
-            "friendlyName": "integral-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-        {
-        "applicationName": "integral-app",
-        "cluster": "integral",
-        "version": "2.0.11_abc123",
-        "imageName": "integral-app",
-        "created": "",
-        "applicationPath": "/integral-app",
-        
-        "mock-expected": {
-            "monitorUrl" : "https://integral.sys.kth.se/integral-app/_monitor",
-            "applicationUrl" : "https://integral.sys.kth.se/integral-app",
-            "friendlyName": "integral-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }""",
-    r"""
-        {
-        "applicationName": "integral-app",
-        "cluster": "integral",
-        "version": "2.0.11_abc123",
-        "imageName": "integral-app",
-        "created": "",
-        
-        "mock-expected": {
-            "monitorUrl" : "",
-            "applicationUrl" : "",
-            "friendlyName": "integral-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
-            "importance": "low"
-        }
-
-    }"""
-]
-
-DEPLOYMENT_STRING = r"""
-    {
-        "applicationName": "kth-azure-app",
-        "cluster": "active",
-        "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
-        "slackChannels": "#team-pipeline,#developers",
-        "publicNameSwedish": "Monitorapp",
-        "publicNameEnglish": "Monitor application",
-        "descriptionSwedish": "Monitorapp för klustret",
-        "descriptionEnglish": "Monitor application for cluster",
-        "created": "",
-        "importance": "high",
-        "applicationPath": "/kth-azure-app",
-        "detectifyProfileTokens": "abc123xyz456,987mnb654vcx",
-        "testAccessibility": "true"
-    }"""
-
-ERROR_STRING = r"""
-    {
-        "message": "An error occured",
-        "slackChannels": "#team-pipeline-logs,#ita-ops",
-        "stackTrace": "This is a multiline\nstack trace"
-    }
-"""
+def get_file_as_json(file_path):
+    file_path = os.path.join(os.path.dirname(__file__), file_path)
+    return json.load(open(file_path))
 
 def get_deployment_samples():
-    global DEPLOYMENT_SAMPLES_WITH_EXPECTED_VALUES # pylint: disable=W0603
+    return get_file_as_json('samples/deployments.json')
+    
+def get_deployment_samples_enriched():
     result = []
 
-    for sample in DEPLOYMENT_SAMPLES_WITH_EXPECTED_VALUES:
-        result.append(json.loads(sample))
+    for sample in get_deployment_samples():
+        sample = deployment_enricher.enrich(sample)
+        result.append(sample)
 
     return result
 
-def get_raw_deployment():
-    global DEPLOYMENT_STRING # pylint: disable=W0603
-    return json.loads(DEPLOYMENT_STRING)
-
-def get_deployment_with_defaults():
-    global DEPLOYMENT_STRING # pylint: disable=W0603
-    return deployment_enricher.enrich(json.loads(DEPLOYMENT_STRING))
+def get_deployment_sample():
+    return get_file_as_json('samples/deployment.json')
+    
+def get_deployment_sample_enriched():
+    return deployment_enricher.enrich(get_deployment_sample())
 
 def reset_deployment_enricher(deployment):
     if 'monitorUrl' in deployment:
@@ -348,8 +35,11 @@ def reset_deployment_enricher(deployment):
 
 
 def get_error():
-    global ERROR_STRING # pylint: disable=W0603
-    return json.loads(ERROR_STRING)
+    return get_file_as_json('samples/error.json')
+
+def get_recommendation_samples():
+    return get_file_as_json('samples/recommendations.json')
+
 
 def expected_value(sample, attribute):
     try: 
@@ -360,47 +50,3 @@ def expected_value(sample, attribute):
         return None
 
     return None
-
-
-
-
-
-RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES = [
-    r"""
-    {
-        "message": "Please add a config a.",
-        "slackChannels": "#team-pipeline-logs,#ita-ops",
-        
-        "mock-expected": {
-            "message": "Please add a config a.",
-            "slackChannels": [
-                "#team-pipeline-logs",
-                "#ita-ops"
-            ]
-        }
-    }
-    """,
-    r"""
-        {
-            "message": "We recommend you add this too..",
-            "slackChannels": "#team-pipeline-logs,#ita-ops,#ita-ops",
-            
-            "mock-expected": {
-                "message": "We recommend you add this too..",
-                "slackChannels": [
-                    "#team-pipeline-logs",
-                    "#ita-ops"
-                ]
-            }
-        }
-    """
-]
-
-def get_recommendation_samples():
-    global RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES # pylint: disable=W0603
-    result = []
-
-    for sample in RECOMMENDATION_SAMPLES_WITH_EXPECTED_VALUES:
-        result.append(json.loads(sample))
-
-    return result
