@@ -145,11 +145,12 @@ def modify_or_add_monitor(deployment, monitor_id=None):
 
 def select_alert_contact(deployment):
     contacts = get_alert_contacts()
-    slack_channels = deployment_util.get_team(deployment)
+    team = deployment_util.get_team(deployment)
+
     for contact in contacts:
-        for channel in slack_channels:
-            if channel.replace('#', '') == contact['friendly_name'].replace('#', ''):
-                return contact['id']
+        if team.replace('#', '') in contact['friendly_name'].replace('#', ''):
+            return contact['id']
+
     # If no match is found default to #team-pipeline
     for contact in contacts:
         if contact['friendly_name'] == '#team-pipeline':

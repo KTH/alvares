@@ -3,7 +3,7 @@
     "cluster": "active",
     "version": "2.0.11_abc123",
     "imageName": "kth-azure-app",
-    "slackChannels": "#team-pipeline,#developers",
+    "slackChannels": "#team-studadm,#developers",
     "publicNameSwedish": "Monitorapp",
     "publicNameEnglish": "Monitor application",
     "descriptionSwedish": "Monitorapp för klustret",

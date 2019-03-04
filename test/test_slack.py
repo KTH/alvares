@@ -63,7 +63,7 @@ class SlackTests(unittest.TestCase):
             call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
                  '#developers', deployment),
             call('https://hooks.slack.com/services/T02KE/B4PH1/VmEd2c7',
-                 '#team-pipeline', deployment),
+                 '#team-studadm', deployment),
         ]
         # Print actual calls - for debugging
         #for c in mock_send.call_args_list:
@@ -158,13 +158,17 @@ class SlackTests(unittest.TestCase):
     def test_get_deployment_channels(self):
         deployment = mock_data.get_deployment_sample_enriched()
         channels = slack_util.get_deployment_channels(deployment)
-        self.assertEqual(channels, ['#developers', '#team-pipeline'])
-        os.environ[environment.SLACK_CHANNELS] = '#team-pipeline'
+        self.assertEqual(channels, ['#developers', '#team-studadm'])
+
+        os.environ[environment.SLACK_CHANNELS] = '#team-ateam'
         channels = slack_util.get_deployment_channels(deployment)
-        self.assertEqual(channels, ['#team-pipeline', '#developers'])
-        os.environ[environment.SLACK_CHANNELS] = '#team-pipeline, #general'
+        self.assertEqual(channels, ['#team-ateam', '#developers', '#team-studadm'])
+
+        os.environ[environment.SLACK_CHANNELS] = '#team-ateam, #general'
         channels = slack_util.get_deployment_channels(deployment)
-        self.assertEqual(channels, ['#team-pipeline', '#general', '#developers'])
+
+        self.assertEqual(channels, ['#team-ateam', '#general', '#developers', '#team-studadm'])
         os.environ[environment.SLACK_CHANNEL_OVERRIDE] = '#override'
         channels = slack_util.get_deployment_channels(deployment)
+
         self.assertEqual(channels, ['#override'])

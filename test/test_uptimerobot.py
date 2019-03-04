@@ -58,12 +58,32 @@ class UptimerobotTests(unittest.TestCase):
         self.assertEqual(alert_contacts[0]['friendly_name'], '#team-pipeline')
 
     def test_select_alert_contact(self):
+        studadm_id = 321
         uptimerobot.get_alert_contacts = Mock(return_value=[
             {
-                "id": "321",
+                "id": "123",
                 "friendly_name": "#team-pipeline",
                 "type": 11,
                 "status": 2,
                 "value": "https://hooks.slack.com/services/abc/123/xzy"
+            },
+            {
+                "id": studadm_id,
+                "friendly_name": "#team-studadm-alert",
+                "type": 11,
+                "status": 2,
+                "value": "https://hooks.slack.com/services/abc/321/xzy"
+            },
+            {
+                "id": "231",
+                "friendly_name": "#team-kth-webb-alert",
+                "type": 11,
+                "status": 2,
+                "value": "https://hooks.slack.com/services/abc/231/xzy"
             }
         ])
+
+        deployment = mock_data.get_deployment_sample_enriched()
+
+        self.assertEqual(studadm_id, uptimerobot.select_alert_contact(deployment))
+
