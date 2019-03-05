@@ -14,7 +14,7 @@ def handle_deployment(deployment):
     call_slack_channel_with_application_endpoint_url(deployment)
         
 def call_slack_channel_with_application_endpoint_url(deployment):
-    message = (f':information_source: About *{deployment_util.get_friendly_name(deployment)}* '
+    message = (f'About *{deployment_util.get_friendly_name(deployment)}* '
                f'https://app.kth.se/pipeline/#{deployment_util.get_application_name(deployment)}')
 
     for channel in deployment_util.get_slack_channels(deployment):
