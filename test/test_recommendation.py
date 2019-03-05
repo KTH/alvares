@@ -4,7 +4,8 @@ from unittest import mock
 import unittest
 import root_path
 from test import mock_data
-from modules.subscribers.slack import slack_util, slack_deployment, slack_error, slack_recommendation
+from modules.subscribers.slack import (slack_util, slack_deployment,
+                                       slack_error, slack_recommendation)
 from requests import HTTPError, ConnectTimeout, RequestException
 
 class TestSlackRecommendation(unittest.TestCase):
