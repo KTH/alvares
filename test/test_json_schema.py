@@ -15,7 +15,7 @@ class TestSchemaValidation(unittest.TestCase):
     def test_validate_deployment_samples(self):
         furano_url = environment.get_env_with_default_value(environment.VALIDATE_DEPLOYMENT_URL, 'https://app.kth.se/jsonschema/dizin/deployment')
         for sample in mock_data.get_deployment_samples():
-            del sample["mock-expected"]
+            del sample["expected-enriched-values"]
             result = requests.post(furano_url, json=sample, allow_redirects=False)
             self.assertEqual(result.json(), {})
             self.assertEqual(result.status_code, 200)
@@ -26,7 +26,7 @@ class TestSchemaValidation(unittest.TestCase):
         furano_url = environment.get_env_with_default_value(environment.VALIDATE_DEPLOYMENT_URL, 'https://app.kth.se/jsonschema/alvares/deployment')
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            del sample["mock-expected"]
+            del sample["expected-enriched-values"]
             result = requests.post(furano_url, json=sample, allow_redirects=False)
             self.assertEqual(result.json(), {})
             self.assertEqual(result.status_code, 200)
@@ -52,7 +52,7 @@ class TestSchemaValidation(unittest.TestCase):
             'https://app.kth.se/jsonschema/dizin/recommendation'
         )
         for sample in mock_data.get_recommendation_samples():
-            del sample["mock-expected"]
+            del sample["expected-enriched-values"]
             result = requests.post(validation_url, json=sample, allow_redirects=False)
             self.assertEqual(result.json(), {})
             self.assertEqual(result.status_code, 200)

@@ -7,7 +7,8 @@
         "applicationPath": "/my-app",
         "monitorPattern": "APPLICATION_STATUS: OK",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/my-app/_about",
             "monitorUrl": "https://app.kth.se/my-app/_monitor",
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -25,7 +26,8 @@
         "created": "",
         "applicationPath": "/my-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app-r.referens.sys.kth.se/my-app/_about",
             "monitorUrl": "https://app-r.referens.sys.kth.se/my-app/_monitor",
             "applicationUrl": "https://app-r.referens.sys.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -44,7 +46,8 @@
         "applicationPath": "/my-app",
         "team": "team-kth-webb",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app-r.referens.sys.kth.se/my-app/_about",
             "monitorUrl": "https://app-r.referens.sys.kth.se/my-app/_monitor",
             "applicationUrl": "https://app-r.referens.sys.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -62,7 +65,8 @@
         "created": "",
         "applicationPath": "/my-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/my-app/_about",
             "monitorUrl": "https://app.kth.se/my-app/_monitor",
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -80,7 +84,8 @@
         "created": "",
         "applicationPath": "/my-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/my-app/_about",
             "monitorUrl": "https://app.kth.se/my-app/_monitor",
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -99,7 +104,8 @@
         "applicationPath": "/my-app",
         "monitorUrl": "https://example.com/other-monitoring-url",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "",
             "monitorUrl": "https://example.com/other-monitoring-url",
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",
@@ -109,7 +115,26 @@
             "slackChannels": []
         }
     },
+    {
+        "applicationName": "kth-azure-app",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "kth-azure-app",
+        "created": "",
+        "applicationPath": "/my-app",
+        "monitorUrl": "https://www.kth.se/_monitor",
 
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/my-app/_about",
+            "monitorUrl": "https://www.kth.se/_monitor",
+            "applicationUrl": "https://app.kth.se/my-app",
+            "friendlyName": "kth-azure-app",
+            "monitorPattern": "APPLICATION_STATUS: OK",
+            "importance": "low",
+            "team": "",
+            "slackChannels": []
+        }
+    },
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
@@ -120,7 +145,8 @@
         "importance": "medium",
         "applicationPath": "/kth-azure-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/kth-azure-app/_about",
             "monitorUrl": "https://app.kth.se/kth-azure-app/_monitor",
             "applicationUrl": "https://app.kth.se/kth-azure-app",
             "friendlyName": "kth-azure-app",
@@ -145,7 +171,8 @@
         "applicationPath": "/app/my-app/",
         "testAccessibility": "true",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/app/my-app/_about",
             "monitorUrl": "https://app.kth.se/app/my-app/_monitor",
             "applicationUrl": "https://app.kth.se/app/my-app/",
             "friendlyName": "Monitor application",
@@ -169,7 +196,8 @@
         "applicationPath": "/app/my-app/",
         "testAccessibility": "true",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://app.kth.se/app/my-app/_about",
             "monitorUrl": "https://app.kth.se/app/my-app/_monitor",
             "applicationUrl": "https://app.kth.se/app/my-app/",
             "friendlyName": "Monitorapp",
@@ -189,7 +217,8 @@
         "importance": "high",
         "applicationPath": "/api/my-app/",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://api.kth.se/api/my-app/_about",
             "monitorUrl": "https://api.kth.se/api/my-app/_monitor",
             "applicationUrl": "https://api.kth.se/api/my-app/",
             "friendlyName": "kth-azure-app",
@@ -210,7 +239,8 @@
         "applicationPath": "/api/my-app/",
         "monitorPattern": "a-string-in-html",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://api.kth.se/api/my-app/_about",
             "monitorUrl": "https://api.kth.se/api/my-app/_monitor",
             "applicationUrl": "https://api.kth.se/api/my-app/",
             "friendlyName": "kth-azure-app",
@@ -231,7 +261,8 @@
         "applicationPath": "/api/my-app/",
         "monitorPattern": "a-string-in-html",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://api.kth.se/api/my-app/_about",
             "monitorUrl": "https://api.kth.se/api/my-app/_monitor",
             "applicationUrl": "https://api.kth.se/api/my-app/",
             "friendlyName": "kth-azure-app",
@@ -252,7 +283,8 @@
         "applicationPath": "/api/my-app/",
         "monitorPattern": "a-string-in-html",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://api.kth.se/api/my-app/_about",
             "monitorUrl": "https://api.kth.se/api/my-app/_monitor",
             "applicationUrl": "https://api.kth.se/api/my-app/",
             "friendlyName": "old-app",
@@ -270,7 +302,8 @@
         "created": "",
         "applicationPath": "/integral-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://integral-r.referens.sys.kth.se/integral-app/_about",
             "monitorUrl": "https://integral-r.referens.sys.kth.se/integral-app/_monitor",
             "applicationUrl": "https://integral-r.referens.sys.kth.se/integral-app",
             "friendlyName": "integral-app",
@@ -288,7 +321,8 @@
         "created": "",
         "applicationPath": "/integral-app",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "https://integral.sys.kth.se/integral-app/_about",
             "monitorUrl": "https://integral.sys.kth.se/integral-app/_monitor",
             "applicationUrl": "https://integral.sys.kth.se/integral-app",
             "friendlyName": "integral-app",
@@ -305,7 +339,8 @@
         "imageName": "integral-app",
         "created": "",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "",
             "monitorUrl": "",
             "applicationUrl": "",
             "friendlyName": "integral-app",
@@ -316,19 +351,40 @@
         }
 
     }, {
-        "applicationName": "kth-azure-app",
+        "applicationName": "grafana",
         "cluster": "active",
         "version": "2.0.11_abc123",
-        "imageName": "kth-azure-app",
+        "imageName": "grafana",
         "created": "",
         "applicationPath": "/my-app",
-        "monitorUrl": "https://example.com/other-monitoring-url",
+        "monitorUrl": "https://example.com/grafana/login",
 
-        "mock-expected": {
-            "monitorUrl": "https://example.com/other-monitoring-url",
+        "expected-enriched-values": {
+            "aboutUrl": "",
+            "monitorUrl": "https://example.com/grafana/login",
             "applicationUrl": "https://app.kth.se/my-app",
-            "friendlyName": "kth-azure-app",
+            "friendlyName": "grafana",
             "monitorPattern": "APPLICATION_STATUS: OK",
+            "importance": "low",
+            "team": "",
+            "slackChannels": []
+        }
+    }, {
+        "applicationName": "grafana",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "grafana",
+        "created": "",
+        "applicationPath": "/grafana",
+        "monitorUrl": "https://app.kth.se/grafana/login",
+        "monitorPattern": "Log in to Grafana",
+
+        "expected-enriched-values": {
+            "aboutUrl": "",
+            "monitorUrl": "https://app.kth.se/grafana/login",
+            "applicationUrl": "https://app.kth.se/grafana",
+            "friendlyName": "grafana",
+            "monitorPattern": "Log in to Grafana",
             "importance": "low",
             "team": "",
             "slackChannels": []
@@ -343,7 +399,8 @@
         "monitorUrl": "https://example.com/other-monitoring-url",
         "team": "team-integral",
 
-        "mock-expected": {
+        "expected-enriched-values": {
+            "aboutUrl": "",
             "monitorUrl": "https://example.com/other-monitoring-url",
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",

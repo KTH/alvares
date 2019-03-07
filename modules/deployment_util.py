@@ -177,6 +177,9 @@ def combine_host_and_paths(host, *paths):
         url = f'{url}{path.rstrip()}'
     return url
 
+def get_about_url(deployment):
+    return get_url_attribute(deployment, 'aboutUrl')
+
 def get_monitor_url(deployment):
     return get_url_attribute(deployment, 'monitorUrl')
 

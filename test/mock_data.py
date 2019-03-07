@@ -43,8 +43,8 @@ def get_recommendation_samples():
 
 def expected_value(sample, attribute):
     try: 
-        if "mock-expected" in sample:
-            return sample["mock-expected"][attribute]
+        if "expected-enriched-values" in sample:
+            return sample["expected-enriched-values"][attribute]
     except Exception as e:
         print(e)
         return None

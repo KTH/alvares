@@ -17,64 +17,97 @@ def enrich(deployment):
 
     # applicationUrl
     if 'applicationUrl' not in deployment:
-        deployment['applicationUrl'] = get_default_application_url(deployment)
+        add_application_url(deployment)
 
     # monitorUrl
     if 'monitorUrl' not in deployment:
-        deployment['monitorUrl'] = get_default_monitor_url(deployment)
+        add_monitor_url(deployment)
+
+    # monitorUrl
+    if 'aboutUrl' not in deployment:
+        add_about_url(deployment)
 
     # friendlyName
     if 'friendlyName' not in deployment:
-        deployment['friendlyName'] = get_default_friendly_name(deployment)
+        add_friendly_name(deployment)
 
     # monitorPattern
     if 'monitorPattern' not in deployment:
-        deployment['monitorPattern'] = get_default_monitor_pattern()
+        add_monitor_pattern(deployment)
 
     # monitorPattern
     if 'team' not in deployment and 'slackChannels' in deployment:
-        deployment['team'] = get_team_from_slack_channels(deployment)
+        add_team_from_slack_channels(deployment)
 
     # importance
-    deployment = validate_importance_level(deployment)
+    clean_or_add_importance_level_(deployment)
 
     return deployment
 
 
-def get_default_application_url(deployment):
-    return deployment_util.combine_host_and_paths(
-        deployment_util.get_host(deployment),
-        deployment_util.get_application_path(deployment))
+def add_application_url(deployment):
+    application_url = deployment_util.combine_host_and_paths(deployment_util.get_host(deployment), deployment_util.get_application_path(deployment))
+    deployment['applicationUrl'] = application_url
 
-def get_default_monitor_url(deployment):
+def add_monitor_url(deployment):
+
+    monitor_url = ''
 
     monitor_route = '/_monitor'
 
     if deployment_util.get_application_path(deployment).endswith('/'):
         monitor_route = '_monitor'
 
-    return deployment_util.combine_host_and_paths(
+    monitor_url = deployment_util.combine_host_and_paths(
         deployment_util.get_host(deployment),
         deployment_util.get_application_path(deployment),
         monitor_route
     )
 
+    deployment['monitorUrl'] = monitor_url
 
-def get_default_friendly_name(deployment):
+def add_about_url(deployment):
+
+    about_url = ''
+    monitor_url = deployment_util.get_monitor_url(deployment)
+
+    if not monitor_url.endswith('/_monitor'):
+        return about_url
+
+    about_route = '/_about'
+
+    if deployment_util.get_application_path(deployment).endswith('/'):
+        about_route = '_about'
+
+    about_url = deployment_util.combine_host_and_paths(
+        deployment_util.get_host(deployment),
+        deployment_util.get_application_path(deployment),
+        about_route
+    )
+
+    print(about_url)
+    deployment['aboutUrl'] = about_url
+
+def add_friendly_name(deployment):
+
+    friendly_name = ''
+ 
     if deployment_util.get_public_name_english(deployment):
-        return deployment_util.get_public_name_english(deployment)
+        friendly_name = deployment_util.get_public_name_english(deployment)
+    elif deployment_util.get_public_name_swedish(deployment):
+        friendly_name = deployment_util.get_public_name_swedish(deployment)
+    else:
+        friendly_name = deployment_util.get_application_name(deployment)
 
-    if deployment_util.get_public_name_swedish(deployment):
-        return deployment_util.get_public_name_swedish(deployment)
-
-    return deployment_util.get_application_name(deployment)
-
-
-def get_default_monitor_pattern():
-    return environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+    deployment['friendlyName'] = friendly_name
 
 
-def validate_importance_level(deployment):
+def add_monitor_pattern(deployment):
+    monitor_pattern = environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+    deployment['monitorPattern'] = monitor_pattern
+
+
+def clean_or_add_importance_level_(deployment):
     if 'importance' not in deployment:
         deployment['importance'] = get_default_importance_level()
     else:
@@ -82,8 +115,6 @@ def validate_importance_level(deployment):
 
         if is_invalid_importance_level(deployment['importance']):
             deployment['importance'] = get_default_importance_level()
-
-    return deployment
 
 
 def get_default_importance_level():
@@ -96,23 +127,31 @@ def is_invalid_importance_level(importance):
     return True
 
 
-def get_team_from_slack_channels(deployment):
+def add_team_from_slack_channels(deployment):
 
+    team = ''
+
+    # Use first match.
     for channel in deployment_util.get_slack_channels(deployment):
 
         if "team-pipeline" in channel:
-            return "team-pipeline"
+            team = "team-pipeline"
+            break
 
         if "team-studadm" in channel:
-            return "team-studadm"
+            team = "team-studadm"
+            break
 
         if "team-e-larande" in channel:
-            return "team-e-larande"
+            team = "team-e-larande"
+            break
 
         if "team-integration" in channel:
-            return "team-integration"
+            team = "team-integration"
+            break
 
         if "team-kth-webb" in channel:
-            return "team-kth-webb"
+            team = "team-kth-webb"
+            break
 
-    return ''
+    deployment['team'] = team

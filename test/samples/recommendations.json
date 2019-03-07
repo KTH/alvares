@@ -2,7 +2,7 @@
     "message": "Please add a config a.",
     "slackChannels": "#team-pipeline-build-logs,#ita-ops",
 
-    "mock-expected": {
+    "expected-enriched-values": {
         "message": "Please add a config a.",
         "slackChannels": [
             "#team-pipeline-build-logs",
@@ -13,7 +13,7 @@
     "message": "We recommend you add this too..",
     "slackChannels": "#team-pipeline-build-logs,#ita-ops,#ita-ops",
 
-    "mock-expected": {
+    "expected-enriched-values": {
         "message": "We recommend you add this too..",
         "slackChannels": [
             "#team-pipeline-build-logs",

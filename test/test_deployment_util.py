@@ -7,6 +7,11 @@ from modules import deployment_enricher
 
 class DeploymentUtilTest(unittest.TestCase):
 
+    def test_get_about_url_from_samples(self):
+        for sample in mock_data.get_deployment_samples():
+            sample = deployment_enricher.enrich(sample)
+            self.assertEqual(mock_data.expected_value(sample, 'aboutUrl'), deployment_util.get_about_url(sample))
+
     def test_get_monitor_url_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
