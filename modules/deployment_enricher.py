@@ -85,7 +85,6 @@ def add_about_url(deployment):
         about_route
     )
 
-    print(about_url)
     deployment['aboutUrl'] = about_url
 
 def add_friendly_name(deployment):
@@ -103,7 +102,12 @@ def add_friendly_name(deployment):
 
 
 def add_monitor_pattern(deployment):
-    monitor_pattern = environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+
+    monitor_pattern = ''
+
+    if deployment_util.get_monitor_url(deployment):
+        monitor_pattern = environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+        
     deployment['monitorPattern'] = monitor_pattern
 
 

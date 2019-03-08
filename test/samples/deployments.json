@@ -344,7 +344,7 @@
             "monitorUrl": "",
             "applicationUrl": "",
             "friendlyName": "integral-app",
-            "monitorPattern": "APPLICATION_STATUS: OK",
+            "monitorPattern": "",
             "importance": "low",
             "team": "",
             "slackChannels": []
@@ -405,6 +405,26 @@
             "applicationUrl": "https://app.kth.se/my-app",
             "friendlyName": "kth-azure-app",
             "monitorPattern": "APPLICATION_STATUS: OK",
+            "importance": "low",
+            "team": "team-integral",
+            "slackChannels": []
+        }
+    }, {
+        "applicationName": "batch-to-file-oupt",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "batch-to-file-oupt",
+        "created": "",
+        "monitorUrl": "https://example.com/file-output.txt",
+        "team": "team-integral",
+        "monitorPattern": "monitor-indirect-by-file-content",
+
+        "expected-enriched-values": {
+            "aboutUrl": "",
+            "monitorUrl": "https://example.com/file-output.txt",
+            "applicationUrl": "",
+            "friendlyName": "batch-to-file-oupt",
+            "monitorPattern": "monitor-indirect-by-file-content",
             "importance": "low",
             "team": "team-integral",
             "slackChannels": []
