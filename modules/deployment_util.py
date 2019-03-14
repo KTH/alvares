@@ -156,14 +156,19 @@ def path_is_relative(path):
 def path_is_url(path):
     return path.startswith('http')
 
+def get_host_for_cluster(cluster):
+    result = cluster
+    if cluster not in get_hosts():
+        result = 'active'
+    
+    return result
+    
 def get_host(deployment):
-     return get_host_for_application(get_application_path(deployment), get_cluster(deployment))
+     return get_host_with_base_path(get_application_path(deployment), get_cluster(deployment))
 
-def get_host_for_application(path, cluster):
+def get_host_with_base_path(path, cluster):
     hosts = get_hosts()
-    select_cluster = cluster
-    if cluster not in hosts:
-        select_cluster = 'active'
+    select_cluster = get_host_for_cluster(cluster)
     
     if not path or not cluster:
         return ''
