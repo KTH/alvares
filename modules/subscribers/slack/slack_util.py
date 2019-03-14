@@ -8,7 +8,7 @@ from modules import deployment_util, environment
 
 def get_attachment(deployment,
                    fallback='Your client does not support attachments :(',
-                   color='#36a64f'):
+                   color='#aec90c'):
     application_name = deployment_util.get_application_name(deployment)
     application_version = deployment_util.get_application_version(deployment)
     return {
