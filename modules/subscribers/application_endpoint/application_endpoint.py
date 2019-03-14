@@ -12,13 +12,17 @@ def unsubscribe():
 
 def handle_deployment(deployment):
     call_slack_channel_with_application_endpoint_url(deployment)
-        
+
+def has_application_path(deployment):
+    if 'applicationPath' in deployment:
+        if deployment['applicationPath']:
+            return True
+    return False
+
 def call_slack_channel_with_application_endpoint_url(deployment):
     
-    if 'applicationPath' in deployment:
-        host = deployment_util.get_host(deployment)
-    else:
-        # none public paths use default host.
+    host = deployment_util.get_host(deployment)
+    if not host:
         host = deployment_util.get_host(deployment, path='/')
 
     path = f'/pipeline/#{deployment_util.get_application_name(deployment)}'
