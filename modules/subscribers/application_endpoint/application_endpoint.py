@@ -15,7 +15,12 @@ def handle_deployment(deployment):
         
 def call_slack_channel_with_application_endpoint_url(deployment):
     
-    host = deployment_util.get_host(deployment['cluster'], path='/')
+    if 'applicationPath' in deployment:
+        host = deployment_util.get_host(deployment)
+    else:
+        # none public paths use default host.
+        host = deployment_util.get_host(deployment, path='/')
+
     path = f'/pipeline/#{deployment_util.get_application_name(deployment)}'
 
     message = (f'About *{deployment_util.get_friendly_name(deployment)}* '
