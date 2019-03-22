@@ -429,5 +429,24 @@
             "team": "team-integral",
             "slackChannels": []
         }
+    }, {
+        "applicationName": "webtex",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "webtex",
+        "created": "",
+        "applicationPath": "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1",
+        "team": "section-sfu",
+
+        "expected-enriched-values": {
+            "aboutUrl": "https://api.kth.se/api/webtex/_about",
+            "monitorUrl": "https://api.kth.se/api/webtex/_monitor",
+            "applicationUrl": "https://api.kth.se/api/webtex",
+            "friendlyName": "webtex",
+            "monitorPattern": "APPLICATION_STATUS: OK",
+            "team": "section-sfu",
+            "importance": "low",
+            "slackChannels": []
+        }
     }
 ]

@@ -10,10 +10,11 @@ def enrich(deployment):
     LOG.debug(
         "Adding default values and common calculated values to the 'deployment' json.")
 
-    # monitorPath - Not used any more
-    # Can be removed later
-    if 'monitorPath' in deployment:
-        del deployment["monitorPath"]
+    # applicationPath
+    clean_application_path_(deployment)
+
+    # importance
+    clean_or_add_importance_level_(deployment)
 
     # applicationUrl
     if 'applicationUrl' not in deployment:
@@ -35,12 +36,9 @@ def enrich(deployment):
     if 'monitorPattern' not in deployment:
         add_monitor_pattern(deployment)
 
-    # monitorPattern
+    # team
     if 'team' not in deployment and 'slackChannels' in deployment:
         add_team_from_slack_channels(deployment)
-
-    # importance
-    clean_or_add_importance_level_(deployment)
 
     return deployment
 
@@ -110,6 +108,24 @@ def add_monitor_pattern(deployment):
         
     deployment['monitorPattern'] = monitor_pattern
 
+
+def clean_application_path_(deployment):
+    '''
+    And applicationPath can be some Traefik config like
+    "applicationPath": "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1"
+    Note that for this to function as intended the first key-value has to be PathPrefix:url;
+    This could be smarter in da future!
+    '''
+
+    if 'applicationPath' not in deployment:
+        return
+
+    applicationPath = deployment['applicationPath']
+
+    if applicationPath.startswith("PathPrefix"):
+        path_prefix_and_value = applicationPath.split(';')[0].strip() # "PathPrefix:/api/webtex" in "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1"
+        path = path_prefix_and_value.split(':')[1].strip() # "/api/webtex" in "PathPrefix:/api/webtex"
+        deployment['applicationPath'] = path
 
 def clean_or_add_importance_level_(deployment):
     if 'importance' not in deployment:
