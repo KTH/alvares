@@ -112,8 +112,7 @@ def add_monitor_pattern(deployment):
 def clean_application_path_(deployment):
     '''
     And applicationPath can be some Traefik config like
-    "applicationPath": "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1"
-    Note that for this to function as intended the first key-value has to be PathPrefix:url;
+    "applicationPath": "/api/webtex;ReplacePathRegex""
     This could be smarter in da future!
     '''
 
@@ -122,9 +121,8 @@ def clean_application_path_(deployment):
 
     applicationPath = deployment['applicationPath']
 
-    if applicationPath.startswith("PathPrefix"):
-        path_prefix_and_value = applicationPath.split(';')[0].strip() # "PathPrefix:/api/webtex" in "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1"
-        path = path_prefix_and_value.split(':')[1].strip() # "/api/webtex" in "PathPrefix:/api/webtex"
+    if applicationPath.startswith("/"):
+        path = applicationPath.split(';')[0].strip() # "/api/webtex" in "/api/webtex;ReplacePathRegex"
         deployment['applicationPath'] = path
 
 def clean_or_add_importance_level_(deployment):

@@ -435,7 +435,7 @@
         "version": "2.0.11_abc123",
         "imageName": "webtex",
         "created": "",
-        "applicationPath": "PathPrefix:/api/webtex;ReplacePathRegex:^/api/(.*) /$$1",
+        "applicationPath": "/api/webtex;ReplacePathRegex",
         "team": "section-sfu",
 
         "expected-enriched-values": {
