@@ -116,7 +116,7 @@ def clean_application_path_(deployment):
     This could be smarter in da future!
     '''
 
-    if 'applicationPath' not in deployment:
+    if 'applicationPath' not in deployment or not deployment['applicationPath']:
         return
 
     applicationPath = deployment['applicationPath']
