@@ -176,7 +176,7 @@ def add_team_from_slack_channels(deployment):
             team = "team-digitalexam"
             break
 
-        if "team-kursinformation" in channel:
+        if "team-kursinfo" in channel:
             team = "team-kursinformation"
             break
 
