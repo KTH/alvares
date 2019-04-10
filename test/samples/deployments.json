@@ -416,8 +416,8 @@
         "imageName": "batch-to-file-oupt",
         "created": "",
         "monitorUrl": "https://example.com/file-output.txt",
-        "team": "team-integral",
         "monitorPattern": "monitor-indirect-by-file-content",
+        "slackChannels": "#team-integration-build",
 
         "expected-enriched-values": {
             "aboutUrl": "",
@@ -426,8 +426,48 @@
             "friendlyName": "batch-to-file-oupt",
             "monitorPattern": "monitor-indirect-by-file-content",
             "importance": "low",
-            "team": "team-integral",
-            "slackChannels": []
+            "team": "team-integration",
+            "slackChannels": ["#team-integration"]
+        }
+    }, {
+        "applicationName": "batch-to-file-oupt",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "batch-to-file-oupt",
+        "created": "",
+        "monitorUrl": "https://example.com/file-output.txt",
+        "monitorPattern": "monitor-indirect-by-file-content",
+        "slackChannels": "#team-kursinformation-bld",
+
+        "expected-enriched-values": {
+            "aboutUrl": "",
+            "monitorUrl": "https://example.com/file-output.txt",
+            "applicationUrl": "",
+            "friendlyName": "batch-to-file-oupt",
+            "monitorPattern": "monitor-indirect-by-file-content",
+            "importance": "low",
+            "team": "team-kursinformation",
+            "slackChannels": ["#team-kursinformation"]
+        }
+    }, {
+        "applicationName": "batch-to-file-oupt",
+        "cluster": "active",
+        "version": "2.0.11_abc123",
+        "imageName": "batch-to-file-oupt",
+        "created": "",
+        "monitorUrl": "https://example.com/file-output.txt",
+        "monitorPattern": "monitor-indirect-by-file-content",
+        "slackChannels": "#team-digitalexam-bld",
+
+        "expected-enriched-values": {
+            "aboutUrl": "",
+            "monitorUrl": "https://example.com/file-output.txt",
+            "applicationUrl": "",
+            "friendlyName": "batch-to-file-oupt",
+            "monitorPattern": "monitor-indirect-by-file-content",
+            "importance": "low",
+            "team": "team-digitalexam",
+            "slackChannels": ["#team-digitalexam"]
         }
     }, {
         "applicationName": "webtex",

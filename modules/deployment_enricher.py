@@ -172,4 +172,12 @@ def add_team_from_slack_channels(deployment):
             team = "team-kth-webb"
             break
 
+        if "team-digitalexam" in channel:
+            team = "team-digitalexam"
+            break
+
+        if "team-kursinformation" in channel:
+            team = "team-kursinformation"
+            break
+
     deployment['team'] = team
