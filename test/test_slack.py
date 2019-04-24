@@ -28,8 +28,8 @@ class SlackTests(unittest.TestCase):
                     'relative=3600&q=source%3Aactive+AND+image_name%3A'
                     '/.%2Akth-azure-app%3A2.0.11_abc123.%2A/')
         self.assertEqual(attachment['author_name'], ':mag: Search Logs')
-        self.assertEqual(attachment['text'], 'Application version: 2.0.11_abc123')
-        self.assertEqual(attachment['title'], 'Application name: kth-azure-app')
+        self.assertEqual(attachment['text'], 'se.kth.imageVersion: 2.0.11_abc123')
+        self.assertEqual(attachment['title'], 'se.kth.imageName: kth-azure-app')
         self.assertEqual(attachment['author_link'], log_link)
 
     def test_create_deployment_message(self):
