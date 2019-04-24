@@ -27,7 +27,7 @@ Alvares gets a json from the deployment process Aspen with information about any
 _Example: deployment data from Aspen sent to Alvares
 
 When Alvares recives the deployemnt data it enriches this with more data
-and then sends the integrations.
+(like url:s) and then sends the enriched deployement json to all integrations to do there thing.
 
 ### Integrations
 - *Slack* Extended developer information about the deployment
