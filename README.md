@@ -1,4 +1,4 @@
-# alvares
+# alvares :loudspeaker:
 
 External service integration API. Handles deployments, errors and recommendations from [Aspen](https://github.com/KTH/aspen) through a subscriber based module system.
 
