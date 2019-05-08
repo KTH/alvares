@@ -48,3 +48,9 @@ class DeploymentUtilTest(unittest.TestCase):
                 self.assertEqual(
                     len(mock_data.expected_value(sample, 'slackChannels')),
                     len(deployment_util.get_slack_channels(sample)))
+    
+    def test_get_slack_channels(self):
+        for sample in mock_data.get_recommendation_samples():
+            for url in deployment_util.get_public_user_documentation_url(sample):
+                if url:
+                    self.assertEqual(mock_data.expected_value(sample, 'publicUserDocumentationUrl'), url)

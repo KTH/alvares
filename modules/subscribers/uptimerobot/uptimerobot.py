@@ -37,9 +37,9 @@ def create_slack_payload(message, channel):
     }
 
 def call_slack_channel_with_monitor_url(deployment):
-    message = (f'*{deployment_util.get_friendly_name(deployment)}* in '
+    message = (f':uptime:  *{deployment_util.get_friendly_name(deployment)}* in '
                f'*{deployment_util.get_cluster(deployment)}* is '
-               f'UpTimeRobot monitored using {deployment_util.get_monitor_url(deployment)}')
+               f'monitored using {deployment_util.get_monitor_url(deployment)}')
     for channel in deployment_util.get_slack_channels(deployment):
         slack_util.call_slack_endpoint(channel,
                                        environment.get_env(environment.SLACK_WEB_HOOK),
