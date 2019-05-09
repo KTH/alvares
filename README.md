@@ -1,4 +1,4 @@
-# alvares :loudspeaker:
+# Alvares :loudspeaker:
 
 External service integration API. Handles deployments, errors and recommendations from [Aspen](https://github.com/KTH/aspen) through a subscriber based module system.
 
@@ -55,7 +55,7 @@ External service integration API. Handles deployments, errors and recommendation
 
 ## How it works
 
-Alvares gets a json object from the Aspen with information about any deployments or errors that have occured in the deployment pipeline. The object sent from Aspen looks something like this:
+Alvares gets a json object from the [Aspen](https://github.com/kth/aspen/) with information about any deployments or errors that have occured in the deployment pipeline. The object sent from Aspen looks something like this:
 
 ```json
 {
