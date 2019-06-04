@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [[ -z "${INSTALL}" ]]; then
-  echo "Skippign pipenv install --dev"
-  echo "To install run: INSTALL=True ./run_tests.sh"
-else
+if [[ -z "${SKIP_INSTALL}" ]]; then
+  echo "To skip install run: SKIP_INSTALL=True ./run_tests.sh"
   pipenv install --dev 
+else
+  echo "Skipping pipenv install --dev"
 fi
 
 pipenv run green -vv --run-coverage --failfast "test" "$@"
