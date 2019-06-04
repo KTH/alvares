@@ -30,7 +30,7 @@ def get_add_endpoint(cluster):
     return '{}/v1/latest/{}'.format(get_base_url(), cluster)
 
 def add(deployment):
-    call_endpoint(get_add_endpoint(deployment.cluster), deployment)
+    call_endpoint(get_add_endpoint(deployment["cluster"]), deployment)
 
 def get_headers():
     api_key = environment.get_env(environment.FLOTTSBRO_API_KEY)
