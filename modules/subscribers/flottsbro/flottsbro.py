@@ -10,6 +10,8 @@ from modules import deployment_util
 
 LOG = logging.getLogger(__name__)
 
+DEFAULT_FLOTTSBRO_API_BASE_URL = 'https://api-r.referens.sys.kth.se/api/pipeline'
+
 def subscribe():
     subscribe_to_event('deployment', handle_deployment)
 
@@ -22,28 +24,34 @@ def handle_deployment(deployment):
     return deployment
 
 def get_base_url():
-    return environment.get_env_with_default_value(
-        environment.FLOTTSBRO_API_BASE_URL,
-        'https://api-r.referens.sys.kth.se/api/pipeline/')
+    return environment.get_env_with_default_value(environment.FLOTTSBRO_API_BASE_URL, DEFAULT_FLOTTSBRO_API_BASE_URL)
+
+def get_add_endpoint(cluster):
+    return '{}/v1/latest/{}'.format(get_base_url(), cluster)
 
 def add(deployment):
-    endpoint = '{}/v1/latest/{}/{}/'.format(
-        get_base_url(),
-        deployment.cluster,
-        deployment.applicationName)
+    call_endpoint(get_add_endpoint(deployment.cluster), deployment)
 
-    call_endpoint(endpoint, deployment)
+def get_headers():
+    api_key = environment.get_env(environment.FLOTTSBRO_API_KEY)
+    if not api_key:
+        LOG.error('No header env FLOTTSBRO_API_KEY specified ')
+        return None
+
+    return {
+            'api_key':  api_key
+        }
 
 def call_endpoint(endpoint, deployment):
     global LOG
 
     try:
-        headers = {
-            'api_key':  environment.get_env(environment.FLOTTSBRO_API_KEY)
-        }
-        response = requests.post(endpoint, data=deployment, headers=headers)
-
-        LOG.info('Calling url "%s", got response was "%s"', endpoint, response.text)
+        headers = get_headers()
+        if headers:
+            response = requests.post(endpoint, data=deployment, headers=headers)
+            LOG.debug('Calling "%s", response was "%s"', endpoint, response.text)
+        else:
+            LOG.info('Skipped calling flottsbro-api, header constraints not satisfied.')
 
     except (HTTPError, ConnectTimeout, RequestException) as request_ex:
         LOG.error('Could not add deployment to Flottsbro-API: "%s"', request_ex)

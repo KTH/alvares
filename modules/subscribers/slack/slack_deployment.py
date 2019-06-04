@@ -21,6 +21,11 @@ def handle_deployment(deployment):
         send_deployment_to_slack(web_hook, channel, deployment)
     return deployment
 
+def send_payload(channel, payload):
+    web_hook = environment.get_env(environment.SLACK_WEB_HOOK)
+    slack_util.call_slack_endpoint(channel, web_hook, payload)
+
+
 def send_deployment_to_slack(web_hook, channel, deployment):
     global LOG # pylint: disable=W0603
     LOG.debug('Sending Slack deployment notification to channel "%s"', channel)
