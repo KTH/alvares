@@ -26,7 +26,7 @@ def fire_event_in_thread(event, event_data):
     event_thread.start()
 
 def init_subscriptions():
-    subscribers = [cosmosdb, detectify, slack_deployment, slack_error,
+    subscribers = [detectify, slack_deployment, slack_error,
                    slack_recommendation, uptimerobot, application_endpoint,
                    flottsbro, lighthouse]
     event_system.init_subscriptions(subscribers)
