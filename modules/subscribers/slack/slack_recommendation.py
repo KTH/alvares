@@ -34,7 +34,7 @@ def get_slack_channels(recommendation):
     result = set([])
     attribute = 'slackChannels'
     try:
-        if attribute not in recommendation:
+        if attribute not in recommendation or not recommendation[attribute]:
             return []
         channels = recommendation[attribute].split(',')
         for channel in channels:

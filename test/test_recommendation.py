@@ -15,3 +15,8 @@ class TestSlackRecommendation(unittest.TestCase):
             self.assertEqual(
                 len(mock_data.expected_value(sample, 'slackChannels')),
                 len(slack_recommendation.get_slack_channels(sample)))
+
+    def test_slack_channels_is_none(self):
+        recommendation = {'slackChannels': None}
+        result = slack_recommendation.get_slack_channels(recommendation)
+        self.assertEqual([], result)
