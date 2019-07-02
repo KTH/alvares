@@ -322,9 +322,9 @@
         "applicationPath": "/integral-app",
 
         "expected-enriched-values": {
-            "aboutUrl": "https://integral.sys.kth.se/integral-app/_about",
-            "monitorUrl": "https://integral.sys.kth.se/integral-app/_monitor",
-            "applicationUrl": "https://integral.sys.kth.se/integral-app",
+            "aboutUrl": "https://integral.everest.sys.kth.se/integral-app/_about",
+            "monitorUrl": "https://integral.everest.sys.kth.se/integral-app/_monitor",
+            "applicationUrl": "https://integral.everest.sys.kth.se/integral-app",
             "friendlyName": "integral-app",
             "monitorPattern": "APPLICATION_STATUS: OK",
             "importance": "low",

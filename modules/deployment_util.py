@@ -128,9 +128,9 @@ def get_hosts():
         },
         'integral': {
             'app': environment.get_env_with_default_value(environment.INTEGRAL_APP_HOST,
-                                                          'https://integral.sys.kth.se'),
+                                                          'https://integral.everest.sys.kth.se/'),
             'api': environment.get_env_with_default_value(environment.INTEGRAL_API_HOST,
-                                                          'https://integral.sys.kth.se')
+                                                          'https://integral.everest.sys.kth.se/')
         },
         'integral-stage': {
             'app': environment.get_env_with_default_value(environment.INTEGRAL_STAGE_APP_HOST,
