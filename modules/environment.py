@@ -68,7 +68,7 @@ def is_true(value, true_values=[ "yes", "true" ]):
     return False
 
 def use_debug(): # pragma: no cover
-    return is_true(os.environ(DEBUG), [ "yes", "true", "debug" ])
+    return is_true(os.environ.get(DEBUG), [ "yes", "true", "debug" ])
 
 def get_utr_clusters():
     clusters = os.environ.get(UTR_CLUSTERS)
