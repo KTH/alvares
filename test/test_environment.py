@@ -11,12 +11,21 @@ from modules import environment
 class EnvironmentTests(unittest.TestCase):
 
     def test_is_true(self):
-        os.environ["true_value"] = 'True'
-        self.assertTrue(environment.is_true(os.environ["true_value"]))
-        os.environ["false_value"] = 'False'
-        self.assertFalse(environment.is_true(os.environ["false_value"]))
-        os.environ["string_value"] = 'a-value'
-        self.assertTrue(environment.is_true(os.environ["string_value"], ["a-value"]))
+        # False, no env/value passed
+        self.assertFalse(environment.is_true(None))
+
+        # False, value passed but no values to compre against.
+        self.assertFalse(environment.is_true("some-value", None))
+
+        os.environ["env_key"] = 'True'
+        self.assertTrue(environment.is_true(os.environ["env_key"]))
+
+        os.environ["env_key"] = 'a-value'
+        self.assertFalse(environment.is_true(os.environ["env_key"]))
+        self.assertTrue(environment.is_true(os.environ["env_key"], ["a-value"]))
+        
+        os.environ["env_key"] = 'False'
+        self.assertFalse(environment.is_true(os.environ["env_key"]))
 
     def test_use_debug(self):
         # False, no env set
