@@ -55,8 +55,20 @@ def get_env_with_default_value(name, default_value):
         return default_value
     return value.strip()
 
+def is_true(value, true_values=[ "yes", "true" ]):
+    if value is None:
+        return False
+    
+    if true_values is None:
+        return False
+        
+    if value.lower() in true_values:
+        return True
+
+    return False
+
 def use_debug(): # pragma: no cover
-    return os.environ.get(DEBUG)
+    return is_true(os.environ(DEBUG), [ "yes", "true", "debug" ])
 
 def get_utr_clusters():
     clusters = os.environ.get(UTR_CLUSTERS)
