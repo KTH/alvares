@@ -22,7 +22,7 @@ def unsubscribe():
 def handle_deployment(deployment):
     global LOG # pylint: disable=W0603
     if not should_monitor(deployment):
-        LOG.info('Skipping adding monitor for "%s"', deployment)
+        LOG.debug('Skipping adding monitor for "%s"', deployment)
         return
     add_or_edit_monitor(deployment)
     call_slack_channel_with_monitor_url(deployment)
@@ -51,12 +51,12 @@ def should_monitor(deployment):
     app_excluded = app_is_excluded(deployment)
     uses_monitor = has_monitor_url(deployment)
 
-    LOG.info('should_monitor-published: %s %s %s %s', published, cluster_ok, app_excluded, uses_monitor)
+    LOG.debug('should_monitor-published: %s %s %s %s', published, cluster_ok, app_excluded, uses_monitor)
 
     return published and cluster_ok and not app_excluded and uses_monitor
 
 def has_monitor_url(deployment):
-    LOG.info('deployment: "%s"', deployment)
+    LOG.debug('deployment: "%s"', deployment)
     monitor_url = deployment_util.get_monitor_url(deployment)
     if monitor_url:
         return True
@@ -102,7 +102,7 @@ def search_for_existing_monitor(keyword):
     if keyword is None:
         return None
     payload = {'search': keyword}
-    LOG.info('Searching for monitor with keyword "%s"', keyword)
+    LOG.debug('Searching for monitor with keyword "%s"', keyword)
     return call_endpoint('/getMonitors', payload)
 
 def add_or_edit_monitor(deployment):
