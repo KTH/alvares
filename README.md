@@ -1,4 +1,5 @@
-# Alvares :loudspeaker:
+# Alvares :loudspeaker: ![alt text](https://api.travis-ci.org/KTH/alvares.svg?branch=master)
+
 
 External service integration API. Handles deployments, errors and recommendations from [Aspen](https://github.com/KTH/aspen) through a subscriber based module system.
 
