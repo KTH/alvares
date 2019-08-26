@@ -2,8 +2,8 @@ language: python
 python:
   - "3.7"
 # command to install dependencies
-#install:
-#  - pip install -r requirements.txt
+install:
+  - pipenv install --dev 
 # command to run tests
 script:
-  - run_tests.sh
+  - SKIP_INSTALL=True ./run_tests.sh
