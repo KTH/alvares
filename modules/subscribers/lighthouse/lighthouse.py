@@ -98,9 +98,9 @@ def get_payload(channel, deployment, report_path, scanned_url):
         'channels': channel,
         'filetype': 'html',
         'mimetype': 'text/html',
-        'title': f'*{0:.2f}* / 4.0 | Google Lighthouse performance and accessibility'
+        'initial_comment': f'*{0:.2f}* / 4.0 | Google Lighthouse performance and accessibility'
                             .format(parse_total_score(report_path)),
-        'initial_comment': (f'This report was created by scanning {scanned_url}.')
+        'title': (f'This report was created by scanning {scanned_url}.')
     }
 
 def create_file_name(deployment):
