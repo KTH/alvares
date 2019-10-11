@@ -40,5 +40,5 @@ def create_deployment_payload(channel, message, deployment, username='Cluster De
     return body
 
 def create_deployment_message(deployment): # pragma: no cover
-    return (f'*{deployment_util.get_application_name(deployment)}* deployed'
-            f' in *{deployment_util.get_cluster(deployment)}*')
+    return (f'*{deployment_util.get_application_name(deployment)}* is being deployed'
+            f' in *{deployment_util.get_cluster(deployment)}*, this may take up to 30 seconds.')
