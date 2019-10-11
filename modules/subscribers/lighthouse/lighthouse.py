@@ -95,6 +95,7 @@ def get_payload(channel, deployment, report_path, scanned_url):
     return {
         'filename': create_file_name(deployment),
         'token': slack_token,
+        "username": "Accessibility testing report from Google Lighthouse",
         'channels': channel,
         'filetype': 'binary',
         'title': f'{deployment_util.get_friendly_name(deployment)} - Performance and Accessibility Audit',
