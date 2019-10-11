@@ -51,7 +51,7 @@ def call_slack_channel_with_application_endpoint_url(deployment):
     
 def create_slack_payload(message, channel):
     return {
-        'username': 'Alvares',
+        'username': 'Cluster Deployment (Alvares)',
         'text': message,
         'icon_emoji': ':azure:',
         'channel': channel

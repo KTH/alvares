@@ -30,7 +30,7 @@ def handle_deployment(deployment):
 
 def create_slack_payload(message, channel):
     return {
-        'username': 'Alvares',
+        'username': 'Cluster Deployment (Alvares)',
         'text': message,
         'icon_emoji': ':azure:',
         'channel': channel

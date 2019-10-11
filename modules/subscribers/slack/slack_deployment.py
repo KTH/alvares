@@ -35,7 +35,7 @@ def send_deployment_to_slack(web_hook, channel, deployment):
 
 def create_deployment_payload(channel, message, deployment): #pragma: no cover
     body = slack_util.get_payload_body(channel, message, icon=':azure:',
-                                       username='Cluster Deployment')
+                                       username='Cluster Deployment (Alvares)')
     attachment = slack_util.get_attachment(deployment)
     body = slack_util.add_attachment_to_body(body, attachment)
     return body
