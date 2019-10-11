@@ -98,10 +98,8 @@ def get_payload(channel, deployment, report_path, scanned_url):
         "username": "Accessibility testing report from Google Lighthouse",
         'channels': channel,
         'filetype': 'binary',
-        'initial_comment': '{0:.2f}/4.0 | Accessibility report for {}'.format(
-                parse_total_score(report_path),
-                deployment_util.get_friendly_name(deployment)),
-        'title': (f'This report was created by scanning {scanned_url}')
+        'initial_comment': f'Google Lighthouse accessibility report {deployment_util.get_friendly_name(deployment)}.',
+        'title': (f'Score for {scanned_url}: {0:.2f}/4.0'.format(parse_total_score(report_path)))
     }
 
 def create_file_name(deployment):
