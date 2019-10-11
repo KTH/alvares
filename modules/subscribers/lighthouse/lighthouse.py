@@ -95,13 +95,11 @@ def get_payload(channel, deployment, report_path, scanned_url):
     return {
         'filename': create_file_name(deployment),
         'token': slack_token,
-        "title": "Accessibility testing report - Google Lighthouse",
         'channels': channel,
         'filetype': 'binary',
-        'title': f'{deployment_util.get_friendly_name(deployment)} - Performance and Accessibility Audit',
-        'initial_comment': (f'This report was created by scanning {scanned_url} and the total '
-                            'score for this report was {0:.2f}/4.0'
-                            .format(parse_total_score(report_path)))
+        'title': f'*{0:.2f}* / 4.0 | Google Lighthouse performance and accessibility'
+                            .format(parse_total_score(report_path)),
+        'initial_comment': (f'This report was created by scanning {scanned_url}.')
     }
 
 def create_file_name(deployment):
