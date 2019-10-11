@@ -96,7 +96,8 @@ def get_payload(channel, deployment, report_path, scanned_url):
         'filename': create_file_name(deployment),
         'token': slack_token,
         'channels': channel,
-        'filetype': 'binary',
+        'filetype': 'html',
+        'mimetype': 'text/html',
         'title': f'*{0:.2f}* / 4.0 | Google Lighthouse performance and accessibility'
                             .format(parse_total_score(report_path)),
         'initial_comment': (f'This report was created by scanning {scanned_url}.')
