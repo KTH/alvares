@@ -30,12 +30,11 @@ def send_deployment_to_slack(web_hook, channel, deployment):
     global LOG # pylint: disable=W0603
     LOG.debug('Sending Slack deployment notification to channel "%s"', channel)
     message = create_deployment_message(deployment)
-    payload = create_deployment_payload(channel, message, deployment)
+    payload = create_deployment_payload(channel, message, deployment, username="Deployment of service started in cluster (Aspen)")
     slack_util.call_slack_endpoint(channel, web_hook, payload)
 
-def create_deployment_payload(channel, message, deployment): #pragma: no cover
-    body = slack_util.get_payload_body(channel, message, icon=':azure:',
-                                       username='Cluster Deployment (Alvares)')
+def create_deployment_payload(channel, message, deployment, username='Cluster Deployment (Alvares)'): #pragma: no cover
+    body = slack_util.get_payload_body(channel, message, icon=':azure:', username=username)
     attachment = slack_util.get_attachment(deployment)
     body = slack_util.add_attachment_to_body(body, attachment)
     return body
