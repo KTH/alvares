@@ -94,6 +94,7 @@ def raise_if_not_200(response):
 def get_scan_state(auth_header, token):
     global LOG # pylint: disable=W0603
     status_endpoint = create_scan_status_url(token)
+    LOG.debug('Calling detectify endpoint')
     status_response = call_detectify_endpoint(status_endpoint, auth_header, get)
     raise_if_not_200(status_response)
     LOG.debug('Got scan status code response from detectify: "%s"',

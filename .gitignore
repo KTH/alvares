@@ -102,3 +102,6 @@ ENV/
 
 # VS Code config
 .vscode/
+
+# Coverage files
+.coverage.*

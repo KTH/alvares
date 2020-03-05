@@ -2,12 +2,15 @@ __author__ = 'tinglev'
 
 import unittest
 import os
+import logging
 from test import mock_data
 from mock import patch
 import responses
 from requests import HTTPError
 from modules import environment
 from modules.subscribers.detectify import detectify
+
+LOG = logging.getLogger(__name__)
 
 class DetectifyTests(unittest.TestCase):
 
@@ -48,6 +51,7 @@ class DetectifyTests(unittest.TestCase):
 
     @responses.activate
     def test_get_scan_state(self):
+        LOG.debug('Setting up responses')
         responses.add(responses.GET, 'https://api.detectify.com/rest/v2/scans/abc1231/',
                       json={
                           "scan_profile_token": "5605b488634efe810dff4276e28ca7f9",
@@ -61,6 +65,7 @@ class DetectifyTests(unittest.TestCase):
                       body="Error 404", status=404)
         responses.add(responses.GET, 'https://api.detectify.com/rest/v2/scans/abc1234/',
                       body=HTTPError())
+        LOG.debug('Responses added')
         state = detectify.get_scan_state('', 'abc1231')
         self.assertEqual(state, 'starting')
         self.assertRaises(detectify.DetectifyError, detectify.get_scan_state, '', 'abc1232')
