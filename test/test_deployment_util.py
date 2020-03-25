@@ -5,52 +5,71 @@ from test import mock_data
 from modules import deployment_util
 from modules import deployment_enricher
 
+
 class DeploymentUtilTest(unittest.TestCase):
 
     def test_get_about_url_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'aboutUrl'), deployment_util.get_about_url(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'aboutUrl'), deployment_util.get_about_url(sample))
 
     def test_get_monitor_url_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'monitorUrl'), deployment_util.get_monitor_url(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'monitorUrl'), deployment_util.get_monitor_url(sample))
 
     def test_get_monitor_pattern(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'monitorPattern'), deployment_util.get_monitor_pattern(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'monitorPattern'), deployment_util.get_monitor_pattern(sample))
 
     def test_get_application_url_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'applicationUrl'), deployment_util.get_application_url(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'applicationUrl'), deployment_util.get_application_url(sample))
 
     def test_get_friendly_name_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'friendlyName'), deployment_util.get_friendly_name(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'friendlyName'), deployment_util.get_friendly_name(sample))
 
     def test_get_importance_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'importance'), deployment_util.get_importance(sample))
+            self.assertEqual(mock_data.expected_value(
+                sample, 'importance'), deployment_util.get_importance(sample))
 
     def test_get_team_from_samples(self):
         for sample in mock_data.get_deployment_samples():
             sample = deployment_enricher.enrich(sample)
-            self.assertEqual(mock_data.expected_value(sample, 'team'), deployment_util.get_team(sample))
-    
+            self.assertEqual(mock_data.expected_value(
+                sample, 'team'), deployment_util.get_team(sample))
+
+    def test_public_user_documentation_url(self):
+        for sample in mock_data.get_deployment_samples():
+            sample = deployment_enricher.enrich(sample)
+            url = deployment_util.get_public_user_documentation_url(sample)
+
+            if url and url != '':
+                self.assertEqual(mock_data.expected_value(sample, 'publicUserDocumentationUrl'), url )
+
+    def test_private_operations_documentation_url(self):
+        for sample in mock_data.get_deployment_samples():
+            sample = deployment_enricher.enrich(sample)
+            url = deployment_util.get_private_operations_documentation_url(sample)
+            if url and url != '':
+                self.assertEqual(mock_data.expected_value(sample, 'privateOperationsDocumentationUrl'), url )
+
+
+    # Reommencations
     def test_get_slack_channels(self):
         for sample in mock_data.get_recommendation_samples():
             for channel in deployment_util.get_slack_channels(sample):
                 self.assertEqual(
                     len(mock_data.expected_value(sample, 'slackChannels')),
                     len(deployment_util.get_slack_channels(sample)))
-    
-    def test_get_slack_channels(self):
-        for sample in mock_data.get_recommendation_samples():
-            for url in deployment_util.get_public_user_documentation_url(sample):
-                if url:
-                    self.assertEqual(mock_data.expected_value(sample, 'publicUserDocumentationUrl'), url)

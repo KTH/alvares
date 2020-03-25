@@ -6,6 +6,7 @@ from modules import environment
 
 LOG = logging.getLogger(__name__)
 
+
 def enrich(deployment):
     LOG.debug(
         "Adding default values and common calculated values to the 'deployment' json.")
@@ -40,12 +41,17 @@ def enrich(deployment):
     if 'team' not in deployment and 'slackChannels' in deployment:
         add_team_from_slack_channels(deployment)
 
+    if 'private-app' in deployment['applicationName']:
+        print(deployment)
+
     return deployment
 
 
 def add_application_url(deployment):
-    application_url = deployment_util.combine_host_and_paths(deployment_util.get_host(deployment), deployment_util.get_application_path(deployment))
+    application_url = deployment_util.combine_host_and_paths(deployment_util.get_host(
+        deployment), deployment_util.get_application_path(deployment))
     deployment['applicationUrl'] = application_url
+
 
 def add_monitor_url(deployment):
 
@@ -63,6 +69,7 @@ def add_monitor_url(deployment):
     )
 
     deployment['monitorUrl'] = monitor_url
+
 
 def add_about_url(deployment):
 
@@ -85,10 +92,11 @@ def add_about_url(deployment):
 
     deployment['aboutUrl'] = about_url
 
+
 def add_friendly_name(deployment):
 
     friendly_name = ''
- 
+
     if deployment_util.get_public_name_english(deployment):
         friendly_name = deployment_util.get_public_name_english(deployment)
     elif deployment_util.get_public_name_swedish(deployment):
@@ -104,8 +112,9 @@ def add_monitor_pattern(deployment):
     monitor_pattern = ''
 
     if deployment_util.get_monitor_url(deployment):
-        monitor_pattern = environment.get_env_with_default_value(environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
-        
+        monitor_pattern = environment.get_env_with_default_value(
+            environment.UTR_KEYWORD, 'APPLICATION_STATUS: OK')
+
     deployment['monitorPattern'] = monitor_pattern
 
 
@@ -122,8 +131,10 @@ def clean_application_path_(deployment):
     applicationPath = deployment['applicationPath']
 
     if applicationPath.startswith("/"):
-        path = applicationPath.split(';')[0].strip() # "/api/webtex" in "/api/webtex;ReplacePathRegex"
+        # "/api/webtex" in "/api/webtex;ReplacePathRegex"
+        path = applicationPath.split(';')[0].strip()
         deployment['applicationPath'] = path
+
 
 def clean_or_add_importance_level_(deployment):
     if 'importance' not in deployment:

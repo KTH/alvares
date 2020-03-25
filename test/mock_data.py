@@ -43,5 +43,5 @@ def expected_value(sample, attribute):
             return sample["expected-enriched-values"][attribute]
     except KeyError as key_err:
         print(key_err)
-        return None
+        return key_err
     return None

@@ -109,6 +109,9 @@ def get_public_name_swedish(deployment):
 def get_public_user_documentation_url(deployment):
     return get_string_attribute(deployment, 'publicUserDocumentationUrl')
 
+def get_private_operations_documentation_url(deployment):
+    return get_string_attribute(deployment, 'privateOperationsDocumentationUrl')
+
 def get_detectify_tokens(deployment):
     return get_list_attribute(deployment, 'detectifyProfileTokens')
 

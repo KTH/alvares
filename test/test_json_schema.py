@@ -4,7 +4,6 @@ import unittest
 from test import mock_data
 import requests
 from modules import environment
-from modules import deployment_util
 from modules import deployment_enricher
 
 

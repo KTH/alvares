@@ -2,27 +2,24 @@
 # Run: pipenv run pip install pip==18.0
 
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
 [dev-packages]
-
 green           = ">=2.16"
 coverage        = ">=4.5"
 mock            = ">=3.0"
 pylint          = ">=2.3"
 responses       = ">=0.10.12"
+autopep8 = "*"
 
 [packages]
-
 flask           = ">=1.0"
 azure-cosmos    = ">=3.1"
 pydocumentdb    = ">=2.3"
 requests        = ">=2.21"
 coloredlogs     = ">=10.0"
-boxsdk          = {version = ">=2.3", extras = ["jwt"]}
+boxsdk = {version = ">=2.3",extras = ["jwt"]}
 
 [requires]
-
-python_version  = "3.6"
+python_version  = "3.7"
