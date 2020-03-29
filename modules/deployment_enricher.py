@@ -128,11 +128,11 @@ def clean_application_path_(deployment):
     if 'applicationPath' not in deployment or not deployment['applicationPath']:
         return
 
-    applicationPath = deployment['applicationPath']
+    application_path = deployment['applicationPath']
 
-    if applicationPath.startswith("/"):
+    if application_path.startswith("/"):
         # "/api/webtex" in "/api/webtex;ReplacePathRegex"
-        path = applicationPath.split(';')[0].strip()
+        path = application_path.split(';')[0].strip()
         deployment['applicationPath'] = path
 
 
