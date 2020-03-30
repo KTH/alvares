@@ -44,15 +44,4 @@ def call_slack_channel_with_application_endpoint_url(deployment):
                f'{build_information_link(deployment)} '
                f'in *{deployment_util.get_cluster(deployment)}*')
 
-    for channel in deployment_util.get_slack_channels(deployment):
-        slack_util.call_slack_endpoint(channel,
-                                       environment.get_env(environment.SLACK_WEB_HOOK),
-                                       create_slack_payload(message, channel))
-    
-def create_slack_payload(message, channel):
-    return {
-        'username': 'Public information about the service (Alvares)',
-        'text': message,
-        'icon_emoji': ':azure:',
-        'channel': channel
-    }
+    slack_util.call_slack_channels(deployment, message, 'Public information about the service')

@@ -28,22 +28,12 @@ def handle_deployment(deployment):
     call_slack_channel_with_monitor_url(deployment)
     return deployment
 
-def create_slack_payload(message, channel):
-    return {
-        'username': 'Monitoring (Alvares)',
-        'text': message,
-        'icon_emoji': ':azure:',
-        'channel': channel
-    }
-
 def call_slack_channel_with_monitor_url(deployment):
     message = (f':uptime:  *{deployment_util.get_friendly_name(deployment)}* in '
                f'*{deployment_util.get_cluster(deployment)}* is '
                f'monitored using {deployment_util.get_monitor_url(deployment)}')
-    for channel in deployment_util.get_slack_channels(deployment):
-        slack_util.call_slack_endpoint(channel,
-                                       environment.get_env(environment.SLACK_WEB_HOOK),
-                                       create_slack_payload(message, channel))
+
+    slack_util.call_slack_channels(deployment, message, 'Monitoring')
 
 def should_monitor(deployment):
     published = has_application_path(deployment)

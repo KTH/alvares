@@ -36,12 +36,12 @@ def get_deployment_channels(deployment):
             channels.append(channel)
     return channels
 
-def get_payload_body(channel, text, username='Cluster Deployment (Alvares)',
+def get_payload_body(channel, text, username='Cluster Deployment',
                      icon=':azure:'): #pragma: no cover
     return {
         "channel": channel,
         "text": text,
-        "username": username,
+        "username": f'{username} (Alvares)',
         "icon_emoji": icon
     }
 

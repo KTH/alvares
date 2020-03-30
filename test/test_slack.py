@@ -88,7 +88,7 @@ class SlackTests(unittest.TestCase):
         payload_1 = {
             "channel": '#override',
             "text": error_message,
-            "username": 'Alvares Error',
+            "username": 'Alvares Error (Alvares)',
             "icon_emoji": ':no_entry:'
         }
         calls = [
@@ -108,13 +108,13 @@ class SlackTests(unittest.TestCase):
         payload_1 = {
             "channel": '#team-pipeline-logs',
             "text": error_message,
-            "username": 'Alvares Error',
+            "username": 'Alvares Error (Alvares)',
             "icon_emoji": ':no_entry:'
         }
         payload_2 = {
             "channel": '#ita-ops',
             "text": error_message,
-            "username": 'Alvares Error',
+            "username": 'Alvares Error (Alvares)',
             "icon_emoji": ':no_entry:'
         }
         calls = [
@@ -138,13 +138,13 @@ class SlackTests(unittest.TestCase):
         payload_1 = {
             "channel": '#zermatt',
             "text": error_message,
-            "username": 'Alvares Error',
+            "username": 'Alvares Error (Alvares)',
             "icon_emoji": ':no_entry:'
         }
         payload_2 = {
             "channel": '#developers',
             "text": error_message,
-            "username": 'Alvares Error',
+            "username": 'Alvares Error (Alvares)',
             "icon_emoji": ':no_entry:'
         }
         calls = [
