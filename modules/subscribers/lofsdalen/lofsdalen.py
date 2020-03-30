@@ -20,7 +20,7 @@ def get_commit(deployment):
     The version is in format "8.11.0_713eef5s", the last part is the git commit hash.
     '''
     version = deployment_util.get_application_version(deployment)
-    return version[version.find('_'):]
+    return version[(version.find('_') + 1):]
 
 def get_url(deployment):
     '''
