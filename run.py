@@ -7,13 +7,12 @@ from modules.event_system import event_system
 from modules.subscribers.slack import (slack_deployment, slack_error,
                                        slack_recommendation)
 from modules.subscribers.detectify import detectify
-from modules.subscribers.database import cosmosdb
 from modules.subscribers.flottsbro import flottsbro
 from modules.subscribers.uptimerobot import uptimerobot
+from modules.subscribers.lofsdalen import lofsdalen
 from modules.subscribers.application_endpoint import application_endpoint
 from modules.subscribers.lighthouse import lighthouse
 from modules.log import init_logging
-from modules import deployment_util
 from modules import deployment_enricher
 
 FLASK = Flask(__name__)
@@ -28,7 +27,7 @@ def fire_event_in_thread(event, event_data):
 def init_subscriptions():
     subscribers = [detectify, slack_deployment, slack_error,
                    slack_recommendation, uptimerobot, application_endpoint,
-                   flottsbro, lighthouse]
+                   flottsbro, lofsdalen, lighthouse]
     event_system.init_subscriptions(subscribers)
 
 @FLASK.before_request

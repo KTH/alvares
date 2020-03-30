@@ -6,6 +6,8 @@ import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from modules import deployment_util, environment
 
+
+
 def get_attachment(deployment,
                    fallback='Your client does not support attachments :(',
                    color='#aec90c'):
@@ -58,6 +60,13 @@ def call_slack_endpoint(channel, web_hook, payload):
     except (HTTPError, ConnectTimeout, RequestException) as request_ex:
         logger.error('Could not send slack notification to channel "%s": "%s"',
                      channel, request_ex)
+
+def call_slack_channels(deployment, text, username):
+    for channel in deployment_util.get_slack_channels(deployment):
+        call_slack_endpoint(
+            channel,
+            environment.get_env(environment.SLACK_WEB_HOOK),
+            get_payload_body(channel, text, username))
 
 def create_link_to_logs(deployment):
     host = environment.get_env_with_default_value(environment.GRAYLOG_HOST,
