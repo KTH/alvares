@@ -37,7 +37,7 @@ def get_deployment_channels(deployment):
     return channels
 
 def get_payload_body(channel, text, username='Cluster Deployment (Alvares)',
-                     icon=':no_entry:'): #pragma: no cover
+                     icon=':azure:'): #pragma: no cover
     return {
         "channel": channel,
         "text": text,
