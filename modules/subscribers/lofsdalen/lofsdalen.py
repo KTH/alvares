@@ -6,6 +6,7 @@ from modules import deployment_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules.subscribers.slack import slack_util
 from modules import environment
+from modules import feature_flags
 
 LOG = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ def unsubscribe():
 def handle_deployment(deployment):
     global LOG  # pylint: disable=W0603
 
-    if environment.get_env_with_default_value('FEATURE_FLAG_LOFSDALEN', False):
+    if feature_flags.use_lofsdalen():
         commited_when = call_lofsdalen_endpoint_when(get_url(deployment))
         if commited_when is not None:
             call_slack(deployment, commited_when)
