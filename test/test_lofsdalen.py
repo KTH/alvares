@@ -6,6 +6,9 @@ from modules.subscribers.lofsdalen import lofsdalen
 
 class LofsdalenTests(unittest.TestCase):
 
+    def test_get_url(self):
+        self.assertEqual(lofsdalen.get_url(mock_data.get_deployment_sample_enriched()), 'https://api-r.referens.sys.kth.se/api/lofsdalen/v1/kth-azure-app/abc123/when')
+
     def test_get_commit_hash(self):
         self.assertEqual(lofsdalen.get_commit(mock_data.get_deployment_sample_enriched()), 'abc123')
 

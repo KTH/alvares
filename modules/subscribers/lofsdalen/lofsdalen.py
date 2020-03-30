@@ -29,7 +29,7 @@ def get_url(deployment):
     https://api-r.referens.sys.kth.se/api/lofsdalen/v1[/my-git-repo-name]/[commit-hash]/when
     i.e: https://api-r.referens.sys.kth.se/api/lofsdalen/v1/lofsdalen/4b1c21f/when
     '''
-    return f"{get_base_url()}/api/lofsdalen/v1/{get_repo_name(deployment)}/{get_commit(deployment)}/when."
+    return f"{get_base_url()}/api/lofsdalen/v1/{get_repo_name(deployment)}/{get_commit(deployment)}/when"
 
 def subscribe():
     subscribe_to_event('deployment', handle_deployment)
