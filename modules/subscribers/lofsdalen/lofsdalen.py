@@ -42,7 +42,9 @@ def handle_deployment(deployment):
 
     if feature_flags.use_lofsdalen():
         commited_when = call_lofsdalen_endpoint_when(get_url(deployment))
+        LOG.debug("Got response %s.", commited_when)
         if commited_when is not None:
+            LOG.debug("Calling Slack with commited when text.")
             call_slack(deployment, commited_when)
 
     return deployment
