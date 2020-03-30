@@ -29,10 +29,7 @@ def get_url(deployment):
     https://api-r.referens.sys.kth.se/api/lofsdalen/v1[/my-git-repo-name]/[commit-hash]/when
     i.e: https://api-r.referens.sys.kth.se/api/lofsdalen/v1/lofsdalen/4b1c21f/when
     '''
-    global LOG  # pylint: disable=W0603
-    result = f"{get_base_url()}/api/lofsdalen/v1/{get_repo_name(deployment)}/{get_commit(deployment)}/when."
-    LOG.info('Lofsdalen URL: %s', result)
-    return result
+    return f"{get_base_url()}/api/lofsdalen/v1/{get_repo_name(deployment)}/{get_commit(deployment)}/when."
 
 def subscribe():
     subscribe_to_event('deployment', handle_deployment)
@@ -44,13 +41,14 @@ def handle_deployment(deployment):
     global LOG  # pylint: disable=W0603
 
     if feature_flags.use_lofsdalen():
-        commited_when = call_lofsdalen_endpoint_when(get_url(deployment))
-        LOG.info("Got response %s.", commited_when)
-        if commited_when is not None:
+        url = get_url(deployment)
+        committed = call_lofsdalen_endpoint_when(url)
+        LOG.info("Url %s responed %s.", url, committed)
+        if committed is not None:
             LOG.info("Calling Slack with commited when text.")
-            call_slack(deployment, commited_when)
-    else:
-        LOG.inf("No Lofsdalen.")
+            call_slack(deployment, committed)
+        else: 
+            LOG.info("Got no data for %s from Lofsdalen.", deployment_util.get_application_name(deployment))
 
     return deployment
 
@@ -84,8 +82,8 @@ def call_lofsdalen_endpoint_when(api_url):
 
     return None
 
-def get_slack_text(commited_when):
-    return f'This code was pushed to :github: Github *{commited_when["readable"]}*.'
+def get_slack_text(committed):
+    return f'This code was pushed to :github: Github *{committed["readable"]}*.'
 
-def call_slack(deployment, commited_when):
-    slack_util.call_slack_channels(deployment, get_slack_text(commited_when), "Git statistics (Alvares)")
+def call_slack(deployment, committed):
+    slack_util.call_slack_channels(deployment, get_slack_text(committed), "Git statistics (Alvares)")
