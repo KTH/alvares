@@ -23,7 +23,7 @@ def handle_recommendation(recommendation):
 
 def get_slack_payload(channel, message):
     payload = slack_util.get_payload_body(
-        channel, message, icon=':female_student:'
+        channel, message, icon=':azure:'
     )
     return payload
 
