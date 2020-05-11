@@ -27,6 +27,11 @@ class EnvironmentTests(unittest.TestCase):
         os.environ["env_key"] = 'False'
         self.assertFalse(environment.is_true(os.environ["env_key"]))
 
+        # Allow bools as ok values
+        self.assertTrue(environment.is_true(True))
+        self.assertFalse(environment.is_true(False))
+
+
     def test_use_debug(self):
         # False, no env set
         self.assertFalse(environment.use_debug())

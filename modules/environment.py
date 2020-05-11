@@ -63,6 +63,9 @@ def is_true(value, true_values=[ "yes", "true" ]):
     
     if true_values is None:
         return False
+
+    if isinstance(value, bool):
+        return value
         
     if value.lower() in true_values:
         return True
