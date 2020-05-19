@@ -53,6 +53,12 @@ External service integration API. Handles deployments, errors and recommendation
 | SLACK_API_BASE_URL | Slack | The base URL for the Slack API to use |
 | - | - | - |
 | LIGHTHOUSE_IMAGE | Lighthouse | What Docker image of Lighthouse to use |
+| - | - | - |
+| FLOTTSBRO_API_KEY | Flottsbro | Key with scope write to Flottsbro |
+| FLOTTSBRO_API_BASE_URL | Flottsbro | Protocoll and host to Flottsbro API |
+| - | - | - |
+| FEATURE_FLAG_LOFSDALEN | Lofsdalen | Turn on or off Lofsdalen |
+| LOFSDALEN_API_BASE_URL | Lofsdalen | Protocoll and host to Lofsdalen API |
 
 ## How it works
 
