@@ -7,7 +7,7 @@ import json
 import shutil
 import logging
 import tempfile
-import datetime
+from datetime import datetime
 import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from boxsdk import JWTAuth
@@ -48,7 +48,10 @@ def process_url_to_scan(deployment, url_to_scan):
                                          f'-v {tmp_dir}:/report '
                                          f'{image}')
         logger.debug('Output from lighthouse was: "%s"', output)
-        report_path = f'{tmp_dir}/report.html'
+        app_name = deployment_util.get_application_name(deployment)
+        now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+        report_path = f'{tmp_dir}/{app_name}_{now}.html'
+        logger.debug(f'Report path is {report_path}')
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
             send_file_to_slack(channel, deployment, report_path, url_to_scan)
@@ -71,7 +74,8 @@ def upload_to_storage(deployment, report_path):
         client.create_container(container)
     except:
         logger.debug('Exception when creating container. Perhaps it already exists?')
-    blob_client = client.get_blob_client(container=container, blob=report_path)
+    filename = os.path.basename(report_path)
+    blob_client = client.get_blob_client(container=container, blob=filename)
     with open(report_path, "rb") as data:
         blob_client.upload_blob(data)
     logger.info('Report upload complete')
