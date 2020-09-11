@@ -51,6 +51,7 @@ def process_url_to_scan(deployment, url_to_scan):
         app_name = deployment_util.get_application_name(deployment)
         now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
         report_path = f'{tmp_dir}/{app_name}_{now}.html'
+        os.rename(f'{tmp_dir}/report.html', report_path)
         logger.debug(f'Report path is {report_path}')
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
