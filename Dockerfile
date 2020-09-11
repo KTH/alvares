@@ -5,7 +5,7 @@ WORKDIR /repo
 
 RUN apk update && \
     apk upgrade && \
-    apk add docker build-base python3-dev libffi-dev openssl-dev
+    apk add docker libxml2-dev libxslt-dev build-base python3-dev libffi-dev openssl-dev
 
 COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
