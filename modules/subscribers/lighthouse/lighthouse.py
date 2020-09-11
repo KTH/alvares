@@ -1,6 +1,7 @@
 __author__ = 'tinglev'
 
 import os
+from os import environ
 import re
 import json
 import shutil
@@ -11,6 +12,7 @@ import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from boxsdk import JWTAuth
 from boxsdk import Client as BoxClient
+from azure.storage.blob import BlobServiceClient
 from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
@@ -50,9 +52,29 @@ def process_url_to_scan(deployment, url_to_scan):
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
             send_file_to_slack(channel, deployment, report_path, url_to_scan)
+        if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
+            upload_to_storage(deployment, report_path)
     finally:
         if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
             shutil.rmtree(tmp_dir)
+
+def upload_to_storage(deployment, report_path):
+    logger = logging.getLogger(__name__)
+    logger.info('Lighthouse connections string found, uploading report')
+    connect_str = environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING)
+    client = BlobServiceClient.from_connection_string(connect_str)
+    container = 'no team'
+    if 'team' in deployment:
+        container = deployment['team']
+    try:
+        logger.debug(f'Using container "{container}"')
+        client.create_container(container)
+    except:
+        logger.debug('Exception when creating container. Perhaps it already exists?')
+    blob_client = client.get_blob_client(container=container, blob=report_path)
+    with open(report_path, "rb") as data:
+        blob_client.upload_blob(data)
+    logger.info('Report upload complete')
 
 def get_urls_to_scan(deployment):
     explicit_urls = deployment_util.get_accessibility_urls(deployment)
