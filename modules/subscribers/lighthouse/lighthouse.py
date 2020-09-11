@@ -135,7 +135,7 @@ def create_file_name(deployment):
     return f'report_{app_name}_{cluster_name}_{date_time}.html'
 
 def get_current_date_time():
-    return datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
+    return datetime.now().strftime('%Y-%m-%d_%H-%M')
 
 def parse_total_score(report_path):
     total_score = 0.0
