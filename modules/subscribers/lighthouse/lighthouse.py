@@ -57,10 +57,10 @@ def process_url_to_scan(deployment, url_to_scan):
         os.rename(f'{tmp_dir}/report.report.html', f'{report_path}.html')
         os.rename(f'{tmp_dir}/report.report.json', f'{report_path}.json')
 
-        logger.debug(f'Report path is {report_path}')
+        logger.debug(f'Report path is {report_path}.html')
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
-            send_file_to_slack(channel, deployment, report_path, url_to_scan)
+            send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
             upload_to_storage(deployment, report_path)
     finally:
@@ -81,7 +81,11 @@ def upload_to_storage(deployment, report_path):
     except:
         logger.debug('Container already exists')
     clean_old_blobs(deployment, client, container)
-    filename = os.path.basename(report_path)
+    filename = os.path.basename(f'{report_path}.html')
+    blob_client = client.get_blob_client(container=container, blob=filename)
+    with open(report_path, "rb") as data:
+        blob_client.upload_blob(data)
+    filename = os.path.basename(f'{report_path}.json')
     blob_client = client.get_blob_client(container=container, blob=filename)
     with open(report_path, "rb") as data:
         blob_client.upload_blob(data)
