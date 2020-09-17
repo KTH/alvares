@@ -54,8 +54,8 @@ def process_url_to_scan(deployment, url_to_scan):
         commit = commit.split('_')[1]
         path = urlparse(url_to_scan).path.replace('/', '-')
         report_path = f'{tmp_dir}/{app_name}_{commit}_{path}'
-        os.rename(f'{tmp_dir}/report.html', f'{report_path}.html')
-        os.rename(f'{tmp_dir}/report.json', f'{report_path}.json')
+        os.rename(f'{tmp_dir}/report.report.html', f'{report_path}.html')
+        os.rename(f'{tmp_dir}/report.report.json', f'{report_path}.json')
 
         logger.debug(f'Report path is {report_path}')
         #box_link = upload_to_box(report_path, deployment)
