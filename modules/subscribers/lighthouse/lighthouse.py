@@ -90,7 +90,10 @@ def upload_to_storage(deployment, report_path, url_path):
     filename = os.path.basename(json_path)
     blob_client = client.get_blob_client(container=container, blob=filename)
     with open(json_path, "rb") as data:
-        blob_client.upload_blob(data)
+        try:
+            blob_client.upload_blob(data)
+        except:
+            logger.debug('Couldnt upload file. Does it already exist?')
     logger.info('Report upload complete')
 
 def clean_old_blobs(deployment, service_client, container_name, url_path):
