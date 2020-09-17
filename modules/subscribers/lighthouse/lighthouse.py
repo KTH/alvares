@@ -81,23 +81,27 @@ def upload_to_storage(deployment, report_path):
     except:
         logger.debug('Container already exists')
     clean_old_blobs(deployment, client, container)
-    filename = os.path.basename(f'{report_path}.html')
+    html_path = f'{report_path}.html'
+    json_path = f'{report_path}.json'
+    filename = os.path.basename(html_path)
     blob_client = client.get_blob_client(container=container, blob=filename)
-    with open(report_path, "rb") as data:
+    with open(html_path, "rb") as data:
         blob_client.upload_blob(data)
-    filename = os.path.basename(f'{report_path}.json')
+    filename = os.path.basename(json_path)
     blob_client = client.get_blob_client(container=container, blob=filename)
-    with open(report_path, "rb") as data:
+    with open(json_path, "rb") as data:
         blob_client.upload_blob(data)
     logger.info('Report upload complete')
 
 def clean_old_blobs(deployment, service_client, container_name):
+    logger = logging.getLogger(__name__)
     client = service_client.get_container_client(container_name)
     app_name = deployment_util.get_application_name(deployment)
     blobs = client.list_blobs(name_starts_with=app_name)
     as_list = [b for b in blobs]
     as_list.sort(key=lambda b:b.last_modified, reverse=True)
     if len(as_list) > 10:
+        logger.info(f'Cleaning {len(as_list)} old reports')
         for b in as_list[10:]:
             blob_client = service_client.get_blob_client(
                 container=container_name,
