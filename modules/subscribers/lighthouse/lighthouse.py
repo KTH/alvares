@@ -94,10 +94,11 @@ def upload_to_storage(deployment, report_path):
 def clean_old_blobs(deployment, service_client, container_name):
     client = service_client.get_container_client(container_name)
     app_name = deployment_util.get_application_name(deployment)
-    blob_list = client.list_blobs(name_starts_with=app_name)
-    blob_list.sort(key=lambda b:b.last_modified, reverse=True)
-    if len(blob_list) > 10:
-        for b in blob_list[10:]:
+    blobs = client.list_blobs(name_starts_with=app_name)
+    as_list = [b for b in blobs]
+    as_list.sort(key=lambda b:b.last_modified, reverse=True)
+    if len(as_list) > 10:
+        for b in as_list[10:]:
             blob_client = service_client.get_blob_client(
                 container=container_name,
                 blob=b.name
