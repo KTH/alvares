@@ -7,12 +7,13 @@ import json
 import shutil
 import logging
 import tempfile
+from urllib.parse import urlparse
 from datetime import datetime
 import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from boxsdk import JWTAuth
 from boxsdk import Client as BoxClient
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, ResourceExistsError
 from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
@@ -49,9 +50,13 @@ def process_url_to_scan(deployment, url_to_scan):
                                          f'{image}')
         logger.debug('Output from lighthouse was: "%s"', output)
         app_name = deployment_util.get_application_name(deployment)
-        now = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-        report_path = f'{tmp_dir}/{app_name}_{now}.html'
-        os.rename(f'{tmp_dir}/report.html', report_path)
+        commit = deployment_util.get_application_version(deployment)
+        commit = commit.split('_')[1]
+        path = urlparse(url_to_scan).path.replace('/', '-')
+        report_path = f'{tmp_dir}/{app_name}_{commit}_{path}'
+        os.rename(f'{tmp_dir}/report.html', f'{report_path}.html')
+        os.rename(f'{tmp_dir}/report.json', f'{report_path}.json')
+
         logger.debug(f'Report path is {report_path}')
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
@@ -73,13 +78,27 @@ def upload_to_storage(deployment, report_path):
     try:
         logger.debug(f'Using container "{container}"')
         client.create_container(container)
-    except:
-        logger.debug('Exception when creating container. Perhaps it already exists?')
+    except ResourceExistsError:
+        logger.debug('Container already exists')
+    clean_old_blobs(deployment, client, container)
     filename = os.path.basename(report_path)
     blob_client = client.get_blob_client(container=container, blob=filename)
     with open(report_path, "rb") as data:
         blob_client.upload_blob(data)
     logger.info('Report upload complete')
+
+def clean_old_blobs(deployment, service_client, container_name):
+    client = service_client.get_container_client(container_name)
+    app_name = deployment_util.get_application_name(deployment)
+    blob_list = client.list_blobs(name_starts_with=app_name)
+    blob_list.sort(key=lambda b:b.last_modified, reverse=True)
+    if len(blob_list) > 10:
+        for b in blob_list[10:]:
+            blob_client = service_client.get_blob_client(
+                container=container_name,
+                blob=b.name
+            )
+            blob_client.delete_blob()
 
 def get_urls_to_scan(deployment):
     explicit_urls = deployment_util.get_accessibility_urls(deployment)
