@@ -13,7 +13,7 @@ import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from boxsdk import JWTAuth
 from boxsdk import Client as BoxClient
-from azure.storage.blob import BlobServiceClient, ResourceExistsError
+from azure.storage.blob import BlobServiceClient
 from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
@@ -78,7 +78,7 @@ def upload_to_storage(deployment, report_path):
     try:
         logger.debug(f'Using container "{container}"')
         client.create_container(container)
-    except ResourceExistsError:
+    except:
         logger.debug('Container already exists')
     clean_old_blobs(deployment, client, container)
     filename = os.path.basename(report_path)
