@@ -52,8 +52,8 @@ def process_url_to_scan(deployment, url_to_scan):
         app_name = deployment_util.get_application_name(deployment)
         commit = deployment_util.get_application_version(deployment)
         commit = commit.split('_')[1]
-        path = urlparse(url_to_scan).path.replace('/', '-')
-        report_path = f'{tmp_dir}/{app_name}_{commit}_{path}'
+        url_path = urlparse(url_to_scan).path.replace('/', '-')
+        report_path = f'{tmp_dir}/{app_name}_{commit}_{url_path}'
         os.rename(f'{tmp_dir}/report.report.html', f'{report_path}.html')
         os.rename(f'{tmp_dir}/report.report.json', f'{report_path}.json')
 
@@ -62,12 +62,12 @@ def process_url_to_scan(deployment, url_to_scan):
         for channel in slack_util.get_deployment_channels(deployment):
             send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
-            upload_to_storage(deployment, report_path)
+            upload_to_storage(deployment, report_path, url_path)
     finally:
         if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
             shutil.rmtree(tmp_dir)
 
-def upload_to_storage(deployment, report_path):
+def upload_to_storage(deployment, report_path, url_path):
     logger = logging.getLogger(__name__)
     logger.info('Lighthouse connections string found, uploading report')
     connect_str = environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING)
@@ -80,7 +80,7 @@ def upload_to_storage(deployment, report_path):
         client.create_container(container)
     except:
         logger.debug('Container already exists')
-    clean_old_blobs(deployment, client, container)
+    clean_old_blobs(deployment, client, container, url_path)
     html_path = f'{report_path}.html'
     json_path = f'{report_path}.json'
     filename = os.path.basename(html_path)
@@ -93,16 +93,17 @@ def upload_to_storage(deployment, report_path):
         blob_client.upload_blob(data)
     logger.info('Report upload complete')
 
-def clean_old_blobs(deployment, service_client, container_name):
+def clean_old_blobs(deployment, service_client, container_name, url_path):
     logger = logging.getLogger(__name__)
     client = service_client.get_container_client(container_name)
     app_name = deployment_util.get_application_name(deployment)
     blobs = client.list_blobs(name_starts_with=app_name)
-    as_list = [b for b in blobs]
+    as_list = [b for b in blobs if url_path in b.name]
     as_list.sort(key=lambda b:b.last_modified, reverse=True)
-    if len(as_list) > 10:
-        logger.info(f'Cleaning {len(as_list)} old reports')
-        for b in as_list[10:]:
+    max_files_per_path = 5
+    if len(as_list) > max_files_per_path:
+        logger.info(f'Cleaning {len(as_list) - max_files_per_path} old reports')
+        for b in as_list[max_files_per_path:]:
             blob_client = service_client.get_blob_client(
                 container=container_name,
                 blob=b.name
