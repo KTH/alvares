@@ -98,9 +98,13 @@ def clean_old_blobs(deployment, service_client, container_name, url_path):
     client = service_client.get_container_client(container_name)
     app_name = deployment_util.get_application_name(deployment)
     blobs = client.list_blobs(name_starts_with=app_name)
-    as_list = [b for b in blobs if url_path in b.name]
+    as_list = [
+        b for b 
+        in blobs 
+        if b.name.replace('.html', '').replace('.json', '').endswith(url_path)
+    ]
     as_list.sort(key=lambda b:b.last_modified, reverse=True)
-    max_files_per_path = 5
+    max_files_per_path = 10
     if len(as_list) > max_files_per_path:
         logger.info(f'Cleaning {len(as_list) - max_files_per_path} old reports')
         for b in as_list[max_files_per_path:]:
