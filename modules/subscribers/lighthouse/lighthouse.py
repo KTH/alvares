@@ -13,7 +13,7 @@ import requests
 from requests import HTTPError, ConnectTimeout, RequestException
 from boxsdk import JWTAuth
 from boxsdk import Client as BoxClient
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, BlobProperties, ContentSettings
 from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
@@ -84,20 +84,35 @@ def upload_to_storage(deployment, report_path, url_path):
     html_path = f'{report_path}.html'
     json_path = f'{report_path}.json'
     filename = os.path.basename(html_path)
-    blob_client = client.get_blob_client(container=container, blob=filename)
+    blob_properties = get_blob_properties(filename)
+    blob_client = client.get_blob_client(container=container, blob=blob_properties)
     with open(html_path, "rb") as data:
         try:
             blob_client.upload_blob(data)
         except:
             logger.debug('Couldnt upload file. Does it already exist?')
     filename = os.path.basename(json_path)
-    blob_client = client.get_blob_client(container=container, blob=filename)
+    blob_properties = get_blob_properties(filename)
+    blob_client = client.get_blob_client(container=container, blob=blob_properties)
     with open(json_path, "rb") as data:
         try:
             blob_client.upload_blob(data)
         except:
             logger.debug('Couldnt upload file. Does it already exist?')
     logger.info('Report upload complete')
+
+def get_blob_properties(filename):
+    props = BlobProperties()
+    content = ContentSettings()
+    if '.json' in filename:
+        content.content_type = 'application/json'
+    elif '.html' in filename:
+        content.content_type = 'text/html'
+    else:
+        content.content_type = 'text/plain'
+    content.content_disposition = f'attachment; filename={filename}'
+    props.content_settings = content
+    return props
 
 def clean_old_blobs(deployment, service_client, container_name, url_path):
     logger = logging.getLogger(__name__)
