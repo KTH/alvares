@@ -104,6 +104,7 @@ def upload_to_storage(deployment, report_path, url_path):
 def get_blob_properties(filename):
     props = BlobProperties()
     content = ContentSettings()
+    props.name = filename
     if '.json' in filename:
         content.content_type = 'application/json'
     elif '.html' in filename:
