@@ -102,8 +102,10 @@ def upload_to_storage(deployment, report_path, url_path):
     logger.info('Report upload complete')
 
 def get_blob_properties(filename):
+    logger = logging.getLogger(__name__)
     props = BlobProperties()
     content = ContentSettings()
+    logger.debug('Settings props for file %s', filename)
     props.name = filename
     if '.json' in filename:
         content.content_type = 'application/json'
@@ -111,6 +113,7 @@ def get_blob_properties(filename):
         content.content_type = 'text/html'
     else:
         content.content_type = 'text/plain'
+    logger.debug('Content-type set to %s', content.content_type)
     content.content_disposition = f'attachment; filename={filename}'
     props.content_settings = content
     return props
