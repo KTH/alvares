@@ -86,6 +86,7 @@ def upload_to_storage(deployment, report_path, url_path):
     filename = os.path.basename(html_path)
     blob_properties = get_blob_properties(filename)
     blob_client = client.get_blob_client(container=container, blob=blob_properties)
+    blob_client.set_http_headers(content_settings=blob_properties.content_settings)
     with open(html_path, "rb") as data:
         try:
             blob_client.upload_blob(data)
@@ -94,6 +95,7 @@ def upload_to_storage(deployment, report_path, url_path):
     filename = os.path.basename(json_path)
     blob_properties = get_blob_properties(filename)
     blob_client = client.get_blob_client(container=container, blob=blob_properties)
+    blob_client.set_http_headers(content_settings=blob_properties.content_settings)
     with open(json_path, "rb") as data:
         try:
             blob_client.upload_blob(data)
