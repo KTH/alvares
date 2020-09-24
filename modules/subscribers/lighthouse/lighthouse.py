@@ -116,7 +116,7 @@ def get_blob_properties(filename):
     else:
         content.content_type = 'text/plain'
     logger.debug('Content-type set to %s', content.content_type)
-    content.content_disposition = f'attachment; filename={filename}'
+    content.content_disposition = f'inline; filename={filename}'
     props.content_settings = content
     return props
 
