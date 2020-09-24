@@ -84,6 +84,7 @@ def upload_to_storage(deployment, report_path, url_path):
     html_path = f'{report_path}.html'
     json_path = f'{report_path}.json'
     filename = os.path.basename(html_path)
+    logger.debug('Generated filename "%s"', filename)
     blob_properties = get_blob_properties(filename)
     blob_client = client.get_blob_client(container=container, blob=blob_properties)
     blob_client.set_http_headers(content_settings=blob_properties.content_settings)
