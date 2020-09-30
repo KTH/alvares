@@ -24,4 +24,4 @@ class LofsdalenTests(unittest.TestCase):
 
         text = lofsdalen.get_slack_text(mock_commited_when)
 
-        self.assertEqual('Pushed to :github: Github *4 months ago*.', text)
+        self.assertEqual('This code was pushed to :github: github.com *4 months ago*.', text)
