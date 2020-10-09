@@ -1,6 +1,7 @@
 [{
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -21,6 +22,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "stage",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -40,6 +42,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "stage",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -60,6 +63,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "missing-cluster",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -79,6 +83,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "missing-cluster",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -98,6 +103,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -118,6 +124,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -138,6 +145,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-pipeline-build,#devops",
@@ -159,6 +167,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-pipeline-build,#devops",
@@ -185,6 +194,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-pipeline-build,#devops",
@@ -210,6 +220,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-pipeline-build,#devops",
@@ -231,6 +242,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-pipeline-build,#devops",
@@ -253,6 +265,7 @@
     {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#team-studadm-alerts,#team-ateam-build,#devops,#devops,#devops,#devops,#devops,invalid-channel-name",
@@ -275,6 +288,7 @@
     {
         "applicationName": "old-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "slackChannels": "#devops-alerts,#team-kth-webb-build,#team-pipeline-build",
@@ -297,6 +311,7 @@
     {
         "applicationName": "integral-app",
         "cluster": "integral-stage",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "integral-app",
         "created": "",
@@ -316,6 +331,7 @@
     {
         "applicationName": "integral-app",
         "cluster": "integral",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "integral-app",
         "created": "",
@@ -335,6 +351,7 @@
     {
         "applicationName": "integral-app",
         "cluster": "integral",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "integral-app",
         "created": "",
@@ -353,6 +370,7 @@
     }, {
         "applicationName": "grafana",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "grafana",
         "created": "",
@@ -372,6 +390,7 @@
     }, {
         "applicationName": "grafana",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "grafana",
         "created": "",
@@ -392,6 +411,7 @@
     }, {
         "applicationName": "kth-azure-app",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "kth-azure-app",
         "created": "",
@@ -412,6 +432,7 @@
     }, {
         "applicationName": "batch-to-file-oupt",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "batch-to-file-oupt",
         "created": "",
@@ -432,6 +453,7 @@
     }, {
         "applicationName": "batch-to-file-oupt",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "batch-to-file-oupt",
         "created": "",
@@ -452,6 +474,7 @@
     }, {
         "applicationName": "batch-to-file-oupt",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "batch-to-file-oupt",
         "created": "",
@@ -472,6 +495,7 @@
     }, {
         "applicationName": "webtex",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "webtex",
         "created": "",
@@ -493,6 +517,7 @@
     }, {
         "applicationName": "webtex",
         "cluster": "active",
+        "replicas": "4",
         "version": "2.0.11_abc123",
         "imageName": "webtex",
         "created": "",

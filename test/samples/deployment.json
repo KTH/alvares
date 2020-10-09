@@ -12,5 +12,6 @@
     "importance": "high",
     "applicationPath": "/kth-azure-app",
     "detectifyProfileTokens": "abc123xyz456,987mnb654vcx",
-    "testAccessibility": "true"
+    "testAccessibility": "true",
+    "replicas": "3"
 }
