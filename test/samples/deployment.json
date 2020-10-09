@@ -13,5 +13,5 @@
     "applicationPath": "/kth-azure-app",
     "detectifyProfileTokens": "abc123xyz456,987mnb654vcx",
     "testAccessibility": "true",
-    "replicas": "3"
+    "replicas": 3
 }

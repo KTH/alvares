@@ -5,6 +5,7 @@ from modules import environment
 
 LOG = logging.getLogger(__name__)
 
+
 def get_string_attribute(deployment, attribute):
 
 
@@ -24,6 +25,26 @@ def get_string_attribute(deployment, attribute):
 
     except KeyError:
         return ''
+
+
+def get_int_attribute(deployment, attribute):
+
+
+    try:
+        if not attribute:
+            return None
+
+        if attribute not in deployment:
+            return None
+        
+        value =  deployment[attribute]
+
+        return int(value)
+
+    except KeyError:
+        return None
+
+
 
 def get_url_attribute(deployment, attribute):
     result = get_string_attribute(deployment, attribute)
@@ -95,7 +116,7 @@ def get_application_version(deployment):
     return get_string_attribute(deployment, 'version')
 
 def get_replicas(deployment):
-    return get_string_attribute(deployment, 'replicas')
+    return get_int_attribute(deployment, 'replicas')
 
 def get_cluster(deployment):
     return get_string_attribute(deployment, 'cluster')
