@@ -23,4 +23,4 @@ boxsdk = {version = ">=2.3",extras = ["jwt"]}
 azure-storage-blob = ">=12.5.0"
 
 [requires]
-python_version  = "3.6"
+python_version  = "3"
