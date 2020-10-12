@@ -19,7 +19,7 @@ def get_string_attribute(deployment, attribute):
         value =  deployment[attribute]
 
         if value:
-            return value.replace('"', '').strip()
+            return str(value).replace('"', '').strip()
         
         return ''
 
