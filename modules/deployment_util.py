@@ -116,7 +116,7 @@ def get_application_version(deployment):
     return get_string_attribute(deployment, 'version')
 
 def get_replicas(deployment):
-    return get_int_attribute(deployment, 'replicas')
+    return get_string_attribute(deployment, 'replicas')
 
 def get_cluster(deployment):
     return get_string_attribute(deployment, 'cluster')
