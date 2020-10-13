@@ -118,6 +118,14 @@ def get_application_version(deployment):
 def get_replicas(deployment):
     return get_string_attribute(deployment, 'replicas')
 
+def has_zero_replicas(deployment):
+    replicas = get_replicas(deployment)
+    if not replicas:
+        return False
+    if replicas.strip() == '0':
+        return True
+    return False
+
 def get_cluster(deployment):
     return get_string_attribute(deployment, 'cluster')
 

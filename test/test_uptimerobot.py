@@ -1,13 +1,52 @@
-__author__ = 'tinglev'
+__author__ = 'paddy'
 
+from modules.subscribers.uptimerobot.uptimerobot import call_endpoint
+from modules import deployment_enricher
 import os
 import unittest
 from test import mock_data
-from mock import Mock
+from mock import Mock, patch
 from modules.subscribers.uptimerobot import uptimerobot
 from modules import environment
 
 class UptimerobotTests(unittest.TestCase):
+
+    @patch.object(uptimerobot, 'select_alert_contact')
+    @patch.object(uptimerobot, 'call_endpoint')
+    def test_modify_or_add_monitor(self, call_endpoint, _):
+        deployment = mock_data.get_deployment_sample_enriched()
+        # New monitor
+        uptimerobot.modify_or_add_monitor(deployment)
+        call_endpoint.assert_called_once()
+        call_endpoint.assert_called_with(
+            '/newMonitor',
+            uptimerobot.get_api_payload(deployment)
+        )
+
+        # Delete monitor
+        call_endpoint.reset_mock()
+        deployment['replicas'] = '0'
+        uptimerobot.modify_or_add_monitor(deployment, 1)
+        call_endpoint.assert_called_once()
+        call_endpoint.assert_called_with(
+            '/deleteMonitor',
+            uptimerobot.get_api_payload(deployment, 1)
+        )
+
+        # Do nothing
+        call_endpoint.reset_mock()
+        uptimerobot.modify_or_add_monitor(deployment)
+        call_endpoint.assert_not_called()
+
+        # Edit monitor
+        call_endpoint.reset_mock()
+        deployment['replicas'] = 'global'
+        uptimerobot.modify_or_add_monitor(deployment, 1)
+        call_endpoint.assert_called_once()
+        call_endpoint.assert_called_with(
+            '/editMonitor',
+            uptimerobot.get_api_payload(deployment, 1)
+        )
 
     def test_has_application_path(self):
         deployment = mock_data.get_deployment_sample_enriched()
@@ -86,4 +125,3 @@ class UptimerobotTests(unittest.TestCase):
         deployment = mock_data.get_deployment_sample_enriched()
 
         self.assertEqual(studadm_id, uptimerobot.select_alert_contact(deployment))
-

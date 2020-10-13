@@ -3,6 +3,7 @@ __author__ = 'tinglev'
 import logging
 import requests
 from requests import HTTPError, ConnectTimeout, RequestException
+from requests.models import parse_url
 from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
@@ -111,9 +112,7 @@ def add_or_edit_monitor(deployment):
         LOG.error('Could not add or edit monitor for: "%s"',
                   format(deployment.monitor_url), exc_info=True)
 
-def modify_or_add_monitor(deployment, monitor_id=None):
-    global LOG # pylint: disable=W0603
-    
+def get_api_payload(deployment, monitor_id=None):
     payload = {
         'url': deployment_util.get_monitor_url(deployment),
         'friendly_name': deployment_util.get_friendly_name(deployment),
@@ -126,12 +125,27 @@ def modify_or_add_monitor(deployment, monitor_id=None):
     }
     if monitor_id:
         payload['id'] = monitor_id
-        LOG.info('Editing monitor with id "%s"', monitor_id)
-        call_endpoint('/editMonitor', payload)
+    return payload
+
+def modify_or_add_monitor(deployment, monitor_id=None):
+    global LOG # pylint: disable=W0603
+
+    payload = get_api_payload(deployment, monitor_id)
+    has_zero_replicas = deployment_util.has_zero_replicas(deployment)
+    if monitor_id:
+        if has_zero_replicas:
+            LOG.info('Deleting monitor with id "%s"', monitor_id)
+            call_endpoint('/deleteMonitor', payload)
+        else:
+            LOG.info('Editing monitor with id "%s"', monitor_id)
+            call_endpoint('/editMonitor', payload)
     else:
-        LOG.info('Adding monitor with friendly name "%s"',
-                 deployment_util.get_friendly_name(deployment))
-        call_endpoint('/newMonitor', payload)
+        if has_zero_replicas:
+            LOG.info('Zero replicas, but no monitor exists - skip')
+        else:
+            LOG.info('Adding monitor with friendly name "%s"',
+                deployment_util.get_friendly_name(deployment))
+            call_endpoint('/newMonitor', payload)
 
 def select_alert_contact(deployment):
     contacts = get_alert_contacts()
