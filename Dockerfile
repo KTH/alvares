@@ -1,4 +1,4 @@
-FROM kthse/kth-python:3.6.0
+FROM kthse/kth-python:3.7.0
 
 RUN mkdir /repo
 WORKDIR /repo
