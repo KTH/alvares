@@ -86,7 +86,7 @@ When Alvares recives the deployment data it enriches this with more data
 ## Integrations
 
 - *Slack* - Extended developer information about the deployment
-- *Dizin database* - Stores deployments for [Flottsbro-API](https://github.com/KTH/flottsbro-api)
+- *Flottsbro-api* - Stores deployments for other services to use, including [Flottsbro-web](https://app.kth.se/pipeline/)
 - *Detectify* - Security scanning through APIs at [Detectify](https://detectify.com)
 - *Lighthouse* - Accessability scanning through [Google Lighthouse](https://github.com/GoogleChrome/lighthouse)
 - *UptimeRobot* - Health monitoring for public web endpoints through [UpTimeRobot](https://uptimerobot.com). Also serves as the source for our own Nagios monitoring.
