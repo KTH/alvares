@@ -59,11 +59,12 @@ def process_url_to_scan(deployment, url_to_scan):
 
         logger.debug(f'Report path is {report_path}.html')
         #box_link = upload_to_box(report_path, deployment)
-        for channel in slack_util.get_deployment_channels(deployment):
-            #send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)x
-            send_info_to_slack(deployment)
+        
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
             upload_to_storage(deployment, report_path, url_path)
+        
+        send_info_to_slack(deployment)
+        
     finally:
         if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
             shutil.rmtree(tmp_dir)
