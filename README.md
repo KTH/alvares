@@ -104,4 +104,4 @@ When Alvares recives the deployment data it enriches this with more data
 
 To skip an integration, just set the environment variable `DISABLED_SUBSCRIBERS` to a comma
 separated list of all module names that should be excluded. For example:
-`modules.subscribers.database.cosmosdb`
+`modules.subscribers.flottsbro.flottsbro`

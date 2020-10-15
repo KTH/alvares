@@ -5,20 +5,20 @@ import unittest
 import logging
 from unittest import mock
 from modules.event_system import event_system
-from modules.subscribers.database import cosmosdb
+from modules.subscribers.flottsbro import flottsbro
 from modules import environment
 
 class TestEventSystem(unittest.TestCase):
 
     def test_init_susbcription(self):
-        cosmosdb.subscribe = mock.Mock()
-        event_system.init_subscriptions([cosmosdb])
-        cosmosdb.subscribe.assert_called_once()
-        cosmosdb.subscribe.reset_mock()
-        cosmosdb.unsubscribe()
-        os.environ[environment.DISABLED_SUBSCRIBERS] = 'modules.subscribers.database.cosmosdb'
-        event_system.init_subscriptions([cosmosdb])
-        cosmosdb.subscribe.assert_not_called()
+        flottsbro.subscribe = mock.Mock()
+        event_system.init_subscriptions([flottsbro])
+        flottsbro.subscribe.assert_called_once()
+        flottsbro.subscribe.reset_mock()
+        flottsbro.unsubscribe()
+        os.environ[environment.DISABLED_SUBSCRIBERS] = 'modules.subscribers.flottsbro.flottsbro'
+        event_system.init_subscriptions([flottsbro])
+        flottsbro.subscribe.assert_not_called()
 
     def test_get_all_event_functions(self):
         event_system.subscribe_to_event('event', self.assertIsNotNone)
