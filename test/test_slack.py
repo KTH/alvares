@@ -35,7 +35,7 @@ class SlackTests(unittest.TestCase):
     def test_create_deployment_message(self):
         deployment = mock_data.get_deployment_sample_enriched()
         message = slack_deployment.create_deployment_message(deployment)
-        self.assertEqual(message, '3 replica(s) of *kth-azure-app* are being deployed in *active*, this may take up to 30 seconds.')
+        self.assertEqual(message, '3 replica(s) of *Monitor application* are being deployed in *active*, this may take up to 30 seconds.')
 
     def test_create_error_message(self):
         error = mock_data.get_error()
