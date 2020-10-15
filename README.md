@@ -40,9 +40,6 @@ External service integration API. Handles deployments, errors and recommendation
 | UTR_API_KEY | UpTimeRobot | UpTimeRobot API key to use |
 | UTR_KEYWORD | UpTimeRobot | Keyword to look for in monitored pages |
 | - | - | - |
-| DB_URL | Database | URL to databas |
-| DB_PASSWORD | Database | Password to database |
-| - | - | - |
 | DETECTIFY_API_KEYS | Detectify | List of API keys to use |
 | DETECTIFY_CLUSTERS | Detectify | Which clusters to perform Detectify scans on |
 | - | - | - |
