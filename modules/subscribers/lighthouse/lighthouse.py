@@ -61,7 +61,7 @@ def process_url_to_scan(deployment, url_to_scan):
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
             #send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)x
-            send_info_to_slack(deployment, f'{report_path}.html')
+            send_info_to_slack(deployment)
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
             upload_to_storage(deployment, report_path, url_path)
     finally:
