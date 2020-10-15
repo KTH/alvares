@@ -162,8 +162,8 @@ def upload_to_box(report_path, deployment):
 
 def send_info_to_slack(deployment, scanned_url, report_path):
     score = (f'*{0:.2f}* / 4.0'.format(parse_total_score(report_path)))
-    text = f'A11Y score: {score} | Full report for `{scanned_url}`: https://app-r.referens.sys.kth.se/inspect/'
-    slack_util.call_slack_channels(deployment, text, 'Google Lighthouse Report')
+    text = f'A11Y score: {score} | Full report for <https://app-r.referens.sys.kth.se/inspect/|{deployment_util.get_friendly_name(deployment)}>'
+    slack_util.call_slack_channels(deployment, text, 'Google Lighthouse Report', icon=':lighhouse:')
 
 def send_file_to_slack(channel, deployment, report_path, scanned_url):
     logger = logging.getLogger(__name__)
