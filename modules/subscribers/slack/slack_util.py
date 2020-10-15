@@ -41,7 +41,7 @@ def get_payload_body(channel, text, username='Cluster Deployment',
     return {
         "channel": channel,
         "text": text,
-        "username": f'{username} (Alvares)',
+        "username": f'{username}',
         "icon_emoji": icon
     }
 
