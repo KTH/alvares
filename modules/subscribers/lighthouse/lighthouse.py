@@ -60,7 +60,8 @@ def process_url_to_scan(deployment, url_to_scan):
         logger.debug(f'Report path is {report_path}.html')
         #box_link = upload_to_box(report_path, deployment)
         for channel in slack_util.get_deployment_channels(deployment):
-            send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)
+            #send_file_to_slack(channel, deployment, f'{report_path}.html', url_to_scan)x
+            send_info_to_slack(deployment, url_to_scan, f'{report_path}.html')
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
             upload_to_storage(deployment, report_path, url_path)
     finally:
@@ -158,6 +159,11 @@ def upload_to_box(report_path, deployment):
     # Folder id 0 is the root folder
     box_file = client.folder('0').upload(report_path, file_name)
     return box_file.get_shared_link(access='open')
+
+def send_info_to_slack(deployment, scanned_url, report_path):
+    score = (f'*{0:.2f}* / 4.0'.format(parse_total_score(report_path)))
+    text = f'A11Y score: {score} | Full report for `{scanned_url}`: https://app-r.referens.sys.kth.se/inspect/'
+    slack_util.call_slack_channels(deployment, text, 'Google Lighthouse Report')
 
 def send_file_to_slack(channel, deployment, report_path, scanned_url):
     logger = logging.getLogger(__name__)

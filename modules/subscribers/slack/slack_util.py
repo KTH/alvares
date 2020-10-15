@@ -61,12 +61,12 @@ def call_slack_endpoint(channel, web_hook, payload):
         logger.error('Could not send slack notification to channel "%s": "%s"',
                      channel, request_ex)
 
-def call_slack_channels(deployment, text, username):
+def call_slack_channels(deployment, text, username, icon=':azure:'):
     for channel in deployment_util.get_slack_channels(deployment):
         call_slack_endpoint(
             channel,
             environment.get_env(environment.SLACK_WEB_HOOK),
-            get_payload_body(channel, text, username))
+            get_payload_body(channel, text, username, icon))
 
 def create_link_to_logs(deployment):
     host = environment.get_env_with_default_value(environment.GRAYLOG_HOST,
