@@ -85,8 +85,8 @@ def call_lofsdalen_endpoint_when(api_url):
 
     return None
 
-def get_slack_text(committed):
-    return f'This code was pushed to :github: github.com *{committed["readable"]}*.'
+def get_slack_text(deployment, committed):
+    return f'This code was pushed to :github: <https://github.com/KTH/{deployment_util.get_application_name(deployment)}| Accessibility report> github.com *{committed["readable"]}*.'
 
 def call_slack(deployment, committed):
-    slack_util.call_slack_channels(deployment, get_slack_text(committed), "Feedback loop")
+    slack_util.call_slack_channels(deployment, get_slack_text(deployment, committed), "Feedback loop")
