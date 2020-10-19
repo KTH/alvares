@@ -63,7 +63,7 @@ def process_url_to_scan(deployment, url_to_scan):
         if environment.get_env(environment.LIGHTHOUSE_STORAGE_CONN_STRING):
             upload_to_storage(deployment, report_path, url_path)
         
-        send_info_to_slack(deployment)
+        send_info_to_slack(deployment, url_to_scan)
         
     finally:
         if os.path.exists(tmp_dir) and os.path.isdir(tmp_dir):
@@ -161,8 +161,8 @@ def upload_to_box(report_path, deployment):
     box_file = client.folder('0').upload(report_path, file_name)
     return box_file.get_shared_link(access='open')
 
-def send_info_to_slack(deployment):
-    text = f'{deployment_util.get_friendly_name(deployment)} <https://app-r.referens.sys.kth.se/inspect/|full accessibility report>.'
+def send_info_to_slack(deployment, url_to_scan):
+    text = f'{deployment_util.get_friendly_name(deployment)} | {url_to_scan} <https://app-r.referens.sys.kth.se/inspect/|full accessibility report>.'
     slack_util.call_slack_channels(deployment, text, 'Google Lighthouse Report', icon=':lighthouse:')
 
 def send_file_to_slack(channel, deployment, report_path, scanned_url):
