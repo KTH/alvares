@@ -162,7 +162,7 @@ def upload_to_box(report_path, deployment):
     return box_file.get_shared_link(access='open')
 
 def send_info_to_slack(deployment, url_to_scan):
-    text = f'{deployment_util.get_friendly_name(deployment)} | {url_to_scan} <https://app-r.referens.sys.kth.se/inspect/|full accessibility report>.'
+    text = f'{deployment_util.get_friendly_name(deployment)} | <https://app-r.referens.sys.kth.se/inspect/| Accessibility report> | {url_to_scan}'
     slack_util.call_slack_channels(deployment, text, 'Google Lighthouse Report', icon=':lighthouse:')
 
 def send_file_to_slack(channel, deployment, report_path, scanned_url):
