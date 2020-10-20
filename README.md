@@ -87,10 +87,11 @@ When Alvares recives the deployment data it enriches this with more data
 ## Integrations
 
 - *Slack* - Extended developer information about the deployment
-- *Flottsbro-api* - Stores deployments for other services to use, including [Flottsbro-web](https://app.kth.se/pipeline/)
+- *[Flottsbro-api](https://github.com/KTH/flottsbro-api)* - Stores deployments for other services to use, including [Flottsbro-web](https://app.kth.se/pipeline/)
 - *Detectify* - Security scanning through APIs at [Detectify](https://detectify.com)
 - *Lighthouse* - Accessability scanning through [Google Lighthouse](https://github.com/GoogleChrome/lighthouse)
 - *UptimeRobot* - Health monitoring for public web endpoints through [UpTimeRobot](https://uptimerobot.com). Also serves as the source for our own Nagios monitoring.
+- *[Lofsdalen](https://github.com/KTH/lofsdalen)* - A simple api for asking the time passed since a commit was push to Git.
 
 ## How to add a new integration
 
