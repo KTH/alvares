@@ -65,6 +65,7 @@ Alvares gets a json object from the [Aspen](https://github.com/kth/aspen/) with 
 {
     "applicationName": "kth-azure-app",
     "cluster": "active",
+    "replicas": "2", // Attribute not mandatory. Might be number or string global
     "version": "2.0.11_abc123",
     "imageName": "kth-azure-app",
     "slackChannels": "#team-studadm,#developers",
