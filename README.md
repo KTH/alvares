@@ -40,7 +40,6 @@ External service integration API. Handles deployments, errors and recommendation
 | UTR_API_KEY | UpTimeRobot | UpTimeRobot API key to use |
 | UTR_KEYWORD | UpTimeRobot | Keyword to look for in monitored pages |
 | FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS | UpTimeRobot | Turn on or off monitor delete on replicas: 0|
-
 | - | - | - |
 | DETECTIFY_API_KEYS | Detectify | List of API keys to use |
 | DETECTIFY_CLUSTERS | Detectify | Which clusters to perform Detectify scans on |
