@@ -5,6 +5,8 @@ from modules import environment
 
 LOG = logging.getLogger(__name__)
 
+FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS = 'FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS'
+
 def use_feature_flag_utr_delete_on_zero_replicas():
     return use('FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS')
 

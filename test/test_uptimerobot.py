@@ -8,6 +8,7 @@ from test import mock_data
 from mock import Mock, patch
 from modules.subscribers.uptimerobot import uptimerobot
 from modules import environment
+from modules import feature_flags
 
 class UptimerobotTests(unittest.TestCase):
 
@@ -25,6 +26,7 @@ class UptimerobotTests(unittest.TestCase):
 
         # Delete monitor
         call_endpoint.reset_mock()
+        os.environ[feature_flags.FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS] = 'True'
         deployment['replicas'] = '0'
         uptimerobot.modify_or_add_monitor(deployment, 1)
         call_endpoint.assert_called_once()
@@ -32,6 +34,7 @@ class UptimerobotTests(unittest.TestCase):
             '/deleteMonitor',
             uptimerobot.get_api_payload(deployment, 1)
         )
+        del os.environ[feature_flags.FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS]
 
         # Do nothing
         call_endpoint.reset_mock()
