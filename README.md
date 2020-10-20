@@ -39,6 +39,8 @@ External service integration API. Handles deployments, errors and recommendation
 | UTR_API_BASE_URL | UpTimeRobot | Base URL to UpTimeRobot API |
 | UTR_API_KEY | UpTimeRobot | UpTimeRobot API key to use |
 | UTR_KEYWORD | UpTimeRobot | Keyword to look for in monitored pages |
+| FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS | UpTimeRobot | Turn on or off monitor delete on replicas: 0|
+
 | - | - | - |
 | DETECTIFY_API_KEYS | Detectify | List of API keys to use |
 | DETECTIFY_CLUSTERS | Detectify | Which clusters to perform Detectify scans on |
@@ -54,7 +56,6 @@ External service integration API. Handles deployments, errors and recommendation
 | FLOTTSBRO_API_KEY | Flottsbro | Key with scope write to Flottsbro |
 | FLOTTSBRO_API_BASE_URL | Flottsbro | Protocoll and host to Flottsbro API |
 | - | - | - |
-| FEATURE_FLAG_LOFSDALEN | Lofsdalen | Turn on or off Lofsdalen |
 | LOFSDALEN_API_BASE_URL | Lofsdalen | Protocoll and host to Lofsdalen API |
 
 ## How it works
