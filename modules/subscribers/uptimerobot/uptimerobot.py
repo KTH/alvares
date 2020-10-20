@@ -8,6 +8,7 @@ from modules import environment
 from modules.subscribers.slack import slack_util
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules import deployment_util
+from modules import feature_flags
 
 LOG = logging.getLogger(__name__)
 
@@ -133,7 +134,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
     payload = get_api_payload(deployment, monitor_id)
     has_zero_replicas = deployment_util.has_zero_replicas(deployment)
     if monitor_id:
-        if has_zero_replicas:
+        if has_zero_replicas and feature_flags.use_feature_flag_utr_delete_on_zero_replicas():
             LOG.info('Deleting monitor with id "%s"', monitor_id)
             call_endpoint('/deleteMonitor', payload)
         else:

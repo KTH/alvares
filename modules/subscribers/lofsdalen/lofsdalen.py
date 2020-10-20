@@ -40,15 +40,14 @@ def unsubscribe():
 def handle_deployment(deployment):
     global LOG  # pylint: disable=W0603
 
-    if feature_flags.use_lofsdalen():
-        url = get_url(deployment)
-        committed = call_lofsdalen_endpoint_when(url)
-        LOG.info("Url %s responed %s.", url, committed)
-        if committed is not None:
-            LOG.info("Calling Slack with commited when text.")
-            call_slack(deployment, committed)
-        else: 
-            LOG.info("Got no data for %s from Lofsdalen.", deployment_util.get_application_name(deployment))
+    url = get_url(deployment)
+    committed = call_lofsdalen_endpoint_when(url)
+    LOG.info("Url %s responed %s.", url, committed)
+    if committed is not None:
+        LOG.info("Calling Slack with commited when text.")
+        call_slack(deployment, committed)
+    else: 
+        LOG.info("Got no data for %s from Lofsdalen.", deployment_util.get_application_name(deployment))
 
     return deployment
 
@@ -86,7 +85,7 @@ def call_lofsdalen_endpoint_when(api_url):
     return None
 
 def get_slack_text(deployment, committed):
-    return f'The code deployed to {deployment_util.get_cluster(deployment)} was pushed to :github: <https://github.com/KTH/{deployment_util.get_application_name(deployment)}|github.com>  *{committed["readable"]}*.'
+    return f'The code deployed to {deployment_util.get_cluster(deployment)}, was pushed to :github: <https://github.com/KTH/{deployment_util.get_application_name(deployment)}|github.com>  *{committed["readable"]}*.'
 
 def call_slack(deployment, committed):
     slack_util.call_slack_channels(deployment, get_slack_text(deployment, committed), "Feedback loop")
