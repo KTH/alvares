@@ -59,4 +59,4 @@ def create_error_message(error):
     message = error_util.get_message(error)
     if not stack_trace:
         return f'{message}'
-    return f'*{message}* ```\n{stack_trace}\n```'
+    return f'*{message}* \n```\n{stack_trace}\n```'

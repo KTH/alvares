@@ -40,7 +40,7 @@ class SlackTests(unittest.TestCase):
     def test_create_error_message(self):
         error = mock_data.get_error()
         message = slack_error.create_error_message(error)
-        self.assertEqual(message, '*An error occured* '
+        self.assertEqual(message, '*An error occured* \n'
                                   '```\nThis is a multiline\nstack trace\n```')
 
     def test_create_error_message_no_stack_trace(self):
