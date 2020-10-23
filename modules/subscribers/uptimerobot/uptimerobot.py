@@ -134,6 +134,12 @@ def modify_or_add_monitor(deployment, monitor_id=None):
     payload = get_api_payload(deployment, monitor_id)
     has_zero_replicas = deployment_util.has_zero_replicas(deployment)
     if monitor_id:
+
+        LOG.info('Number of replicas for %s: "%s"',
+            deployment_util.get_application_name(deployment), has_zero_replicas)
+        LOG.info('FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS: %s',
+            feature_flags.use_feature_flag_utr_delete_on_zero_replicas())
+
         if has_zero_replicas and feature_flags.use_feature_flag_utr_delete_on_zero_replicas():
             LOG.info('Deleting monitor with id "%s"', monitor_id)
             call_endpoint('/deleteMonitor', payload)
