@@ -121,7 +121,7 @@ def get_replicas(deployment):
 def has_zero_replicas(deployment):
     replicas = get_replicas(deployment)
     if not replicas:
-        return False
+        return True
     if replicas.strip() == '0':
         return True
     return False
