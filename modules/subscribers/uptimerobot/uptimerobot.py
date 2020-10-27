@@ -27,13 +27,18 @@ def handle_deployment(deployment):
         LOG.debug('Skipping adding monitor for "%s"', deployment)
         return
     add_or_edit_monitor(deployment)
-    call_slack_channel_with_monitor_url(deployment)
+    
     return deployment
 
 def call_slack_channel_with_monitor_url(deployment):
     message = (f':uptime:  *{deployment_util.get_friendly_name(deployment)}* in '
                f'*{deployment_util.get_cluster(deployment)}* is '
                f'monitored using {deployment_util.get_monitor_url(deployment)}')
+
+    slack_util.call_slack_channels(deployment, message, 'Monitoring')
+
+def call_slack_channel_with_deleted_monitor_message(deployment):
+    message = (f':uptime:  The monitor for *{deployment_util.get_friendly_name(deployment)}* was removed from UptimeRobot.')
 
     slack_util.call_slack_channels(deployment, message, 'Monitoring')
 
@@ -135,17 +140,19 @@ def modify_or_add_monitor(deployment, monitor_id=None):
     has_zero_replicas = deployment_util.has_zero_replicas(deployment)
     if monitor_id:
 
-        LOG.info('Has zero replicas for %s: "%s"',
+        LOG.debug('%s has zero replicas: "%s"',
             deployment_util.get_application_name(deployment), has_zero_replicas)
-        LOG.info('FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS: %s',
+        LOG.debug('FEATURE_FLAG_UTR_DELETE_ON_ZERO_REPLICAS: %s',
             feature_flags.use_feature_flag_utr_delete_on_zero_replicas())
 
         if has_zero_replicas and feature_flags.use_feature_flag_utr_delete_on_zero_replicas():
             LOG.info('Deleting monitor with id "%s"', monitor_id)
             call_endpoint('/deleteMonitor', payload)
+            call_slack_channel_with_deleted_monitor_message(deployment)
         else:
             LOG.info('Editing monitor with id "%s"', monitor_id)
             call_endpoint('/editMonitor', payload)
+            call_slack_channel_with_monitor_url(deployment)
     else:
         if has_zero_replicas:
             LOG.info('Zero replicas, but no monitor exists - skip')
@@ -153,6 +160,7 @@ def modify_or_add_monitor(deployment, monitor_id=None):
             LOG.info('Adding monitor with friendly name "%s"',
                 deployment_util.get_friendly_name(deployment))
             call_endpoint('/newMonitor', payload)
+            call_slack_channel_with_monitor_url(deployment)
 
 def select_alert_contact(deployment):
     contacts = get_alert_contacts()
