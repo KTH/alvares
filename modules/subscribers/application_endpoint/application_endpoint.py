@@ -44,4 +44,4 @@ def call_slack_channel_with_application_endpoint_url(deployment):
     message = (f':information_source: About <{build_information_link(deployment)}|{deployment_util.get_friendly_name(deployment)}> '
                f'in *{deployment_util.get_cluster(deployment)}*')
 
-    slack_util.call_slack_channels(deployment, message, 'Public information about the service')
+    slack_util.call_slack_channels(deployment, message, 'Public information')
