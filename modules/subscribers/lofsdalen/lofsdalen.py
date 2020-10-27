@@ -75,7 +75,7 @@ def call_lofsdalen_endpoint_when(api_url):
         response = requests.get(api_url)
 
         if response.status_code == 200:
-            LOG.info('Got commit information for "%s", got response was "%s"', api_url, response.text)
+            LOG.debug('Got commit information for "%s", got response was "%s"', api_url, response.text)
             return response.json()
         if response.status_code == 404:
             LOG.info('Cound not find commit information for "%s".', api_url)
