@@ -41,7 +41,7 @@ def create_deployment_payload(channel, message, deployment, username='Deployment
 
 def create_deployment_message(deployment): # pragma: no cover
     if deployment_util.has_zero_replicas(deployment):
-        return (f'Started removing *{deployment_util.get_friendly_name(deployment)}* from *{deployment_util.get_cluster(deployment)}*, this may take up to 30 seconds.\n<https://confluence.sys.kth.se/confluence/pages/viewpage.action?pageId=44894619|How to remove an service')
+        return (f'Started removing *{deployment_util.get_friendly_name(deployment)}* from *{deployment_util.get_cluster(deployment)}*, this may take up to 30 seconds.\n<https://confluence.sys.kth.se/confluence/pages/viewpage.action?pageId=44894619|Information how to remove a service')
 
     return (f'{deployment_util.get_replicas(deployment)} replica(s) of *{deployment_util.get_friendly_name(deployment)}* are being deployed'
             f' in *{deployment_util.get_cluster(deployment)}*, this may take up to 30 seconds.')
