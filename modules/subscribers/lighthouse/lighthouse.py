@@ -27,6 +27,10 @@ def unsubscribe():
 
 def handle_deployment(deployment):
     logger = logging.getLogger(__name__)
+    if deployment_util.has_zero_replicas(deployment):
+        logger.debug('Skipping testAccessibility, no replicas')
+        return deployment
+
     if not deployment_util.get_test_accessibility(deployment):
         logger.debug('testAccessibility not set - skipping Lighthouse')
         return deployment

@@ -40,6 +40,10 @@ def unsubscribe():
 def handle_deployment(deployment):
     global LOG  # pylint: disable=W0603
 
+    if deployment_util.has_zero_replicas(deployment):
+        LOG.debug('Skipping lofsdalen, no replicas')
+        return deployment
+
     url = get_url(deployment)
     committed = call_lofsdalen_endpoint_when(url)
     LOG.info("Url %s responed %s.", url, committed)

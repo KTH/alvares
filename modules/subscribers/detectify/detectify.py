@@ -19,6 +19,11 @@ def unsubscribe():
     unsubscribe_from_event('deployment', handle_deployment)
 
 def handle_deployment(deployment):
+
+    if deployment_util.has_zero_replicas(deployment):
+        LOG.debug('Skipping Detectify, no replicas')
+        return deployment
+        
     if should_use_cluster(deployment):
         for api_key in environment.get_env_list(environment.DETECTIFY_API_KEYS):
             try:
