@@ -46,9 +46,9 @@ def handle_deployment(deployment):
 
     url = get_url(deployment)
     committed = call_lofsdalen_endpoint_when(url)
-    LOG.info("Url %s responed %s.", url, committed)
+    LOG.debug("Url %s responed %s.", url, committed)
     if committed is not None:
-        LOG.info("Calling Slack with commited when text.")
+        LOG.debug("Calling Slack with commited when text.")
         call_slack(deployment, committed)
     else: 
         LOG.info("Got no data for %s from Lofsdalen.", deployment_util.get_application_name(deployment))
