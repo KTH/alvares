@@ -15,7 +15,6 @@ def unsubscribe():
 
 def handle_deployment(deployment):
     if deployment_util.has_zero_replicas(deployment):
-        call_slack_channel_with_application_endpoint_url(deployment)
         return deployment
 
     call_slack_channel_with_application_endpoint_url(deployment)
@@ -46,9 +45,3 @@ def call_slack_channel_with_application_endpoint_url(deployment):
                f'in *{deployment_util.get_cluster(deployment)}*')
 
     slack_util.call_slack_channels(deployment, message, 'Public information about the service')
-
-def call_slack_channel_with_deleted_message(deployment):
-    
-    message = (f'{deployment_util.get_friendly_name(deployment)} *removed*f from *{deployment_util.get_cluster(deployment)}*')
-
-    slack_util.call_slack_channels(deployment, message, 'Service removed.')
