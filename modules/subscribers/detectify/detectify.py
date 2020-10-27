@@ -6,6 +6,7 @@ from requests import get, post, HTTPError, ConnectTimeout, RequestException
 from modules import environment
 from modules.event_system.event_system import subscribe_to_event, unsubscribe_from_event
 from modules import deployment_util
+from modules.subscribers.slack import slack_util
 
 LOG = logging.getLogger(__name__)
 
@@ -21,7 +22,10 @@ def unsubscribe():
 def handle_deployment(deployment):
 
     if deployment_util.has_zero_replicas(deployment):
-        LOG.debug('Skipping Detectify, no replicas')
+        if deployment_util.get_detectify_tokens(deployment):
+            message = f'Don´t forget to remove Detectify for {deployment_util.get_friendly_name(deployment)}.'
+            slack_util.call_slack_channels(deployment, message, "Detectify")
+
         return deployment
         
     if should_use_cluster(deployment):
