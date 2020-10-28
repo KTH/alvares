@@ -24,4 +24,4 @@ class LofsdalenTests(unittest.TestCase):
 
         text = lofsdalen.get_slack_text(mock_data.get_deployment_sample(), mock_commited_when)
 
-        self.assertEqual('The code deployed to active, was pushed to :github: <https://github.com/KTH/kth-azure-app|github.com>  *4 months ago*.', text)
+        self.assertEqual('The source code for  deployed to active, was pushed to :github: <https://github.com/KTH/kth-azure-app|github.com>  *4 months ago*.', text)
