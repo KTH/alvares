@@ -12,14 +12,15 @@ def get_attachment(deployment,
                    fallback='Your client does not support attachments :(',
                    color='#aec90c'):
     application_name = deployment_util.get_application_name(deployment)
-    application_version = deployment_util.get_application_version(deployment)
+    image_name = deployment_util.get_image_name(deployment)
+    image_version = deployment_util.get_application_version(deployment)
     return {
         "fallback": fallback,
         "color": color,
         "author_name": ":mag: Search Logs",
         "author_link": create_link_to_logs(deployment),
         "title": f"Name: {application_name}",
-        "text": f"Image: {application_name}:{application_version}"
+        "text": f"Image: {image_name}:{image_version}"
     }
 
 def get_deployment_channels(deployment):
