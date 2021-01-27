@@ -18,8 +18,8 @@ def get_attachment(deployment,
         "color": color,
         "author_name": ":mag: Search Logs",
         "author_link": create_link_to_logs(deployment),
-        "title": f"Image name: {application_name}",
-        "text": f"Image version: {application_version}"
+        "title": f"Name: {application_name}",
+        "text": f"Image: {application_name}:{application_version}"
     }
 
 def get_deployment_channels(deployment):
